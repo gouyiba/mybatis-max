@@ -4,11 +4,6 @@
 # [Type]: Bug
 [Type]: 
 
-# jira中问题编号
-# 例如 
-# [JIRA-ID]: issue #GLOBAL-1
-[JIRA-ID]:  
-
 # 本次提交描述
 # 例如
 # [Description]: 金额未判断数据的类型，导致数据转换错误，添加类型判断。
