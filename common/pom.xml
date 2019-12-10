@@ -22,6 +22,7 @@
             <artifactId>spring-boot-starter</artifactId>
             <version>${springBootVersion}</version>
         </dependency>
+        <!-- common utils -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -33,6 +34,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commonsLang3}</version>
         </dependency>
+        <!-- common utils -->
     </dependencies>
 
     <build>
