@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mybatis-rabbit-plug</artifactId>
+        <groupId>com.rabbit</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>starter</artifactId>
+
+    <properties>
+        <moduleVersion>1.0-SNAPSHOT</moduleVersion>
+        <springBootMavenPluginVersion>2.2.0.RELEASE</springBootMavenPluginVersion>
+        <mavenCompilerPluginVersion>3.6.0</mavenCompilerPluginVersion>
+        <applicationMainClassPath>com.rabbit.MyBatisRabbitPlugStarter</applicationMainClassPath>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${springBootVersion}</version>
+        </dependency>
+        <!-- 开发阶段导入，应用阶段移除 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${springBootVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbit</groupId>
+            <artifactId>common</artifactId>
+            <version>${moduleVersion}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mavenCompilerPluginVersion}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springBootMavenPluginVersion}</version>
+                <configuration>
+                    <mainClass>${applicationMainClassPath}</mainClass>
+                    <fork>true</fork>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
