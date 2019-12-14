@@ -27,7 +27,21 @@ public enum MySqlKeyWord implements IEnum<String> {
     EXISTS("EXISTS"),
     BETWEEN("BETWEEN"),
     ASC("ASC"),
-    DESC("DESC");
+    DESC("DESC"),
+    SELECT("SELECT"),
+    WHERE("WHERE"),
+    ALL("*"),
+    FROM("FROM"),
+    LEFT_JOIN("LEFT JOIN"),
+    RIGHT_JOIN("RIGHT JOIN"),
+    JOIN("INNER JOIN"),
+    ON("ON"),
+    INSERT("INSERT INTO"),
+    VALUE("VALUE"),
+    VALUES("VALUES"),
+    UPDATE("UPDATE"),
+    SET("SET"),
+    DELETE("DELETE");
 
     private String keyword;
 

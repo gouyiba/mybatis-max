@@ -1,5 +1,6 @@
 package com.rabbit.core.annotation;
 
+import com.rabbit.core.enumation.MySqlColumnType;
 import com.rabbit.core.enumation.PrimaryKey;
 
 import java.lang.annotation.*;
@@ -14,6 +15,12 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Id {
+
+    /**
+     * 主键的columnName
+     * @return
+     */
+    String value() default "";
 
     /**
      * 主键生成策略
@@ -32,4 +39,10 @@ public @interface Id {
      * @return
      */
     int datacenterId() default 0;
+
+    /**
+     * 数据库字段类型，默认VARCHAR
+     * @return
+     */
+    MySqlColumnType columnType() default MySqlColumnType.VARCHAR;
 }

@@ -14,6 +14,7 @@
 
     <properties>
         <commonsLang3>3.9</commonsLang3>
+        <hutool>5.0.7</hutool>
     </properties>
 
     <dependencies>
@@ -35,6 +36,14 @@
             <version>${commonsLang3}</version>
         </dependency>
         <!-- common utils -->
+
+        <!-- hutool utils -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool}</version>
+        </dependency>
+        <!-- hutool utils -->
     </dependencies>
 
     <build>

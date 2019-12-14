@@ -1,9 +1,13 @@
 package com.rabbit.core.constructor;
 
+import com.rabbit.core.bean.TableInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 
 /**
- * 新增条件构造器
+ * add constructor
  *
  * @param <E>
  * @author duxiaoyu
@@ -11,12 +15,16 @@ import java.io.Serializable;
  */
 public class InsertWrapper<E extends Serializable> extends BaseAbstractWrapper<E> implements Serializable {
 
-    /*
-     *
-     * InsertWrapper只继承BaseAbstractWrapper，因为新增不具备条件拼接生成
-     * TODO 构建思路待实现...
-     *
-     *
-     *
-     * */
+    private static final Logger LOGGER= LoggerFactory.getLogger(InsertWrapper.class);
+
+    /**
+     * 解析后的TableInfo
+     */
+    private TableInfo tableInfo;
+
+    public InsertWrapper(Class<E> clazz){
+         super(clazz);
+         this.tableInfo=analysisClazz();
+    }
+
 }

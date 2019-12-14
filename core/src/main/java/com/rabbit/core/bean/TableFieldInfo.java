@@ -1,5 +1,6 @@
 package com.rabbit.core.bean;
 
+import com.rabbit.core.enumation.MySqlColumnType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,17 +18,17 @@ public class TableFieldInfo implements Serializable {
     /**
      * 属性
      */
-    private final Field field;
+    private Field field;
 
     /**
      * 属性名
      */
-    private final String propertyName;
+    private String propertyName;
 
     /**
      * 数据库表字段名
      */
-    private final String columnName;
+    private String columnName;
 
     /**
      * 属性类型
@@ -37,5 +38,5 @@ public class TableFieldInfo implements Serializable {
     /**
      * 数据库表字段类型
      */
-    private final String columnType;
+    private MySqlColumnType columnType;
 }

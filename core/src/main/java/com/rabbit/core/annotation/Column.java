@@ -22,7 +22,13 @@ public @interface Column {
     String value() default "";
 
     /**
-     * 数据库字段类型
+     * 是否是数据库表中的字段
+     * @return
+     */
+    boolean isTableColumn() default true;
+
+    /**
+     * 数据库字段类型，默认VARCHAR
      * @return
      */
     MySqlColumnType columnType() default MySqlColumnType.VARCHAR;

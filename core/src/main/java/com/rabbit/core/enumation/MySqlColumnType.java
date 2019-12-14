@@ -1,7 +1,7 @@
 package com.rabbit.core.enumation;
 
 /**
- * 数据库表字段类型枚举
+ * MySql数据库字段类型枚举
  *
  * @author duxiaoyu
  * @since 2019-12-12
@@ -10,6 +10,7 @@ public enum MySqlColumnType implements IEnum<String> {
 
     TINYINT("TINYINT"),
     BIGINT("BIGINT"),
+    SHORT("SHORT"),
     INT("INT"),
     FLOAT("FLOAT"),
     DOUBLE("DOUBLE"),
