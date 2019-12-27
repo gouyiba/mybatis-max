@@ -8,5 +8,5 @@ package com.rabbit.core.mapper;
  * @since 2019-12-12
  */
 public interface BaseMapper<T> {
-
+    // TODO 待实现 ...
 }

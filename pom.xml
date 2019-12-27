@@ -24,6 +24,7 @@
         <springBootVersion>2.2.1.RELEASE</springBootVersion>
         <mysqlConnectionVersion>8.0.18</mysqlConnectionVersion>
         <lomBokVersion>1.18.10</lomBokVersion>
+        <mybatis-springboot-start>2.1.1</mybatis-springboot-start>
     </properties>
 
     <!-- 所有模块公共依赖 -->

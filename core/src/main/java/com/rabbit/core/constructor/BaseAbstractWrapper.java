@@ -1,5 +1,6 @@
 package com.rabbit.core.constructor;
 
+import cn.hutool.json.JSONObject;
 import com.rabbit.core.annotation.Column;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Table;
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-public abstract class BaseAbstractWrapper<E extends Serializable> implements Serializable {
+public abstract class BaseAbstractWrapper<E> implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(BaseAbstractWrapper.class);
 
@@ -37,16 +38,16 @@ public abstract class BaseAbstractWrapper<E extends Serializable> implements Ser
     private static final String TAG = "Mybatis-Rabbit-Plug";
 
     /**
-     * E (bean.Class)
+     * class.bean
      */
-    private Class<E> clazz;
+    private E clazz;
 
     /**
      * BaseAbstractWrapper-constructor
      *
      * @param clazz
      */
-    public BaseAbstractWrapper(Class<E> clazz) {
+    public BaseAbstractWrapper(E clazz) {
         this.clazz = clazz;
     }
 
@@ -125,17 +126,17 @@ public abstract class BaseAbstractWrapper<E extends Serializable> implements Ser
             logger.info("{}:开始解析数据库表信息>>>>>>", TAG);
             tableInfo = new TableInfo();
             // 判断是否使用@Table
-            if (clazz.isAnnotationPresent(Table.class)) {
-                Table table = clazz.getAnnotation(Table.class);
+            if (clazz.getClass().isAnnotationPresent(Table.class)) {
+                Table table = clazz.getClass().getAnnotation(Table.class);
                 tableName = table.value();
             } else {
                 // 自动解析对应的数据库表名称，默认按照驼峰转下划线格式进行转换，如: GoodsInfo -> goods_info
-                String className = clazz.getSimpleName();
+                String className = clazz.getClass().getSimpleName();
                 tableName = StringUtils.camelToUnderline(StringUtils.firstToLowerCase(className));
             }
             logger.info("{}:解析出的数据库表名称:{}", TAG, tableName);
             // 开始解析entity中的field
-            List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
+            List<Field> fieldList = Arrays.asList(clazz.getClass().getDeclaredFields());
             if (!CollectionUtils.isEmpty(fieldList)) {
                 logger.info("{}:开始解析数据库表字段信息>>>>>>", TAG);
                 for (Field item : fieldList) {
@@ -157,6 +158,8 @@ public abstract class BaseAbstractWrapper<E extends Serializable> implements Ser
                             columnName = column.value();
                         } else if (!Objects.isNull(id)) {
                             columnName = id.value();
+                            // 设置table指定的主键字段
+                            tableInfo.setPrimaryKey(item);
                         }
                         // 判断使用@column是否设置了对应的数据库表字段名称，如果没有设置，自动解析字段，默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
                         if (org.apache.commons.lang3.StringUtils.isBlank(columnName)) {
@@ -164,10 +167,12 @@ public abstract class BaseAbstractWrapper<E extends Serializable> implements Ser
                             columnName = StringUtils.camelToUnderline(propertyName);
                         }
                         // 获取字段对应的数据类型: 如果设置了对应的数据类型，就直接获取，如果没有就自动获取默认数据类型
-                        if (!Objects.isNull(column.columnType())) {
+                        if (!Objects.isNull(column)) {
+                            // 此处在设置数据库字段类型时，如果没有指定，会拿默认的数据库类型varchar，
+                            // 但是这个情况是不符合实际情况的，如果是枚举类型，其实对应的应该不是varchar，此处问题不是很大，所以暂时先不做处理
                             tbField.setColumnType(column.columnType());
                         }
-                        if (!Objects.isNull(id.columnType())) {
+                        if(!Objects.isNull(id)){
                             tbField.setColumnType(id.columnType());
                         }
                     } else {
@@ -236,9 +241,9 @@ public abstract class BaseAbstractWrapper<E extends Serializable> implements Ser
             }
         }
 
-        if (clazz.isArray()) {
+        if (clazz.getClass().isArray()) {
             throw new MyBatisRabbitPlugException("属性类型为数据或集合，无法获取对应的数据类型......");
-        } else if (clazz.isEnum()) {
+        } else if (clazz.getClass().isEnum()) {
             // 枚举在数据库中对应TINYINT类型
             return MySqlColumnType.TINYINT;
         } else {
