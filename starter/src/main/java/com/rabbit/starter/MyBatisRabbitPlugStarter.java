@@ -3,7 +3,7 @@ package com.rabbit.starter;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.starter.bean.User;
 import com.rabbit.core.enumation.Sex;
-//import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
         "com.rabbit.starter",
         "com.rabbit.core.service.impl"
 })
-//@MapperScan("com.rabbit.starter.dao")
+@MapperScan("com.rabbit.starter.dao")
 @SpringBootApplication
 @Controller
 public class MyBatisRabbitPlugStarter {
