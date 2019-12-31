@@ -1,7 +1,5 @@
 package com.rabbit.core.service;
 
-import java.util.Map;
-
 /**
  * 公用Service接口，声明基础Service-Method
  *

@@ -1,5 +1,5 @@
-package com.rabbit.utils;
-import com.rabbit.exception.MyBatisRabbitPlugException;
+package com.rabbit.common.utils;
+import com.rabbit.common.exception.MyBatisRabbitPlugException;
 
 import java.util.Collection;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
 /**
  * ArrayUtils工具类

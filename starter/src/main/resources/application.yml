@@ -13,3 +13,4 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: false
     auto-mapping-behavior: full
+

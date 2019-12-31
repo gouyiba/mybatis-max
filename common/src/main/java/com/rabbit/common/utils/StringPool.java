@@ -1,4 +1,4 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
 /**
  * 字符串变量池

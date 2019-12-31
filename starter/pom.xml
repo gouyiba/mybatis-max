@@ -16,7 +16,7 @@
         <moduleVersion>1.0-SNAPSHOT</moduleVersion>
         <springBootMavenPluginVersion>2.2.0.RELEASE</springBootMavenPluginVersion>
         <mavenCompilerPluginVersion>3.6.0</mavenCompilerPluginVersion>
-        <applicationMainClassPath>com.rabbit.MyBatisRabbitPlugStarter</applicationMainClassPath>
+        <applicationMainClassPath>com.rabbit.starter.MyBatisRabbitPlugStarter</applicationMainClassPath>
     </properties>
 
     <dependencies>
@@ -36,6 +36,26 @@
             <artifactId>common</artifactId>
             <version>${moduleVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.rabbit</groupId>
+            <artifactId>core</artifactId>
+            <version>${moduleVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lomBokVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysqlConnectionVersion}</version>
+        </dependency>
+       <!-- <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-springboot-start}</version>
+        </dependency>-->
     </dependencies>
 
     <build>

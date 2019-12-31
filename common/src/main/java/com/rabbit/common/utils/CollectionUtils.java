@@ -1,4 +1,4 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
 import java.util.Collection;
 import java.util.Map;

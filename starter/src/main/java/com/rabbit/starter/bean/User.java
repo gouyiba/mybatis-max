@@ -1,15 +1,16 @@
-package com.rabbit.core.bean;
+package com.rabbit.starter.bean;
 
+import com.rabbit.core.annotation.Column;
+import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Table;
 import com.rabbit.core.constructor.BaseAbstractWrapper;
 import com.rabbit.core.enumation.MySqlColumnType;
 import com.rabbit.core.enumation.PrimaryKey;
-import com.rabbit.core.annotation.Column;
-import com.rabbit.core.annotation.Id;
 import com.rabbit.core.enumation.Sex;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 测试User-bean
@@ -27,4 +28,10 @@ public class User implements Serializable {
 
     @Column(typeHandler = BaseAbstractWrapper.class,columnType = MySqlColumnType.TINYINT)
     private Sex sex;
+
+    private Date createDate;
+
+    private Date updateDate;
+
+    private Integer delFlag;
 }

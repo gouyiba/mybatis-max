@@ -1,7 +1,7 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
-import com.rabbit.exception.MyBatisRabbitPlugException;
-import com.rabbit.utils.supper.BiIntFunction;
+import com.rabbit.common.exception.MyBatisRabbitPlugException;
+import com.rabbit.common.utils.supper.BiIntFunction;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Blob;

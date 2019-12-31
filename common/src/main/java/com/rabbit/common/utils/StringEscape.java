@@ -1,4 +1,4 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
 /**
  * StringEscape ，数据库字符串转义

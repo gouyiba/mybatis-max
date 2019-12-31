@@ -1,4 +1,4 @@
-package com.rabbit.exception;
+package com.rabbit.common.exception;
 
 import lombok.Getter;
 

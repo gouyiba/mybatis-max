@@ -1,22 +1,15 @@
 package com.rabbit.core.constructor;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.rabbit.core.annotation.Column;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
-import com.rabbit.core.bean.User;
-import com.rabbit.core.enumation.MySqlKeyWord;
-import com.rabbit.core.enumation.Sex;
+import com.rabbit.core.annotation.Column;
 import com.rabbit.core.enumation.SqlKey;
-import com.rabbit.exception.MyBatisRabbitPlugException;
-import com.rabbit.utils.CollectionUtils;
-import lombok.Data;
+import com.rabbit.common.exception.MyBatisRabbitPlugException;
+import com.rabbit.common.utils.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -25,7 +18,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 新增 constructor
@@ -83,9 +75,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
 
         // value拼接，此处需要验证value类型，并进行value对应的数据库类型转换
         sqlMap.put(SqlKey.INSERT_VALUE_KEYWORD.getValue(), "value");
-        JSONObject fieldObj = JSONUtil.parseObj(JSONUtil.toJsonStr(obj));
-        // 主键生成留到BaseService中生成
-        // 新增成功后，返回主键id
+        //JSONObject fieldObj = JSONUtil.parseObj(JSONUtil.toJsonStr(obj));
         String sqlValue = this.sqlValueConvert(fieldInfoMap);
         sqlMap.put(SqlKey.INSERT_VAL_LEFT_BRA.getValue(), "(");
         sqlMap.put(SqlKey.INSERT_VALUE.getValue(), sqlValue);
@@ -99,40 +89,30 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      * 需要考虑sql注入风险: 考虑使用 #{} 进行赋值操作，sql的value会生成: #{stuid,jdbcType=BIGINT} 格式的sql
      * 字段value进行转换时，如: 字段是枚举类型，如果指定了typeHandler，则使用指定的typeHandler进行转换，未指定，则使用默认的typeHandler进行转换
      * 将最终的完整sql交给mybatis进行预编译，避免sql的注入风险
+     *
      * @param fieldInfoMap 字段Map
      * @return value 转换后的字符串
      * @author duxiaoyu
      * @since 2019-12-25
      */
     private String sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
-        StringJoiner sj=new StringJoiner(",");
-        for(Map.Entry<String,TableFieldInfo> item:fieldInfoMap.entrySet()){
-            Field field=item.getValue().getField();
-            String typeHandler="";
-            if(field.isAnnotationPresent(Column.class)){
-                Column column=field.getAnnotation(Column.class);
-                Class<?> typeHandlerClass=column.typeHandler();
-                typeHandler=typeHandlerClass.getName();
+        StringJoiner sj = new StringJoiner(",");
+        for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
+            Field field = item.getValue().getField();
+            String typeHandler = "";
+            if (field.isAnnotationPresent(Column.class)) {
+                Column column = field.getAnnotation(Column.class);
+                Class<?> typeHandlerClass = column.typeHandler();
+                typeHandler = typeHandlerClass.getName();
             }
-            String propertyName=item.getValue().getPropertyName();
-            String columnType=item.getValue().getColumnType().getValue();
-            if(StringUtils.isNotBlank(typeHandler)){
-                sj.add(String.format("#{%s,typeHandler=%s}",propertyName,typeHandler));
-            }else {
-                sj.add(String.format("#{%s,jdbcType=%s}",propertyName,columnType));
+            String propertyName = item.getValue().getPropertyName();
+            String columnType = item.getValue().getColumnType().getValue();
+            if (StringUtils.isNotBlank(typeHandler)) {
+                sj.add(String.format("#{%s,typeHandler=%s}", propertyName, typeHandler));
+            } else {
+                sj.add(String.format("#{%s,jdbcType=%s}", propertyName, columnType));
             }
         }
         return sj.toString();
     }
-
-    public static void main(String[] args) {
-        /*InsertWrapper insertWrapper=new InsertWrapper(new User());
-        User user=new User();
-        user.setStuAge(23);
-        user.setStuName("杜晓宇");
-        user.setSex(Sex.MAN);
-        System.out.println(JSONUtil.toJsonStr(insertWrapper.sqlGenerate(user)));*/
-    }
-
-
 }

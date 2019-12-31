@@ -1,4 +1,4 @@
-package com.rabbit.properties;
+package com.rabbit.common.properties;
 
 import org.springframework.stereotype.Component;
 

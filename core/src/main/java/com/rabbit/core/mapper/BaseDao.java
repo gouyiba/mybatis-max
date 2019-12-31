@@ -1,7 +1,5 @@
 package com.rabbit.core.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
 
@@ -19,6 +17,6 @@ public interface BaseDao {
      * @param objectMap 实例参数
      * @return 主键
      */
-    String addObject(@Param("objectMap") Map<String,Object> objectMap, @Param("sqlMap") Map<String,String> sqlMap);
+    String addObject(Map<String,Object> objectMap,Map<String,String> sqlMap);
 
 }

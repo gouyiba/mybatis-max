@@ -1,8 +1,6 @@
 package com.rabbit.core.annotation;
 
 import com.rabbit.core.enumation.MySqlColumnType;
-import com.rabbit.utils.ClassUtils;
-import sun.invoke.empty.Empty;
 
 import java.lang.annotation.*;
 

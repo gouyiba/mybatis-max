@@ -1,6 +1,6 @@
-package com.rabbit.utils;
+package com.rabbit.common.utils;
 
-import com.rabbit.exception.MyBatisRabbitPlugException;
+import com.rabbit.common.exception.MyBatisRabbitPlugException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

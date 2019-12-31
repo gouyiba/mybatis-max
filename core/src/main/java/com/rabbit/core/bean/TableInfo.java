@@ -1,9 +1,6 @@
 package com.rabbit.core.bean;
 
 import com.rabbit.core.annotation.Column;
-import com.rabbit.core.annotation.Id;
-import com.rabbit.core.enumation.MySqlColumnType;
-import com.rabbit.core.enumation.PrimaryKey;
 import lombok.Data;
 
 import java.io.Serializable;

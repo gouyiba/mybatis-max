@@ -1,4 +1,4 @@
-package com.rabbit.utils.supper;
+package com.rabbit.common.utils.supper;
 /**
  * 接受 Int 小类型的处理函数，使用小类型来避免 Java 自动装箱
  */
