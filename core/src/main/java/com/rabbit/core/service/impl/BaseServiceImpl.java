@@ -4,10 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.json.JSONUtil;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.PrimaryKey;
-import com.rabbit.core.mapper.BaseDao;
+import com.rabbit.core.mapper.BusinessMapper;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.core.annotation.FillingStrategy;
 import com.rabbit.core.annotation.Id;
@@ -15,6 +16,8 @@ import com.rabbit.core.constructor.BaseAbstractWrapper;
 import com.rabbit.core.constructor.InsertWrapper;
 import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -35,10 +38,13 @@ import java.util.Objects;
 @Service("baseServiceImpl")
 public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService {
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(BaseServiceImpl.class);
+
     @Autowired
     private ApplicationContext applicationContext;
 
-    private BaseDao baseDao;
+    @Autowired
+    private BusinessMapper businessMapper;
 
     /**
      * 新增实例
@@ -63,6 +69,9 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         // 获取主键
         Id id = primaryKey.getAnnotation(Id.class);
         PrimaryKey pkEnum = id.generateType();
+
+        // 指定临时主键名称 -> 获取新增成功后返回的表默认主键值
+        beanMap.put("tempPrimKey","");
 
         if (MapUtil.isEmpty(beanMap)) {
             throw new MyBatisRabbitPlugException("beanMap转换失败......");
@@ -94,8 +103,10 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }catch (Exception e){
             e.printStackTrace();
         }
-        //baseDao.addObject(beanMap,sqlMap);
-        return beanMap.get(primaryKey.getName()).toString();
+        LOGGER.info("{}:{}",TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}:{}",TAG, JSONUtil.toJsonStr(beanMap));
+        businessMapper.addObject(beanMap,sqlMap);
+        return beanMap.get("tempPrimKey").toString();
     }
 
     /**
@@ -130,9 +141,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             for(Field item:fieldList){
                 Method getMethod = clazz.getMethod("get" + StringUtils.capitalize(item.getName()));
                 Object val = getMethod.invoke(obj);
-                if (!Objects.isNull(val)) {
-                    beanMap.put(item.getName(), val);
-                }
+                beanMap.put(item.getName(), val);
             }
         }
     }

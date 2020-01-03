@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
         "com.rabbit.starter",
         "com.rabbit.core.service.impl"
 })
-@MapperScan("com.rabbit.starter.dao")
+@MapperScan("com.rabbit.core.mapper")
 @SpringBootApplication
 @Controller
 public class MyBatisRabbitPlugStarter {
@@ -31,8 +31,8 @@ public class MyBatisRabbitPlugStarter {
     public void test(){
         User user=new User();
         user.setStuAge(23);
-        user.setStuName("杜晓宇");
-        user.setSex(Sex.MAN.MAN);
+        user.setStuName("杜晓宇1");
+        user.setSex(Sex.MAN.getValue());
         System.out.println(baseService.addObject(user));
     }
 

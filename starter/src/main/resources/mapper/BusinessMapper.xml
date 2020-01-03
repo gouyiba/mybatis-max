@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.core.mapper.BusinessMapper">
+
+    <insert id="addObject" useGeneratedKeys="true" keyProperty="objectMap.tempPrimKey">
+        <if test="sqlMap.INSERT_HEAD!=null and sqlMap.INSERT_HEAD!=''">
+            ${sqlMap.INSERT_HEAD}
+        </if>
+      <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+          ${sqlMap.TABLE_NAME}
+      </if>
+        <if test="sqlMap.INSERT_PAM_LEFT_BRA!=null and sqlMap.INSERT_PAM_LEFT_BRA!=''">
+            ${sqlMap.INSERT_PAM_LEFT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_PARAMETER!=null and sqlMap.INSERT_PARAMETER!=''">
+            ${sqlMap.INSERT_PARAMETER}
+        </if>
+        <if test="sqlMap.INSERT_PAM_RIGHT_BRA!=null and sqlMap.INSERT_PAM_RIGHT_BRA!=''">
+            ${sqlMap.INSERT_PAM_RIGHT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_VALUE_KEYWORD!=null and sqlMap.INSERT_VALUE_KEYWORD!=''">
+            ${sqlMap.INSERT_VALUE_KEYWORD}
+        </if>
+        <if test="sqlMap.INSERT_VAL_LEFT_BRA!=null and sqlMap.INSERT_VAL_LEFT_BRA!=''">
+            ${sqlMap.INSERT_VAL_LEFT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_VALUE!=null and sqlMap.INSERT_VALUE!=''">
+            ${sqlMap.INSERT_VALUE}
+        </if>
+        <if test="sqlMap.INSERT_VAL_RIGHT_BRA!=null and sqlMap.INSERT_VAL_RIGHT_BRA!=''">
+            ${sqlMap.INSERT_VAL_RIGHT_BRA}
+        </if>
+    </insert>
+</mapper>

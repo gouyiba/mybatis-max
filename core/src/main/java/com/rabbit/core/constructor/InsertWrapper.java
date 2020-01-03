@@ -41,7 +41,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
     public InsertWrapper(E clazz) {
         super(clazz);
         this.tableInfo = analysisClazz();
-        LOGGER.info("out:{}", JSONUtil.toJsonStr(tableInfo));
+        //LOGGER.info("out:{}", JSONUtil.toJsonStr(tableInfo));
     }
 
     /**
@@ -60,6 +60,9 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
 
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
+        // TODO 此处需要过滤掉自增字段，因为新增不需要给自增字段赋值
+
+
         if (CollectionUtils.isEmpty(fieldInfoMap)) {
             throw new MyBatisRabbitPlugException("字段解析为空，未能够获取到字段信息......");
         }
@@ -108,9 +111,9 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
             String propertyName = item.getValue().getPropertyName();
             String columnType = item.getValue().getColumnType().getValue();
             if (StringUtils.isNotBlank(typeHandler)) {
-                sj.add(String.format("#{%s,typeHandler=%s}", propertyName, typeHandler));
+                sj.add(String.format("#{objectMap.%s,typeHandler=%s}", propertyName, typeHandler));
             } else {
-                sj.add(String.format("#{%s,jdbcType=%s}", propertyName, columnType));
+                sj.add(String.format("#{objectMap.%s,jdbcType=%s}", propertyName, columnType));
             }
         }
         return sj.toString();

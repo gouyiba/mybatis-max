@@ -7,6 +7,7 @@ import com.rabbit.core.constructor.BaseAbstractWrapper;
 import com.rabbit.core.enumation.MySqlColumnType;
 import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.Sex;
+import com.rabbit.starter.typehandler.IEnumTypeHandler;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,6 +20,15 @@ import java.util.Date;
 @Table(value = "t_user")
 public class User implements Serializable {
 
+    /**
+     * id是自增字段
+     */
+    @Column(isIncrementColumn = true)
+    private Integer id;
+
+    /**
+     * 指定业务主键和生成策略
+     */
     @Id(generateType = PrimaryKey.OBJECTID)
     private String stuUid;
 
@@ -26,8 +36,10 @@ public class User implements Serializable {
 
     private Integer stuAge;
 
-    @Column(typeHandler = BaseAbstractWrapper.class,columnType = MySqlColumnType.TINYINT)
-    private Sex sex;
+
+    // 自定义枚举转换器有问题，还需改进
+    //@Column(typeHandler = IEnumTypeHandler.class,columnType = MySqlColumnType.TINYINT)
+    private Integer sex;
 
     private Date createDate;
 

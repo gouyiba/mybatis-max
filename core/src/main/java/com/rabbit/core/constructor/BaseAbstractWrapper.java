@@ -32,7 +32,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(BaseAbstractWrapper.class);
 
     // Mybatis-Rabbit-Plug-TAG
-    private static final String TAG = "Mybatis-Rabbit-Plug";
+    protected static final String TAG = "Mybatis-Rabbit-Plug";
 
     /**
      * 缓存 TableInfo 数据，作为全局缓存
@@ -217,7 +217,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
             // 判断具体的数据类型
             Class<?> clazz = (Class<?>) type;
             if (Integer.class.isAssignableFrom(clazz)) {
-                return MySqlColumnType.INT;
+                return MySqlColumnType.INTEGER;
             } else if (String.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.VARCHAR;
             } else if (Double.class.isAssignableFrom(clazz)) {

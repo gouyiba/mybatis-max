@@ -11,7 +11,7 @@ public enum MySqlColumnType implements IEnum<String> {
     TINYINT("TINYINT"),
     BIGINT("BIGINT"),
     SHORT("SHORT"),
-    INT("INT"),
+    INTEGER("INTEGER"),
     FLOAT("FLOAT"),
     DOUBLE("DOUBLE"),
     DECIMAL("DECIMAL"),
