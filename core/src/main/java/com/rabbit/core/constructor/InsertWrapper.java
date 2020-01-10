@@ -1,6 +1,6 @@
 package com.rabbit.core.constructor;
 
-import cn.hutool.json.JSONUtil;
+import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.annotation.Column;
@@ -10,12 +10,10 @@ import com.rabbit.common.utils.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -41,7 +39,6 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
     public InsertWrapper(E clazz) {
         super(clazz);
         this.tableInfo = analysisClazz();
-        //LOGGER.info("out:{}", JSONUtil.toJsonStr(tableInfo));
     }
 
     /**
@@ -60,23 +57,22 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
 
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
-        // TODO 此处需要过滤掉自增字段，因为新增不需要给自增字段赋值
-
 
         if (CollectionUtils.isEmpty(fieldInfoMap)) {
             throw new MyBatisRabbitPlugException("字段解析为空，未能够获取到字段信息......");
         }
-
         sqlMap.put(SqlKey.INSERT_PAM_LEFT_BRA.getValue(), "(");
 
-        // 获取所有表字段
-        List<String> sqlField = fieldInfoMap.values().stream().map(x -> x.getColumnName()).collect(Collectors.toList());
+        // 过滤自增字段
+        Collection<TableFieldInfo> fieldInfoCollection = fieldInfoMap.values();
+        this.filterIncrementColumnField(fieldInfoCollection);
+        List<String> sqlField = fieldInfoCollection.stream().map(x -> x.getColumnName()).collect(Collectors.toList());
 
         // 表字段拼接
         sqlMap.put(SqlKey.INSERT_PARAMETER.getValue(), String.join(",", sqlField));
         sqlMap.put(SqlKey.INSERT_PAM_RIGHT_BRA.getValue(), ")");
 
-        // value拼接，此处需要验证value类型，并进行value对应的数据库类型转换
+        // 验证value类型，并进行value对应的数据库类型转换
         sqlMap.put(SqlKey.INSERT_VALUE_KEYWORD.getValue(), "value");
         //JSONObject fieldObj = JSONUtil.parseObj(JSONUtil.toJsonStr(obj));
         String sqlValue = this.sqlValueConvert(fieldInfoMap);
@@ -117,5 +113,23 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
             }
         }
         return sj.toString();
+    }
+
+    /**
+     * 过滤自增字段
+     *
+     * @param fieldInfoCollection
+     */
+    public void filterIncrementColumnField(Collection<TableFieldInfo> fieldInfoCollection) {
+        Iterator<TableFieldInfo> fieldInfoIterator = fieldInfoCollection.iterator();
+        while (fieldInfoIterator.hasNext()) {
+            TableFieldInfo tableFieldInfo = fieldInfoIterator.next();
+            if (tableFieldInfo.getField().isAnnotationPresent(Id.class)) {
+                Id id = tableFieldInfo.getField().getAnnotation(Id.class);
+                if (id.isIncrementColumn()) {
+                    fieldInfoIterator.remove();
+                }
+            }
+        }
     }
 }

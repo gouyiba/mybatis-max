@@ -28,12 +28,6 @@ public @interface Column {
     boolean isTableColumn() default true;
 
     /**
-     * 是否是数据库表中的自增字段
-     * @return
-     */
-    boolean isIncrementColumn() default false;
-
-    /**
      * 如果有特殊字段的value需要进行类型转换，则需要指定value的类型转换器
      * 如枚举：指定了类型转换器后，在执行sql前，会将字段的value按照指定类型转换器，进行转换成数据库可以保存的value
      * 从数据库返回数据时，可以转换成程序中的类型

@@ -23,6 +23,12 @@ public @interface Id {
     String value() default "";
 
     /**
+     * 是否是自增字段
+     * @return
+     */
+    boolean isIncrementColumn() default false;
+
+    /**
      * 主键生成策略
      * @return
      */

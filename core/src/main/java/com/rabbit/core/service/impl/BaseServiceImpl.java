@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
+import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.PrimaryKey;
@@ -24,10 +25,8 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 公用Service-Method-Impl
@@ -38,7 +37,7 @@ import java.util.Objects;
 @Service("baseServiceImpl")
 public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService {
 
-    private static final Logger LOGGER= LoggerFactory.getLogger(BaseServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceImpl.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -58,6 +57,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         if (Objects.isNull(obj)) {
             throw new MyBatisRabbitPlugException("bean为空......");
         }
+        String pk = null;
         InsertWrapper insertWrapper = new InsertWrapper(obj);
         Map<String, String> sqlMap = insertWrapper.sqlGenerate(obj);
         TableInfo tableInfo = getTableInfo(obj.getClass());
@@ -69,15 +69,17 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         // 获取主键
         Id id = primaryKey.getAnnotation(Id.class);
         PrimaryKey pkEnum = id.generateType();
-
-        // 指定临时主键名称 -> 获取新增成功后返回的表默认主键值
-        beanMap.put("tempPrimKey","");
+        // 如果主键是自增字段，默认返回自增的value
+        if (id.isIncrementColumn()) {
+            // 指定临时主键名称 -> 获取新增成功后返回的表默认主键值
+            beanMap.put("tempPrimKey", "");
+        }
 
         if (MapUtil.isEmpty(beanMap)) {
             throw new MyBatisRabbitPlugException("beanMap转换失败......");
         }
         // 判断是否指定主键
-        if (beanMap.containsKey(primaryKey.getName())) {
+        if (beanMap.containsKey(primaryKey.getName()) && id.isIncrementColumn() == false) {
             // 如果设置了主键的value，则此处不再进行主键设置
             if (Objects.isNull(beanMap.get(primaryKey.getName()))) {
                 // 根据主键策略设置主键
@@ -94,19 +96,120 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                         beanMap.put(primaryKey.getName(), snowflake.nextId());
                         break;
                 }
+                // 策略主键
+                pk = beanMap.get(primaryKey.getName()).toString();
+            } else {
+                // 自定义主键
+                pk = beanMap.get(primaryKey.getName()).toString();
             }
+        } else {
+            // 默认表主键
+            pk = "default-tab-pk";
         }
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
             this.setFillingStrategyContent(beanMap, clazz);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        LOGGER.info("{}:{}",TAG, JSONUtil.toJsonStr(sqlMap));
-        LOGGER.info("{}:{}",TAG, JSONUtil.toJsonStr(beanMap));
-        businessMapper.addObject(beanMap,sqlMap);
-        return beanMap.get("tempPrimKey").toString();
+        LOGGER.info("{}: begin add data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
+        businessMapper.addObject(beanMap, sqlMap);
+        LOGGER.info("{}: end add data...", TAG);
+        if (org.apache.commons.lang3.StringUtils.equals("default-tab-pk", pk))
+            pk = beanMap.get("tempPrimKey").toString();
+        return pk;
+    }
+
+
+    /**
+     * 批量新增实例
+     *
+     * @param objectList 实例集合
+     * @param <E>        实例类型
+     * @return 受影响行数
+     */
+    public <E> Long addBatchObject(List<E> objectList) {
+        if (CollectionUtils.isEmpty(objectList)) {
+            throw new MyBatisRabbitPlugException("新增实例集合为空......");
+        }
+        long beginTime = System.currentTimeMillis();
+        InsertWrapper insertWrapper = new InsertWrapper(objectList.get(0));
+        Map<String, String> sqlMap = insertWrapper.sqlGenerate(objectList.get(0));
+        TableInfo tableInfo = getTableInfo(objectList.get(0).getClass());
+        Field primaryKey = tableInfo.getPrimaryKey();
+        if (Objects.isNull(primaryKey)) {
+            throw new MyBatisRabbitPlugException("解析时未获取到主键字段......");
+        }
+        // 获取主键
+        Id id = primaryKey.getAnnotation(Id.class);
+        PrimaryKey pkEnum = id.generateType();
+        List<Map<String, Object>> objMap = objectList.stream().map(x -> BeanUtil.beanToMap(x)).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(objMap)) {
+            throw new MyBatisRabbitPlugException("beanMap转换失败......");
+        }
+
+        // 批量设置主键
+        for (Map<String, Object> item : objMap) {
+            // 如果设置了主键的value，则此处不再进行主键设置
+            if (Objects.isNull(item.get(primaryKey.getName())) && id.isIncrementColumn() == false) {
+                // 根据主键策略设置主键
+                switch (pkEnum) {
+                    case UUID32:
+                        item.put(primaryKey.getName(), IdUtil.simpleUUID());
+                        break;
+                    case OBJECTID:
+                        item.put(primaryKey.getName(), IdUtil.objectId());
+                        break;
+                    case SNOWFLAKE:
+                        // 根据雪花算法生成64bit大小的分布式Long类型id，需要在 @id 中设置workerId和datacenterId
+                        Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
+                        item.put(primaryKey.getName(), snowflake.nextId());
+                        break;
+                }
+            }
+        }
+
+        // 批量字段填充
+        Class<?> clazz = this.getFillingStrategyClass();
+        for (Map<String, Object> item : objMap) {
+            try {
+                this.setFillingStrategyContent(item, clazz);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        LOGGER.info("{}: begin add data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMap));
+        long result = 0;
+        // 批量新增限制: 如果总记录数大于500条，则分批执行，每批插入500条记录
+        if (objMap.size() > 500) {
+            int currentBatch = 1;
+            int total = objMap.size();
+            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
+            int limit = (currentBatch - 1) * 500;
+            List<Map<String, Object>> tempList = new LinkedList<>();
+            for (int x = 1; x <= batch; x++) {
+                if ((limit + 500) > total) {
+                    tempList = objMap.subList(limit, objMap.size());
+                } else {
+                    tempList = objMap.subList(limit, x * 500);
+                }
+                result += businessMapper.addBatchObject(tempList, sqlMap);
+                currentBatch++;
+                limit = (currentBatch - 1) * 500;
+            }
+        } else {
+            result = businessMapper.addBatchObject(objMap, sqlMap);
+        }
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("{}: success total: {}", TAG, result);
+        LOGGER.info("{}: 本次批量新增共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
+        LOGGER.info("{}: end add data...", TAG);
+        return result;
     }
 
     /**
@@ -133,17 +236,16 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     public void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz) throws Exception {
         if (!Objects.isNull(clazz)) {
             List<Method> methodList = Arrays.asList(clazz.getMethods());
-            Method addMethod = methodList.stream().filter(x -> x.isAnnotationPresent(Create.class)).findAny().orElseThrow(()->
+            Method addMethod = methodList.stream().filter(x -> x.isAnnotationPresent(Create.class)).findAny().orElseThrow(() ->
                     new MyBatisRabbitPlugException("未找到新增时的自定义字段填充Method......"));
             Object obj = clazz.newInstance();
             addMethod.invoke(obj);
             List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
-            for(Field item:fieldList){
+            for (Field item : fieldList) {
                 Method getMethod = clazz.getMethod("get" + StringUtils.capitalize(item.getName()));
                 Object val = getMethod.invoke(obj);
                 beanMap.put(item.getName(), val);
             }
         }
     }
-
 }

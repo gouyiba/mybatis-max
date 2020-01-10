@@ -20,22 +20,15 @@ import java.util.Date;
 @Table(value = "t_user")
 public class User implements Serializable {
 
-    /**
-     * id是自增字段
-     */
-    @Column(isIncrementColumn = true)
-    private Integer id;
+   /* @Id(isIncrementColumn = true)
+    private Integer id;*/
 
-    /**
-     * 指定业务主键和生成策略
-     */
-    @Id(generateType = PrimaryKey.OBJECTID)
+    @Id
     private String stuUid;
 
     private String stuName;
 
     private Integer stuAge;
-
 
     // 自定义枚举转换器有问题，还需改进
     //@Column(typeHandler = IEnumTypeHandler.class,columnType = MySqlColumnType.TINYINT)

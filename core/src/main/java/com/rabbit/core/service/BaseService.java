@@ -1,5 +1,7 @@
 package com.rabbit.core.service;
 
+import java.util.List;
+
 /**
  * 公用Service接口，声明基础Service-Method
  *
@@ -15,4 +17,13 @@ public interface BaseService {
      * @return 主键
      */
     String addObject(Object obj);
+
+    /**
+     * 批量新增实例
+     *
+     * @param objectList 实例集合
+     * @param <E>        实例类型
+     * @return 受影响行数
+     */
+    public <E> Long addBatchObject(List<E> objectList);
 }

@@ -11,6 +11,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ComponentScan(basePackages = {
         "com.rabbit.starter",
         "com.rabbit.core.service.impl"
@@ -29,11 +32,16 @@ public class MyBatisRabbitPlugStarter {
 
     @GetMapping("/test1")
     public void test(){
-        User user=new User();
-        user.setStuAge(23);
-        user.setStuName("杜晓宇1");
-        user.setSex(Sex.MAN.getValue());
-        System.out.println(baseService.addObject(user));
+        List<User> users=new ArrayList<>();
+        for (int i=0;i<1955;i++){
+            User user=new User();
+            //user.setStuUid("duxiaoyu"+i);
+            user.setStuAge(i);
+            user.setStuName("杜晓宇"+i);
+            user.setSex(Sex.MAN.getValue());
+            users.add(user);
+        }
+        System.out.println(baseService.addBatchObject(users));
     }
 
 }

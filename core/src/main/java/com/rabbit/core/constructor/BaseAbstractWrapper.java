@@ -190,7 +190,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
                 tbField.setPropertyType(clazzFieldType);
                 tbFieldMap.put(propertyName, tbField);
             }
-            logger.info("{}:解析数据库表字段信息完成>>>>>>", TAG);
+            logger.info("{}:完成解析数据库表字段信息>>>>>>", TAG);
         } else {
             throw new MyBatisRabbitPlugException("解析Class-Field异常，未能获取到Field......");
         }
