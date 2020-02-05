@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-public class QueryWrapper<E extends Serializable> extends BaseAbstractWrapper<E> implements Serializable {
+public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializable {
 
     /*
     *
@@ -19,4 +19,8 @@ public class QueryWrapper<E extends Serializable> extends BaseAbstractWrapper<E>
     *
     *
     * */
+
+    public QueryWrapper(E clazz){
+        super(clazz);
+    }
 }

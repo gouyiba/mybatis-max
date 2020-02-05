@@ -57,4 +57,36 @@
             </if>
         </foreach>
     </insert>
+
+    <!--修改实例-->
+    <update id="updateObject">
+        update ${sqlMap.TABLE_NAME}
+        <trim prefix="set" suffixOverrides=",">
+            <foreach collection="sqlMap.UPDATE_VALUE.keys" item="item" index="i">
+              <if test="objectMap[item]!=null">
+                ${sqlMap.UPDATE_VALUE[item]}
+              </if>
+            </foreach>
+        </trim>
+        <if test="sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''">
+            ${sqlMap.UPDATE_WHERE}
+        </if>
+    </update>
+
+    <!--批量修改实例-->
+    <update id="updateBatchByIdObject">
+      <foreach collection="objectList" item="obj" separator=";">
+          update ${sqlMap.TABLE_NAME}
+          <trim prefix="set" suffixOverrides=",">
+              <foreach collection="sqlMap.UPDATE_VALUE.keys" item="item" index="i">
+                  <if test="obj[item]!=null">
+                      ${sqlMap.UPDATE_VALUE[item]}
+                  </if>
+              </foreach>
+          </trim>
+          <if test="sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''">
+              ${sqlMap.UPDATE_WHERE}
+          </if>
+      </foreach>
+    </update>
 </mapper>

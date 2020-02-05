@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-public class DeleteWrapper<E extends Serializable> extends QueryWrapper<E> implements Serializable {
+public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
 
     /*
      *
@@ -19,4 +19,8 @@ public class DeleteWrapper<E extends Serializable> extends QueryWrapper<E> imple
      *
      *
      * */
+
+    public DeleteWrapper(E clazz){
+        super(clazz);
+    }
 }

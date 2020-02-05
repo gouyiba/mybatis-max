@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: Duxiaoyu@123
-    url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
 # mybatis
 mybatis:

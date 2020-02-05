@@ -17,7 +17,7 @@ public interface BusinessMapper {
     /**
      * 新增实例
      * @param objectMap 实例
-     * @param sqlMap sql字符串
+     * @param sqlMap sqlMap
      * @return
      */
     Long addObject(@Param("objectMap") Map<String,Object> objectMap, @Param("sqlMap") Map<String,String> sqlMap);
@@ -25,9 +25,25 @@ public interface BusinessMapper {
     /**
      * 批量新增实例
      * @param objectList 实例集合
-     * @param sqlMap sql字符串
+     * @param sqlMap sqlMap
      * @return
      */
     Long addBatchObject(@Param("objectList") List<Map<String, Object>> objectList , @Param("sqlMap") Map<String,String> sqlMap);
+
+    /**
+     * 修改实例
+     * @param objectMap 实例
+     * @param sqlMap sqlMap
+     * @return
+     */
+    Long updateObject(@Param("objectMap") Map<String,Object> objectMap, @Param("sqlMap") Map<String,Object> sqlMap);
+
+    /**
+     * 批量修改实例
+     * @param objectList 实例集合
+     * @param sqlMap sqlMap
+     * @return
+     */
+    Long updateBatchByIdObject(@Param("objectList") List<Map<String,Object>> objectList,@Param("sqlMap") Map<String,Object> sqlMap);
 
 }

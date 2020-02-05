@@ -44,4 +44,38 @@ public class MyBatisRabbitPlugStarter {
         System.out.println(baseService.addBatchObject(users));
     }
 
+    @GetMapping("/test2")
+    public void test2(){
+//        User user=new User();
+//        user.setStuUid("5e182bf8de7cf5871d904a0e");
+//        user.setStuName("马化腾");
+//        user.setStuAge(40);
+//        System.out.println(baseService.updateObject(user));
+
+        String[] stuid={
+//                "5e182bf8de7cf5871d904a0f",
+//                "5e182bf8de7cf5871d904a10"
+  //              "5e182bf8de7cf5871d904a11"
+//                "5e182bf8de7cf5871d904a12",
+//                "5e182bf8de7cf5871d904a13",
+                "5e182bf8de7cf5871d904a14",
+                "5e182bf8de7cf5871d904a15",
+                "5e182bf8de7cf5871d904a16",
+                "5e182bf8de7cf5871d904a17",
+                "5e182bf8de7cf5871d904a18",
+                "5e182bf8de7cf5871d904a19",
+                "5e182bf8de7cf5871d904a1a"
+        };
+
+        List<User> users=new ArrayList<>();
+        for (int i=601;i<=2000;i++){
+            User user=new User();
+            user.setId(i);
+            user.setStuName("马化腾");
+            user.setStuAge(i);
+            users.add(user);
+        }
+        System.out.println(baseService.updateBatchByIdObject(users));
+    }
+
 }

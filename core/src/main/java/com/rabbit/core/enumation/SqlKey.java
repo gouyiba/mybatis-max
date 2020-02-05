@@ -51,6 +51,7 @@ public enum SqlKey implements IEnum<String>{
     UPDATE_SET("UPDATE_SET"),
     // field1=value,field2=value，field3=value
     UPDATE_VALUE("UPDATE_VALUE"),
+    UPDATE_WHERE("UPDATE_WHERE"),
 
     /************************** Delete ****************************/
 

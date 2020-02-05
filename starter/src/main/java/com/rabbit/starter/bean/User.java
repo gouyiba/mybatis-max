@@ -20,10 +20,10 @@ import java.util.Date;
 @Table(value = "t_user")
 public class User implements Serializable {
 
-   /* @Id(isIncrementColumn = true)
-    private Integer id;*/
+    @Id(isIncrementColumn = true)
+    private Integer id;
 
-    @Id
+    //@Id
     private String stuUid;
 
     private String stuName;

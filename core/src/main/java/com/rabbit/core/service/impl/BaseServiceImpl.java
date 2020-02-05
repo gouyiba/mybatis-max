@@ -7,8 +7,11 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Create;
+import com.rabbit.core.annotation.Update;
 import com.rabbit.core.bean.TableInfo;
+import com.rabbit.core.constructor.UpdateWrapper;
 import com.rabbit.core.enumation.PrimaryKey;
+import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.mapper.BusinessMapper;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.core.annotation.FillingStrategy;
@@ -23,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -44,6 +48,110 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
 
     @Autowired
     private BusinessMapper businessMapper;
+
+
+    /**
+     * 修改实例
+     * 目前根据主键进行修改
+     *
+     * @param obj bean
+     * @return 受影响行数
+     */
+    @Override
+    public Long updateObject(Object obj) {
+        if (Objects.isNull(obj)) {
+            throw new MyBatisRabbitPlugException("bean为空......");
+        }
+        UpdateWrapper updateWrapper = new UpdateWrapper(obj);
+        TableInfo tableInfo = getTableInfo(obj.getClass());
+        Field pk = tableInfo.getPrimaryKey();
+        Map<String, Object> beanMap = BeanUtil.beanToMap(obj);
+        if (Objects.isNull(beanMap.get(pk.getName()))) {
+            throw new MyBatisRabbitPlugException("要修改的bean主键为空......");
+        }
+        Map<String, Object> sqlMap = updateWrapper.sqlGenerate(obj);
+        // 自定义字段填充策略
+        Class<?> clazz = this.getFillingStrategyClass();
+        try {
+            this.setFillingStrategyContent(beanMap, clazz, Update.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LOGGER.info("{}: begin update data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
+        long result = businessMapper.updateObject(beanMap, sqlMap);
+        LOGGER.info("{}: end update data...", TAG);
+        return result;
+    }
+
+    /**
+     * 批量修改实例
+     *
+     * @param objectList 实例集合
+     * @param <E>        实例类型
+     * @return 受影响行数
+     */
+    @Override
+    public <E> Long updateBatchByIdObject(List<E> objectList) {
+        if(CollectionUtils.isEmpty(objectList)){
+            throw  new MyBatisRabbitPlugException("修改实例集合为空......");
+        }
+        long beginTime = System.currentTimeMillis();
+        UpdateWrapper updateWrapper = new UpdateWrapper(objectList.get(0));
+        TableInfo tableInfo = getTableInfo(objectList.get(0).getClass());
+        //Field pk = tableInfo.getPrimaryKey();
+        List<Map<String,Object>> objMapList=objectList.stream().map(x-> BeanUtil.beanToMap(x)).collect(Collectors.toList());
+        Map<String, Object> sqlMap = updateWrapper.sqlGenerate(objectList.get(0));
+        String where=sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();
+        where=where.replace("objectMap","obj");
+        sqlMap.put(SqlKey.UPDATE_WHERE.getValue(),where);
+        // 批量修改目标参数
+        Map<String,String> paramterMap=(Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
+        for (String item:paramterMap.keySet()){
+            paramterMap.put(item,paramterMap.get(item).replace("objectMap","obj"));
+        }
+        // 自定义字段批量填充
+        Class<?> clazz = this.getFillingStrategyClass();
+        try {
+            for(Map<String,Object> item:objMapList){
+                this.setFillingStrategyContent(item, clazz, Update.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 批量修改
+        LOGGER.info("{}: begin update data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMapList));
+        long result = 0;
+        // 批量新增限制: 如果总记录数大于500条，则分批执行，每批插入500条记录
+        if (objMapList.size() > 500) {
+            int currentBatch = 1;
+            int total = objMapList.size();
+            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
+            int limit = (currentBatch - 1) * 500;
+            List<Map<String, Object>> tempList = new LinkedList<>();
+            for (int x = 1; x <= batch; x++) {
+                if ((limit + 500) > total) {
+                    tempList = objMapList.subList(limit, objMapList.size());
+                } else {
+                    tempList = objMapList.subList(limit, x * 500);
+                }
+                result += businessMapper.updateBatchByIdObject(tempList, sqlMap);
+                currentBatch++;
+                limit = (currentBatch - 1) * 500;
+            }
+        } else {
+            result = businessMapper.updateBatchByIdObject(objMapList, sqlMap);
+        }
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("{}: success total: {}", TAG, result);
+        LOGGER.info("{}: 本次批量修改共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
+        LOGGER.info("{}: end update data...", TAG);
+        return result;
+    }
 
     /**
      * 新增实例
@@ -109,7 +217,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            this.setFillingStrategyContent(beanMap, clazz);
+            this.setFillingStrategyContent(beanMap, clazz, Create.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,7 +284,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         Class<?> clazz = this.getFillingStrategyClass();
         for (Map<String, Object> item : objMap) {
             try {
-                this.setFillingStrategyContent(item, clazz);
+                this.setFillingStrategyContent(item, clazz, Create.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -231,12 +339,16 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     /**
      * 设置自定义字段内容
      *
-     * @param beanMap 实例
+     * @param beanMap    实例Map
+     * @param clazz      公用字段class
+     * @param methodType 公用字段赋值方法类型: create/update/delete
+     * @throws Exception
      */
-    public void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz) throws Exception {
+    public void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz, Class<? extends Annotation> methodType) throws Exception {
         if (!Objects.isNull(clazz)) {
             List<Method> methodList = Arrays.asList(clazz.getMethods());
-            Method addMethod = methodList.stream().filter(x -> x.isAnnotationPresent(Create.class)).findAny().orElseThrow(() ->
+            Method addMethod = methodList.stream().filter(x ->
+                    x.isAnnotationPresent(methodType)).findAny().orElseThrow(() ->
                     new MyBatisRabbitPlugException("未找到新增时的自定义字段填充Method......"));
             Object obj = clazz.newInstance();
             addMethod.invoke(obj);
