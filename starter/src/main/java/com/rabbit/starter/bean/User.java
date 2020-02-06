@@ -6,7 +6,6 @@ import com.rabbit.core.annotation.Table;
 import com.rabbit.core.constructor.BaseAbstractWrapper;
 import com.rabbit.core.enumation.MySqlColumnType;
 import com.rabbit.core.enumation.PrimaryKey;
-import com.rabbit.core.enumation.Sex;
 import com.rabbit.starter.typehandler.IEnumTypeHandler;
 import lombok.Data;
 

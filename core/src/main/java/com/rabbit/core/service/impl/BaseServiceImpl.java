@@ -9,7 +9,9 @@ import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Update;
 import com.rabbit.core.bean.TableInfo;
+import com.rabbit.core.constructor.DeleteWrapper;
 import com.rabbit.core.constructor.UpdateWrapper;
+import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.mapper.BusinessMapper;
@@ -51,6 +53,98 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
 
 
     /**
+     * 删除实例
+     *
+     * @param objectId 主键
+     * @param clazz    实例类型
+     * @return 受影响行数
+     */
+    @Override
+    public Long deleteObject(Object objectId, Class<?> clazz) {
+        if (Objects.isNull(objectId)) {
+            throw new MyBatisRabbitPlugException("主键Id为空......");
+        }
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
+        Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
+        LOGGER.info(" ");
+        LOGGER.info("{}: begin delete data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: objectId ==>{}", TAG, objectId);
+        long result = businessMapper.deleteObject(objectId, sqlMap);
+        LOGGER.info("{}: end delete data...", TAG);
+        LOGGER.info(" ");
+        return result;
+    }
+
+    /**
+     * 批量删除实例
+     *
+     * @param objectIdList 主键集合
+     * @param clazz        实例类型
+     * @return 受影响行数
+     */
+    @Override
+    public Long deleteBatchByIdObject(List<Object> objectIdList, Class<?> clazz) {
+        if (CollectionUtils.isEmpty(objectIdList)) {
+            throw new MyBatisRabbitPlugException("主键集合为空......");
+        }
+        /*********************************** 记录批量操作开始时间 ***************************************/
+        long beginTime = System.currentTimeMillis();
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
+        Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
+        // 修改sql格式
+        String where = sqlMap.get(SqlKey.DELETE_WHERE.getValue());
+        where = where.substring(0, where.indexOf("=")) + " " + MySqlKeyWord.IN.getValue();
+        sqlMap.put(SqlKey.DELETE_WHERE.getValue(), where);
+
+        // 开始批量删除
+        LOGGER.info(" ");
+        LOGGER.info("{}: begin deleteBatch data...", TAG);
+        LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
+        LOGGER.info("{}: objectIdList ==>{}", TAG, JSONUtil.toJsonStr(objectIdList));
+        long result = 0;
+        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
+        if (objectIdList.size() > 500) {
+            int currentBatch = 1;
+            int total = objectIdList.size();
+            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
+            int limit = (currentBatch - 1) * 500;
+            List<Object> tempList = new LinkedList<>();
+            for (int x = 1; x <= batch; x++) {
+                if ((limit + 500) > total) {
+                    tempList = objectIdList.subList(limit, objectIdList.size());
+                } else {
+                    tempList = objectIdList.subList(limit, x * 500);
+                }
+                result += businessMapper.deleteBatchByIdObject(tempList, sqlMap);
+                currentBatch++;
+                limit = (currentBatch - 1) * 500;
+            }
+        } else {
+            result = businessMapper.deleteBatchByIdObject(objectIdList, sqlMap);
+        }
+        long endTime = System.currentTimeMillis();
+        LOGGER.info("{}: success total: {}", TAG, result);
+        LOGGER.info("{}: 本次批量删除共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
+        LOGGER.info("{}: end deleteBatch data...", TAG);
+        LOGGER.info(" ");
+        return result;
+    }
+
+    /**
      * 修改实例
      * 目前根据主键进行修改
      *
@@ -63,13 +157,14 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             throw new MyBatisRabbitPlugException("bean为空......");
         }
         UpdateWrapper updateWrapper = new UpdateWrapper(obj);
+        Map<String, Object> sqlMap = updateWrapper.sqlGenerate();
         TableInfo tableInfo = getTableInfo(obj.getClass());
         Field pk = tableInfo.getPrimaryKey();
         Map<String, Object> beanMap = BeanUtil.beanToMap(obj);
         if (Objects.isNull(beanMap.get(pk.getName()))) {
             throw new MyBatisRabbitPlugException("要修改的bean主键为空......");
         }
-        Map<String, Object> sqlMap = updateWrapper.sqlGenerate(obj);
+
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
@@ -77,16 +172,19 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LOGGER.info(" ");
         LOGGER.info("{}: begin update data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
         long result = businessMapper.updateObject(beanMap, sqlMap);
         LOGGER.info("{}: end update data...", TAG);
+        LOGGER.info(" ");
         return result;
     }
 
     /**
      * 批量修改实例
+     * 目前根据主键进行修改
      *
      * @param objectList 实例集合
      * @param <E>        实例类型
@@ -94,39 +192,40 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      */
     @Override
     public <E> Long updateBatchByIdObject(List<E> objectList) {
-        if(CollectionUtils.isEmpty(objectList)){
-            throw  new MyBatisRabbitPlugException("修改实例集合为空......");
+        if (CollectionUtils.isEmpty(objectList)) {
+            throw new MyBatisRabbitPlugException("修改实例集合为空......");
         }
+        /*********************************** 记录批量操作开始时间 ***************************************/
         long beginTime = System.currentTimeMillis();
         UpdateWrapper updateWrapper = new UpdateWrapper(objectList.get(0));
         TableInfo tableInfo = getTableInfo(objectList.get(0).getClass());
-        //Field pk = tableInfo.getPrimaryKey();
-        List<Map<String,Object>> objMapList=objectList.stream().map(x-> BeanUtil.beanToMap(x)).collect(Collectors.toList());
-        Map<String, Object> sqlMap = updateWrapper.sqlGenerate(objectList.get(0));
-        String where=sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();
-        where=where.replace("objectMap","obj");
-        sqlMap.put(SqlKey.UPDATE_WHERE.getValue(),where);
-        // 批量修改目标参数
-        Map<String,String> paramterMap=(Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
-        for (String item:paramterMap.keySet()){
-            paramterMap.put(item,paramterMap.get(item).replace("objectMap","obj"));
+        List<Map<String, Object>> objMapList = objectList.stream().map(x -> BeanUtil.beanToMap(x)).collect(Collectors.toList());
+        Map<String, Object> sqlMap = updateWrapper.sqlGenerate();
+        String where = sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();
+        where = where.replace("objectMap", "obj");
+        sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
+        // 批量修改目标实例参数
+        Map<String, String> paramterMap = (Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
+        for (String item : paramterMap.keySet()) {
+            paramterMap.put(item, paramterMap.get(item).replace("objectMap", "obj"));
         }
         // 自定义字段批量填充
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            for(Map<String,Object> item:objMapList){
+            for (Map<String, Object> item : objMapList) {
                 this.setFillingStrategyContent(item, clazz, Update.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // 批量修改
-        LOGGER.info("{}: begin update data...", TAG);
+        // 开始批量修改
+        LOGGER.info(" ");
+        LOGGER.info("{}: begin updateBatch data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMapList));
         long result = 0;
-        // 批量新增限制: 如果总记录数大于500条，则分批执行，每批插入500条记录
+        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
         if (objMapList.size() > 500) {
             int currentBatch = 1;
             int total = objMapList.size();
@@ -149,7 +248,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         long endTime = System.currentTimeMillis();
         LOGGER.info("{}: success total: {}", TAG, result);
         LOGGER.info("{}: 本次批量修改共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
-        LOGGER.info("{}: end update data...", TAG);
+        LOGGER.info("{}: end updateBatch data...", TAG);
+        LOGGER.info(" ");
         return result;
     }
 
@@ -167,7 +267,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         String pk = null;
         InsertWrapper insertWrapper = new InsertWrapper(obj);
-        Map<String, String> sqlMap = insertWrapper.sqlGenerate(obj);
+        Map<String, String> sqlMap = insertWrapper.sqlGenerate();
         TableInfo tableInfo = getTableInfo(obj.getClass());
         Field primaryKey = tableInfo.getPrimaryKey();
         if (Objects.isNull(primaryKey)) {
@@ -214,18 +314,20 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             // 默认表主键
             pk = "default-tab-pk";
         }
-        // 自定义字段填充策略
+        // 自定义字段填充
         Class<?> clazz = this.getFillingStrategyClass();
         try {
             this.setFillingStrategyContent(beanMap, clazz, Create.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LOGGER.info(" ");
         LOGGER.info("{}: begin add data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
         businessMapper.addObject(beanMap, sqlMap);
         LOGGER.info("{}: end add data...", TAG);
+        LOGGER.info(" ");
         if (org.apache.commons.lang3.StringUtils.equals("default-tab-pk", pk))
             pk = beanMap.get("tempPrimKey").toString();
         return pk;
@@ -243,9 +345,10 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         if (CollectionUtils.isEmpty(objectList)) {
             throw new MyBatisRabbitPlugException("新增实例集合为空......");
         }
+        /*********************************** 记录批量操作开始时间 ***************************************/
         long beginTime = System.currentTimeMillis();
         InsertWrapper insertWrapper = new InsertWrapper(objectList.get(0));
-        Map<String, String> sqlMap = insertWrapper.sqlGenerate(objectList.get(0));
+        Map<String, String> sqlMap = insertWrapper.sqlGenerate();
         TableInfo tableInfo = getTableInfo(objectList.get(0).getClass());
         Field primaryKey = tableInfo.getPrimaryKey();
         if (Objects.isNull(primaryKey)) {
@@ -289,11 +392,14 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                 e.printStackTrace();
             }
         }
-        LOGGER.info("{}: begin add data...", TAG);
+
+        // 开始批量新增
+        LOGGER.info(" ");
+        LOGGER.info("{}: begin addBatch data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMap));
         long result = 0;
-        // 批量新增限制: 如果总记录数大于500条，则分批执行，每批插入500条记录
+        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
         if (objMap.size() > 500) {
             int currentBatch = 1;
             int total = objMap.size();
@@ -316,7 +422,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         long endTime = System.currentTimeMillis();
         LOGGER.info("{}: success total: {}", TAG, result);
         LOGGER.info("{}: 本次批量新增共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
-        LOGGER.info("{}: end add data...", TAG);
+        LOGGER.info("{}: end addBatch data...", TAG);
+        LOGGER.info(" ");
         return result;
     }
 
@@ -341,7 +448,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      *
      * @param beanMap    实例Map
      * @param clazz      公用字段class
-     * @param methodType 公用字段赋值方法类型: create/update/delete
+     * @param methodType 公用字段赋值方法类型Annotation: create/update/delete
      * @throws Exception
      */
     public void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz, Class<? extends Annotation> methodType) throws Exception {

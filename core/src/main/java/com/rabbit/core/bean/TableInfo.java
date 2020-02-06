@@ -35,7 +35,7 @@ public class TableInfo implements Serializable {
 
     /**
      * 数据库表字段信息
-     * K 对应entity中的属性名，V 对应TableFieldInfo
+     * Key: entity中的属性名 Value: TableFieldInfo
      */
     @Column(isTableColumn = false)
     private Map<String,TableFieldInfo> columnMap=new ConcurrentHashMap<>();

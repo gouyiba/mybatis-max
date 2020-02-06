@@ -46,4 +46,20 @@ public interface BusinessMapper {
      */
     Long updateBatchByIdObject(@Param("objectList") List<Map<String,Object>> objectList,@Param("sqlMap") Map<String,Object> sqlMap);
 
+    /**
+     * 删除实例
+     * @param objectId 主键
+     * @param sqlMap sqlMap
+     * @return
+     */
+    Long deleteObject(@Param("objectId") Object objectId,@Param("sqlMap") Map<String,String> sqlMap);
+
+    /**
+     * 批量删除实例
+     * @param objectList
+     * @param sqlMap
+     * @return
+     */
+    Long deleteBatchByIdObject(@Param("objectList") List<Object> objectList,@Param("sqlMap") Map<String,String> sqlMap);
+
 }

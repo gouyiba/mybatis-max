@@ -1,6 +1,9 @@
 package com.rabbit.core.service;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * 公用Service接口，声明基础Service-Method
@@ -45,4 +48,20 @@ public interface BaseService {
      * @return 受影响行数
      */
     <E> Long updateBatchByIdObject(List<E> objectList);
+
+    /**
+     * 删除实例
+     * @param objectId 主键
+     * @param clazz 实例类型
+     * @return 受影响行数
+     */
+    Long deleteObject(Object objectId,Class<?> clazz);
+
+    /**
+     * 批量删除实例
+     * @param objectIdList 主键集合
+     * @param clazz 实例类型
+     * @return 受影响行数
+     */
+    Long deleteBatchByIdObject(List<Object> objectIdList,Class<?> clazz);
 }

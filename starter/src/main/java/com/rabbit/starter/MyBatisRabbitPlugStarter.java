@@ -2,7 +2,6 @@ package com.rabbit.starter;
 
 import com.rabbit.core.service.BaseService;
 import com.rabbit.starter.bean.User;
-import com.rabbit.core.enumation.Sex;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -30,6 +29,8 @@ public class MyBatisRabbitPlugStarter {
         SpringApplication.run(MyBatisRabbitPlugStarter.class, args);
     }
 
+
+
     @GetMapping("/test1")
     public void test(){
         List<User> users=new ArrayList<>();
@@ -38,7 +39,7 @@ public class MyBatisRabbitPlugStarter {
             //user.setStuUid("duxiaoyu"+i);
             user.setStuAge(i);
             user.setStuName("杜晓宇"+i);
-            user.setSex(Sex.MAN.getValue());
+            //user.setSex(Sex.MAN.getValue());
             users.add(user);
         }
         System.out.println(baseService.addBatchObject(users));
@@ -70,12 +71,37 @@ public class MyBatisRabbitPlugStarter {
         List<User> users=new ArrayList<>();
         for (int i=601;i<=2000;i++){
             User user=new User();
-            user.setId(i);
+           // user.setId(i);
             user.setStuName("马化腾");
             user.setStuAge(i);
             users.add(user);
         }
         System.out.println(baseService.updateBatchByIdObject(users));
+    }
+
+    @GetMapping("/test3")
+    public void test3(){
+        //System.out.println(baseService.deleteObject("5e182bf8de7cf5871d904a0d",User.class));
+        String[] stuid={
+//                "5e182bf8de7cf5871d904a0f",
+//                "5e182bf8de7cf5871d904a10"
+                //              "5e182bf8de7cf5871d904a11"
+//                "5e182bf8de7cf5871d904a12",
+//                "5e182bf8de7cf5871d904a13",
+                "5e182bf8de7cf5871d904a14",
+                "5e182bf8de7cf5871d904a15",
+                "5e182bf8de7cf5871d904a16",
+                "5e182bf8de7cf5871d904a17",
+                "5e182bf8de7cf5871d904a18",
+                "5e182bf8de7cf5871d904a19",
+                "5e182bf8de7cf5871d904a1a"
+        };
+
+        List<Object> objects=new ArrayList<>();
+        for (int i=21;i<=1000;i++){
+            objects.add(i);
+        }
+        System.out.println(baseService.deleteBatchByIdObject(objects,User.class));
     }
 
 }

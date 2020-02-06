@@ -4,9 +4,8 @@ import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.annotation.Column;
+import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
-import com.rabbit.common.exception.MyBatisRabbitPlugException;
-import com.rabbit.common.utils.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,19 +47,10 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      * @author duxiaoyu
      * @since 2019-12-25
      */
-    public Map<String, String> sqlGenerate(E obj) {
-        if (Objects.isNull(obj)) {
-            throw new MyBatisRabbitPlugException("要保存的对象为空......");
-        }
-
-        sqlMap.put(SqlKey.INSERT_HEAD.getValue(), "insert into ");
-        sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
-
+    public Map<String, String> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
-
-        if (CollectionUtils.isEmpty(fieldInfoMap)) {
-            throw new MyBatisRabbitPlugException("字段解析为空，未能够获取到字段信息......");
-        }
+        sqlMap.put(SqlKey.INSERT_HEAD.getValue(), MySqlKeyWord.INSERT.getValue());
+        sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
         sqlMap.put(SqlKey.INSERT_PAM_LEFT_BRA.getValue(), "(");
 
         // 过滤自增字段
@@ -68,13 +58,11 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
         this.filterIncrementColumnField(fieldInfoCollection);
         List<String> sqlField = fieldInfoCollection.stream().map(x -> x.getColumnName()).collect(Collectors.toList());
 
-        // 表字段拼接
         sqlMap.put(SqlKey.INSERT_PARAMETER.getValue(), String.join(",", sqlField));
         sqlMap.put(SqlKey.INSERT_PAM_RIGHT_BRA.getValue(), ")");
 
         // 验证value类型，并进行value对应的数据库类型转换
-        sqlMap.put(SqlKey.INSERT_VALUE_KEYWORD.getValue(), "value");
-        //JSONObject fieldObj = JSONUtil.parseObj(JSONUtil.toJsonStr(obj));
+        sqlMap.put(SqlKey.INSERT_VALUE_KEYWORD.getValue(), MySqlKeyWord.VALUE.getValue());
         String sqlValue = this.sqlValueConvert(fieldInfoMap);
         sqlMap.put(SqlKey.INSERT_VAL_LEFT_BRA.getValue(), "(");
         sqlMap.put(SqlKey.INSERT_VALUE.getValue(), sqlValue);

@@ -56,7 +56,8 @@ public enum SqlKey implements IEnum<String>{
     /************************** Delete ****************************/
 
     // delete
-    DELETE_HEAD("DELETE_HEAD");
+    DELETE_HEAD("DELETE_HEAD"),
+    DELETE_WHERE("DELETE_WHERE");
 
     private String sqlKey;
 

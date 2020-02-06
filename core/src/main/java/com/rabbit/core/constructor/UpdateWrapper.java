@@ -1,6 +1,5 @@
 package com.rabbit.core.constructor;
 
-import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.core.annotation.Column;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
@@ -14,8 +13,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,43 +39,6 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
         this.tableInfo = analysisClazz();
     }
 
-    /*
-     * UpdateWrapper继承自QueryWrapper，所以拥有QueryWrapper的条件拼接生成能力
-     * 目前的思路想法:
-     * 在UpdateWrapper中定义修改时，所需要的Method实现，以及Sql的生成拼接规则
-     *
-     * 使用方法(暂时拟定):
-     * User user=new User();
-     * user.setId(10010);
-     * user.setName("admin");
-     * user.setAge(20);
-     *
-     * 默认按照 @Id 注解标注的主键来修改指定数据
-     * UpdateWrapper<User> updateWrapper=new UpdateWrapper<User>();
-     * updateWrapper.setEntity(user); 设置要修改的对象
-     * 修改时可以传入对象，如上User，生成的Sql是:
-     * update set user name=#{name,jdbcType=VARCHAR},age=#{age,jdbcType=INT} where id=#{id,jdbcType=INT}
-     *
-     *
-     * 也可以不传入对象，直接指定条件修改数据，实例化UpdateWrapper，指定泛型并在构造函数中传入指定的bean.class
-     * UpdateWrapper<User> updateWrapper=new UpdateWrapper<User>(User.class);
-     * Map<String,Object> map=new HashMap<>();
-     * map.put("phone","166xxx95036");
-     * updateWrapper.setMap(map); 设置要修改的字段value
-     * 设置修改条件
-     * updateWrapper.where("age",20);
-     * updateWrapper.where("sex","男");
-     * 如上生成的Sql是:
-     * update set user name=#{phone,jdbcType=VARCHAR} where age=#{age,jdbcType=INT} and sex=#{sex,jdbcType=INT}
-     *
-     * TODO 构建思路待实现 ...
-     *
-     * 第一步先实现根据主键修改
-     * 第二步根据Map条件实现多条件修改
-     * 第三步根据QueryWrapper实现条件修改
-     * 第四步实现批量修改的重载(根据主键和多条件)
-     * */
-
     /**
      * 修改 sql 生成:
      * 用于修改sql的参数和value和条件生成
@@ -86,19 +46,18 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
      * @author duxiaoyu
      * @since 2020-01-28
      */
-    public Map<String, Object> sqlGenerate(E obj) {
-        if (Objects.isNull(obj)) {
-            throw new MyBatisRabbitPlugException("要修改的对象为空......");
-        }
+    public Map<String, Object> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
+
         Field primaryKey = this.tableInfo.getPrimaryKey();
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
+
         // 将主键字段移除不进行修改
         fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
         Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap);
         sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
-        String where = String.format("where %s=#{objectMap.%s,jdbcType=%s}", columnPK.getColumnName(), primaryKey.getName(), columnPK.getColumnType().getValue());
+        String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getColumnType().getValue());
         sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
         return sqlMap;
     }
@@ -138,4 +97,40 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
         return paramterMap;
     }
 
+    /*
+     * UpdateWrapper继承自QueryWrapper，所以拥有QueryWrapper的条件拼接生成能力
+     * 目前的思路想法:
+     * 在UpdateWrapper中定义修改时，所需要的Method实现，以及Sql的生成拼接规则
+     *
+     * 使用方法(暂时拟定):
+     * User user=new User();
+     * user.setId(10010);
+     * user.setName("admin");
+     * user.setAge(20);
+     *
+     * 默认按照 @Id 注解标注的主键来修改指定数据
+     * UpdateWrapper<User> updateWrapper=new UpdateWrapper<User>();
+     * updateWrapper.setEntity(user); 设置要修改的对象
+     * 修改时可以传入对象，如上User，生成的Sql是:
+     * update set user name=#{name,jdbcType=VARCHAR},age=#{age,jdbcType=INT} where id=#{id,jdbcType=INT}
+     *
+     *
+     * 也可以不传入对象，直接指定条件修改数据，实例化UpdateWrapper，指定泛型并在构造函数中传入指定的bean.class
+     * UpdateWrapper<User> updateWrapper=new UpdateWrapper<User>(User.class);
+     * Map<String,Object> map=new HashMap<>();
+     * map.put("phone","166xxx95036");
+     * updateWrapper.setMap(map); 设置要修改的字段value
+     * 设置修改条件
+     * updateWrapper.where("age",20);
+     * updateWrapper.where("sex","男");
+     * 如上生成的Sql是:
+     * update set user name=#{phone,jdbcType=VARCHAR} where age=#{age,jdbcType=INT} and sex=#{sex,jdbcType=INT}
+     *
+     * TODO 构建思路待实现 ...
+     *
+     * 第一步先实现根据主键修改
+     * 第二步根据Map条件实现多条件修改
+     * 第三步根据QueryWrapper实现条件修改
+     * 第四步实现批量修改的重载(根据主键和多条件)
+     * */
 }

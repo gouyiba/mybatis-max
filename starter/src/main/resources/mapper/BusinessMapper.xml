@@ -89,4 +89,33 @@
           </if>
       </foreach>
     </update>
+
+    <!--删除实例-->
+    <delete id="deleteObject">
+        <if test="sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''">
+            ${sqlMap.DELETE_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''">
+            ${sqlMap.DELETE_WHERE}
+        </if>
+    </delete>
+
+    <!--批量删除实例-->
+    <delete id="deleteBatchByIdObject">
+        <if test="sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''">
+            ${sqlMap.DELETE_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''">
+            ${sqlMap.DELETE_WHERE}
+        </if>
+        <foreach collection="objectList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>
