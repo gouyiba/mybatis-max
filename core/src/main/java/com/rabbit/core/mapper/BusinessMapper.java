@@ -15,6 +15,22 @@ import java.util.Map;
 public interface BusinessMapper {
 
     /**
+     * 获取实例
+     * @param sqlMap sqlMap
+     * @param valMap valMap
+     * @return
+     */
+    Map<String,Object> getObject(@Param("sqlMap") Map<String,Object> sqlMap,@Param("valMap") Map<String,Object> valMap);
+
+    /**
+     * 获取实例集合
+     * @param sqlMap sqlMap
+     * @param valMap valMap
+     * @return
+     */
+    List<Map<String,Object>> getObjectList(@Param("sqlMap") Map<String,Object> sqlMap,@Param("valMap") Map<String,Object> valMap);
+
+    /**
      * 新增实例
      * @param objectMap 实例
      * @param sqlMap sqlMap
@@ -56,8 +72,8 @@ public interface BusinessMapper {
 
     /**
      * 批量删除实例
-     * @param objectList
-     * @param sqlMap
+     * @param objectList 主键集合
+     * @param sqlMap sqlMap
      * @return
      */
     Long deleteBatchByIdObject(@Param("objectList") List<Object> objectList,@Param("sqlMap") Map<String,String> sqlMap);

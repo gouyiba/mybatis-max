@@ -41,8 +41,9 @@ public enum MySqlKeyWord implements IEnum<String> {
     VALUES("VALUES"),
     UPDATE("UPDATE"),
     SET("SET"),
-    DELETE("DELETE");
-
+    DELETE("DELETE"),
+    JOINWD("JOINWD"),
+    LIMIT("LIMIT");
     private String keyword;
 
     private MySqlKeyWord(String keyword) {

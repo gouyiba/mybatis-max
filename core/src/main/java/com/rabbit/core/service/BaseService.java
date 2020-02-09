@@ -1,5 +1,6 @@
 package com.rabbit.core.service;
 
+import com.rabbit.core.constructor.QueryWrapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,6 +13,24 @@ import java.util.Map;
  * @since 2019-12-12
  */
 public interface BaseService {
+
+    /**
+     * 查询实例
+     * @param queryWrapper 查询条件构造器
+     * @param clazz 实例class
+     * @param <T>
+     * @return 指定类型实例
+     */
+    <T> T queryObject(QueryWrapper queryWrapper, Class<T> clazz);
+
+    /**
+     * 查询实例集合
+     * @param queryWrapper 查询条件构造器
+     * @param clazz 实例class
+     * @param <T>
+     * @return 指定类型集合实例
+     */
+    <T> List<T> queryObjectList(QueryWrapper queryWrapper,Class<T> clazz);
 
     /**
      * 新增实例

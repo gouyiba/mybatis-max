@@ -2,6 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rabbit.core.mapper.BusinessMapper">
     <!-- 公用Mapper -->
+
+    <!--query-sql-->
+    <sql id="querySql">
+        select
+        <if test="sqlMap.setColumn!=null and sqlMap.setColumn!=''">
+            ${sqlMap.setColumn}
+        </if>
+        <if test="sqlMap.setColumn==null or sqlMap.setColumn==''">
+            *
+        </if>
+        from ${sqlMap.TABLE_NAME}
+        <where>
+            <!--优先执行 IN 或者 NOT IN 查询-->
+            <if test="sqlMap.IN!=null and sqlMap.IN!=''">
+                ${sqlMap.IN}
+                <foreach collection="valMap.IN" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sqlMap.NOTIN!=null and sqlMap.NOTIN!=''">
+                ${sqlMap.NOTIN}
+                <foreach collection="valMap.NOTIN" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--优先执行 IN 或者 NOT IN 查询-->
+            <if test="sqlMap.WHERE!=null">
+                    <!--普通 where 条件查询-->
+                    <foreach collection="sqlMap.WHERE.keys" item="item" index="index">
+                        ${sqlMap.WHERE[item]}
+                    </foreach>
+                    <!--普通 where 条件查询-->
+            </if>
+        </where>
+        <if test="sqlMap.ORDERBY!=null and sqlMap.ORDERBY!=''">
+            ${sqlMap.ORDERBY}
+        </if>
+        <if test="sqlMap.LIMIT!=null and sqlMap.LIMIT!=''">
+            ${sqlMap.LIMIT}
+        </if>
+    </sql>
+
+
+    <!--获取实例-->
+    <select id="getObject" parameterType="java.util.Map" resultType="java.util.Map">
+      <include refid="querySql"></include>
+    </select>
+
+    <!--获取实例集合-->
+    <select id="getObjectList" parameterType="java.util.Map" resultType="java.util.Map">
+      <include refid="querySql"></include>
+    </select>
+
     <!-- 新增实例 -->
     <insert id="addObject" useGeneratedKeys="true" keyProperty="objectMap.tempPrimKey">
         <if test="sqlMap.INSERT_HEAD!=null and sqlMap.INSERT_HEAD!=''">

@@ -1,5 +1,7 @@
 package com.rabbit.starter;
 
+import cn.hutool.json.JSONUtil;
+import com.rabbit.core.constructor.QueryWrapper;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.starter.bean.User;
 import org.mybatis.spring.annotation.MapperScan;
@@ -102,6 +104,27 @@ public class MyBatisRabbitPlugStarter {
             objects.add(i);
         }
         System.out.println(baseService.deleteBatchByIdObject(objects,User.class));
+    }
+
+    @GetMapping("/test4")
+    public void test4(){
+        // 单实例查询
+        User user=baseService.queryObject(new QueryWrapper().
+                where("sex",0).
+                like("stu_name","马").
+                where("stu_age",1001),User.class);
+        System.out.println("query result -> "+JSONUtil.toJsonStr(user));
+
+        // 多实例查询
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.
+                where("sex",0).
+                like("stu_name","马").
+                between("stu_age",1001,1003).
+                in("stu_age",1001,1002,1003,1004,1005,1006,1007,1008).
+                orderBy("stu_age",QueryWrapper.DESC).limit(0,2);
+        List<User> userList=baseService.queryObjectList(queryWrapper,User.class);
+        System.out.println("query result -> "+JSONUtil.toJsonStr(userList));
     }
 
 }

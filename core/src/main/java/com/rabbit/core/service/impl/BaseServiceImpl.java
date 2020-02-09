@@ -9,8 +9,7 @@ import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Update;
 import com.rabbit.core.bean.TableInfo;
-import com.rabbit.core.constructor.DeleteWrapper;
-import com.rabbit.core.constructor.UpdateWrapper;
+import com.rabbit.core.constructor.*;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.SqlKey;
@@ -18,8 +17,6 @@ import com.rabbit.core.mapper.BusinessMapper;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.core.annotation.FillingStrategy;
 import com.rabbit.core.annotation.Id;
-import com.rabbit.core.constructor.BaseAbstractWrapper;
-import com.rabbit.core.constructor.InsertWrapper;
 import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.StringUtils;
 import org.slf4j.Logger;
@@ -51,6 +48,53 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     @Autowired
     private BusinessMapper businessMapper;
 
+
+    /**
+     * 查询实例
+     *
+     * @param queryWrapper 查询条件构造器
+     * @param clazz        实例class
+     * @param <T>          类型
+     * @return 类型实例
+     */
+    @Override
+    public <T> T queryObject(QueryWrapper queryWrapper, Class<T> clazz) {
+        if (Objects.isNull(clazz)) {
+            throw new MyBatisRabbitPlugException("queryObject -> clazz is null......");
+        }
+        copyQueryWrapper(queryWrapper, clazz);
+        Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
+        Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        if (CollectionUtils.isEmpty(objMap)) return null;
+        T bean = BeanUtil.mapToBean(objMap, clazz, true);
+        return bean;
+    }
+
+    /**
+     * 查询实例集合
+     *
+     * @param queryWrapper 查询条件构造器
+     * @param clazz        实例class
+     * @param <T>          类型
+     * @return 类型集合实例
+     */
+    @Override
+    public <T> List<T> queryObjectList(QueryWrapper queryWrapper, Class<T> clazz) {
+        if (Objects.isNull(clazz)) {
+            throw new MyBatisRabbitPlugException("queryObjectList -> clazz is null......");
+        }
+        copyQueryWrapper(queryWrapper, clazz);
+        Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
+        List<Map<String, Object>> objMapList = businessMapper.getObjectList(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
+
+        List<T> beanList = new ArrayList<>();
+        for (Map<String, Object> item : objMapList) {
+            T bean = BeanUtil.mapToBean(item, clazz, true);
+            if (!Objects.isNull(bean)) beanList.add(bean);
+        }
+        return beanList;
+    }
 
     /**
      * 删除实例
@@ -466,5 +510,24 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                 beanMap.put(item.getName(), val);
             }
         }
+    }
+
+    /**
+     * 复制QueryWapper-sqlMap
+     *
+     * @param source
+     * @return
+     */
+    public void copyQueryWrapper(QueryWrapper source, Class<?> clazz) {
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        QueryWrapper query = new QueryWrapper(obj);
+        source.getSqlMap().put(SqlKey.TABLE_NAME.getValue(), query.getTableInfo().getTableName());
     }
 }

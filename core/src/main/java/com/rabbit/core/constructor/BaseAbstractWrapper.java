@@ -116,6 +116,11 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
      */
     protected TableInfo analysisClazz() {
         TableInfo tableInfo = null;
+        // 查找bean.class是否已存在缓存中
+        tableInfo=getTableInfo(clazz.getClass());
+        if(tableInfo!=null){
+            return tableInfo;
+        }
         String tableName = "";
         Map<String, TableFieldInfo> tbFieldMap = new ConcurrentHashMap<>();
 
