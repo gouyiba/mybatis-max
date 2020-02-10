@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @ComponentScan(basePackages = {
         "com.rabbit.starter",
@@ -32,7 +33,9 @@ public class MyBatisRabbitPlugStarter {
     }
 
 
-
+    /**
+     * 新增测试
+     */
     @GetMapping("/test1")
     public void test(){
         List<User> users=new ArrayList<>();
@@ -47,6 +50,9 @@ public class MyBatisRabbitPlugStarter {
         System.out.println(baseService.addBatchObject(users));
     }
 
+    /**
+     * 修改测试
+     */
     @GetMapping("/test2")
     public void test2(){
 //        User user=new User();
@@ -71,9 +77,9 @@ public class MyBatisRabbitPlugStarter {
         };
 
         List<User> users=new ArrayList<>();
-        for (int i=601;i<=2000;i++){
+        for (int i=2011;i<=2020;i++){
             User user=new User();
-           // user.setId(i);
+            user.setId(i);
             user.setStuName("马化腾");
             user.setStuAge(i);
             users.add(user);
@@ -81,6 +87,9 @@ public class MyBatisRabbitPlugStarter {
         System.out.println(baseService.updateBatchByIdObject(users));
     }
 
+    /**
+     * 删除测试
+     */
     @GetMapping("/test3")
     public void test3(){
         //System.out.println(baseService.deleteObject("5e182bf8de7cf5871d904a0d",User.class));
@@ -100,23 +109,26 @@ public class MyBatisRabbitPlugStarter {
         };
 
         List<Object> objects=new ArrayList<>();
-        for (int i=21;i<=1000;i++){
+        for (int i=1001;i<=1010;i++){
             objects.add(i);
         }
         System.out.println(baseService.deleteBatchByIdObject(objects,User.class));
     }
 
+    /**
+     * 查询测试
+     */
     @GetMapping("/test4")
     public void test4(){
         // 单实例查询
-        User user=baseService.queryObject(new QueryWrapper().
+        /*User user=baseService.queryObject(new QueryWrapper().
                 where("sex",0).
                 like("stu_name","马").
                 where("stu_age",1001),User.class);
-        System.out.println("query result -> "+JSONUtil.toJsonStr(user));
+        System.out.println("query result -> "+JSONUtil.toJsonStr(user));*/
 
         // 多实例查询
-        QueryWrapper queryWrapper=new QueryWrapper();
+       /* QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.
                 where("sex",0).
                 like("stu_name","马").
@@ -124,7 +136,15 @@ public class MyBatisRabbitPlugStarter {
                 in("stu_age",1001,1002,1003,1004,1005,1006,1007,1008).
                 orderBy("stu_age",QueryWrapper.DESC).limit(0,2);
         List<User> userList=baseService.queryObjectList(queryWrapper,User.class);
-        System.out.println("query result -> "+JSONUtil.toJsonStr(userList));
+        System.out.println("query result -> "+JSONUtil.toJsonStr(userList));*/
+
+       // 主键查询
+        /*User user=baseService.queryObjectById(1001,User.class);
+        System.out.println("query result -> "+JSONUtil.toJsonStr(user));*/
+
+        // 自定义sql查询
+        List<Map<String,Object>> result=baseService.queryCustomSql("SELECT count(1) as `num` FROM t_user");
+        System.out.println(JSONUtil.toJsonStr(result.get(0)));
     }
 
 }

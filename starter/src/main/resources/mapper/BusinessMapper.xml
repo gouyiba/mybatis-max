@@ -44,7 +44,6 @@
         </if>
     </sql>
 
-
     <!--获取实例-->
     <select id="getObject" parameterType="java.util.Map" resultType="java.util.Map">
       <include refid="querySql"></include>
@@ -53,6 +52,11 @@
     <!--获取实例集合-->
     <select id="getObjectList" parameterType="java.util.Map" resultType="java.util.Map">
       <include refid="querySql"></include>
+    </select>
+
+    <!--自定义sql查询-->
+    <select id="customSqlObject" parameterType="java.lang.String" resultType="java.util.Map">
+        ${sql}
     </select>
 
     <!-- 新增实例 -->

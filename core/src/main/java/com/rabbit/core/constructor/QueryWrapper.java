@@ -31,251 +31,268 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
 
     // query-sql-cache-map
 
-    private  Map<String, String> whereSqlMap = new ConcurrentHashMap<>();
+    private Map<String, String> whereSqlMap = new ConcurrentHashMap<>();
 
-    private  Map<String,String> joinSqlMap=new ConcurrentHashMap<>();
+    private Map<String, String> joinSqlMap = new ConcurrentHashMap<>();
 
-    private  Map<String,Object> valMap=new ConcurrentHashMap<>();
+    private Map<String, Object> valMap = new ConcurrentHashMap<>();
 
-    private  Map<String,Object> sqlMap=new ConcurrentHashMap<>();
+    private Map<String, Object> sqlMap = new ConcurrentHashMap<>();
 
     private TableInfo tableInfo;
 
-    public QueryWrapper(E clazz){
+    public QueryWrapper(E clazz) {
         super(clazz);
-        this.tableInfo=analysisClazz();
-        this.sqlMap.put(SqlKey.TABLE_NAME.getValue(),this.tableInfo.getTableName());
+        this.tableInfo = analysisClazz();
+        this.sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
     }
 
-    public QueryWrapper(){}
+    public QueryWrapper() {
+    }
 
 
-    private int joinNum=0;
+    private int joinNum = 0;
 
     // final-variable
-    private final String VALIDEN="valMap.";
+    private final String VALIDEN = "valMap.";
 
     // global-final-static-variable
-    public static final String ASC="ASC";
+    public static final String ASC = "ASC";
 
-    public static final String DESC="DESC";
+    public static final String DESC = "DESC";
 
     /**
      * where
+     *
      * @param column 表字段
      * @param value
      * @return
      */
-    public QueryWrapper where(String column,Object value){
+    public QueryWrapper where(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType=getJdbcType(value.getClass());
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,
-                String.format(" %s %s=#{%s,jdbcType=%s}",MySqlKeyWord.AND.getValue(),column,VALIDEN+column+joinNum,columnType.getValue()));
-        valMap.put(column+joinNum,value);
+        MySqlColumnType columnType = getJdbcType(value.getClass());
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
         return this;
     }
 
     /**
      * or
+     *
      * @param column 表字段
      * @param value
      * @return
      */
-    public QueryWrapper or(String column,Object value){
+    public QueryWrapper or(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType=getJdbcType(value.getClass());
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,
-                String.format(" %s %s=#{%s,jdbcType=%s}",MySqlKeyWord.OR.getValue(),column,VALIDEN+column+joinNum,columnType.getValue()));
-        valMap.put(column+joinNum,value);
+        MySqlColumnType columnType = getJdbcType(value.getClass());
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.OR.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
         return this;
     }
 
     /**
      * 模糊匹配
+     *
      * @param column 表字段
      * @param value
      * @return
      */
-    public QueryWrapper like(String column,Object value){
+    public QueryWrapper like(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType=getJdbcType(value.getClass());
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,
-                String.format(" %s %s like concat('%%',#{%s,jdbcType=%s},'%%')",MySqlKeyWord.AND.getValue(),column,VALIDEN+column+joinNum,columnType.getValue()));
-        valMap.put(column+joinNum,value);
+        MySqlColumnType columnType = getJdbcType(value.getClass());
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s like concat('%%',#{%s,jdbcType=%s},'%%')", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
         return this;
     }
 
     /**
      * 范围匹配
+     *
      * @param column 表字段
-     * @param begin 起始值
-     * @param end 结束值
+     * @param begin  起始值
+     * @param end    结束值
      * @return
      */
-    public QueryWrapper between(String column,Object begin,Object end){
+    public QueryWrapper between(String column, Object begin, Object end) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType=getJdbcType(begin.getClass());
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,
-                String.format(" %s %s between #{%s,jdbcType=%s} and #{%s,jdbcType=%s}",MySqlKeyWord.AND.getValue(),column,VALIDEN+column+"1",columnType.getValue(),VALIDEN+column+"2",columnType.getValue()));
-        valMap.put(column+"1",begin);
-        valMap.put(column+"2",end);
+        MySqlColumnType columnType = getJdbcType(begin.getClass());
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s between #{%s,jdbcType=%s} and #{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + "1", columnType.getValue(), VALIDEN + column + "2", columnType.getValue()));
+        valMap.put(column + "1", begin);
+        valMap.put(column + "2", end);
         return this;
     }
 
     /**
      * 等于null
+     *
      * @param column 表字段
      * @return
      */
-    public QueryWrapper isNull(String column){
+    public QueryWrapper isNull(String column) {
         isBlank(column);
         joinNum++;
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,String.format(" %s %s is null",MySqlKeyWord.AND.getValue(),column));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum, String.format(" %s %s is null", MySqlKeyWord.AND.getValue(), column));
         return this;
     }
 
     /**
      * 不等于null
+     *
      * @param column
      * @return
      */
-    public QueryWrapper isNotNull(String column){
+    public QueryWrapper isNotNull(String column) {
         isBlank(column);
         joinNum++;
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,String.format(" %s %s is not null",MySqlKeyWord.AND.getValue(),column));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum, String.format(" %s %s is not null", MySqlKeyWord.AND.getValue(), column));
         return this;
     }
 
     /**
      * 等于null或者等于''
+     *
      * @param column
      * @return
      */
-    public QueryWrapper isNullOrEqual(String column){
+    public QueryWrapper isNullOrEqual(String column) {
         isBlank(column);
         joinNum++;
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,String.format(" %s %s is null %s %s=''",MySqlKeyWord.AND.getValue(),column,MySqlKeyWord.OR.getValue(),column));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum, String.format(" %s %s is null %s %s=''", MySqlKeyWord.AND.getValue(), column, MySqlKeyWord.OR.getValue(), column));
         return this;
     }
 
     /**
      * 不等于null或者不等于''
+     *
      * @param column
      * @return
      */
-    public QueryWrapper isNotNullOrEqual(String column){
+    public QueryWrapper isNotNullOrEqual(String column) {
         isBlank(column);
         joinNum++;
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,String.format(" %s %s is not null %s %s<>''",MySqlKeyWord.AND.getValue(),column,MySqlKeyWord.OR.getValue(),column));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum, String.format(" %s %s is not null %s %s<>''", MySqlKeyWord.AND.getValue(), column, MySqlKeyWord.OR.getValue(), column));
         return this;
     }
 
     /**
      * 不等于某个条件
+     *
      * @param column
      * @param value
      * @return
      */
-    public QueryWrapper notEqual(String column,Object value){
+    public QueryWrapper notEqual(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType=getJdbcType(value.getClass());
-        whereSqlMap.put(MySqlKeyWord.WHERE.getValue()+joinNum,
-                String.format(" %s %s<>#{%s,jdbcType=%s}",MySqlKeyWord.AND.getValue(),column,VALIDEN+column+joinNum,columnType.getValue()));
-        valMap.put(column+joinNum,value);
+        MySqlColumnType columnType = getJdbcType(value.getClass());
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s<>#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
         return this;
     }
 
     /**
      * 匹配多个值
+     *
      * @param column
      * @param values
      * @return
      */
-    public QueryWrapper in(String column,Object... values){
+    public QueryWrapper in(String column, Object... values) {
         isBlank(column);
-        sqlMap.put(MySqlKeyWord.IN.getValue(),String.format(" %s %s %s",MySqlKeyWord.AND.getValue(),column,MySqlKeyWord.IN.getValue()));
-        valMap.put(MySqlKeyWord.IN.getValue(),values);
+        sqlMap.put(MySqlKeyWord.IN.getValue(), String.format(" %s %s %s", MySqlKeyWord.AND.getValue(), column, MySqlKeyWord.IN.getValue()));
+        valMap.put(MySqlKeyWord.IN.getValue(), values);
         return this;
     }
 
     /**
      * 不匹配多个值
+     *
      * @param column
      * @param values
      * @return
      */
-    public QueryWrapper notIn(String column,Object... values){
+    public QueryWrapper notIn(String column, Object... values) {
         isBlank(column);
-        sqlMap.put(MySqlKeyWord.NOT.getValue()+"IN",String.format(" %s %s %s %s",MySqlKeyWord.AND.getValue(),column,MySqlKeyWord.NOT.getValue(),MySqlKeyWord.IN.getValue()));
-        valMap.put(MySqlKeyWord.NOT.getValue()+"IN",values);
+        sqlMap.put(MySqlKeyWord.NOT.getValue() + "IN", String.format(" %s %s %s %s", MySqlKeyWord.AND.getValue(), column, MySqlKeyWord.NOT.getValue(), MySqlKeyWord.IN.getValue()));
+        valMap.put(MySqlKeyWord.NOT.getValue() + "IN", values);
         return this;
     }
 
     /**
      * 设置结果集字段
+     *
      * @param columns
      * @return
      */
-    public QueryWrapper setColumn(String columns){
+    public QueryWrapper setColumn(String columns) {
         isBlank(columns);
-        sqlMap.put("setColumn",columns);
+        sqlMap.put("setColumn", columns);
         return this;
     }
 
     /**
      * 结果集排序
+     *
      * @param column
      * @param orderType
      * @return
      */
-    public QueryWrapper orderBy(String column,String orderType){
+    public QueryWrapper orderBy(String column, String orderType) {
         isBlank(column);
-        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ",""),String.format(" %s %s %s",MySqlKeyWord.ORDER_BY.getValue(),column,orderType));
+        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ", ""), String.format(" %s %s %s", MySqlKeyWord.ORDER_BY.getValue(), column, orderType));
         return this;
     }
 
     /**
      * 结果集分页
+     *
      * @param offset
      * @param limit
      * @return
      */
-    public QueryWrapper limit(int offset,int limit){
-        sqlMap.put(MySqlKeyWord.LIMIT.getValue(),String.format(" %s %s,%s",MySqlKeyWord.LIMIT.getValue(),offset,limit));
+    public QueryWrapper limit(int offset, int limit) {
+        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), offset, limit));
         return this;
     }
 
     /************************************************** 连接查询暂时不实现 ***********************************************************/
-    public QueryWrapper leftJoin(String tableName,String on){
+    public QueryWrapper leftJoin(String tableName, String on) {
         return this;
     }
 
-    public QueryWrapper rightJoin(String tableName,String on){
+    public QueryWrapper rightJoin(String tableName, String on) {
         return this;
     }
 
-    public QueryWrapper innerJoin(String tableName,String on){
+    public QueryWrapper innerJoin(String tableName, String on) {
         return this;
     }
+
     /************************************************** 连接查询暂时不实现 ***********************************************************/
 
-    private void isBlank(String column){
-        if(StringUtils.isBlank(column)){
+    private void isBlank(String column) {
+        if (StringUtils.isBlank(column)) {
             throw new MyBatisRabbitPlugException("表字段为空......");
         }
     }
 
     /**
      * 获取字段val对应的JdbcType
+     *
      * @param clazz
      * @return
      */
-    protected MySqlColumnType getJdbcType(Class<?> clazz){
+    protected MySqlColumnType getJdbcType(Class<?> clazz) {
         if (Integer.class.isAssignableFrom(clazz)) {
             return MySqlColumnType.INTEGER;
         } else if (String.class.isAssignableFrom(clazz)) {
@@ -302,13 +319,14 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
 
     /**
      * sqlMap合并
+     *
      * @return
      */
-    public Map<String,Object> mergeSqlMap(){
-        sqlMap.put(MySqlKeyWord.WHERE.getValue(),whereSqlMap);
-        sqlMap.put(MySqlKeyWord.JOINWD.getValue(),joinSqlMap);
-        sqlMap.put(MySqlKeyWord.VALUE.getValue(),valMap);
-        LOGGER.info("{}: QueryWrapper -> Sql: {}",TAG,JSONUtil.toJsonStr(sqlMap));
+    public Map<String, Object> mergeSqlMap() {
+        sqlMap.put(MySqlKeyWord.WHERE.getValue(), whereSqlMap);
+        sqlMap.put(MySqlKeyWord.JOINWD.getValue(), joinSqlMap);
+        sqlMap.put(MySqlKeyWord.VALUE.getValue(), valMap);
+        LOGGER.info("{}: QueryWrapper -> Sql: {}", TAG, JSONUtil.toJsonStr(sqlMap));
         return sqlMap;
     }
 }

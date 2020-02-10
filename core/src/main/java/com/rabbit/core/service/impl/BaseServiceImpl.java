@@ -97,6 +97,55 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     }
 
     /**
+     * 按实例主键查询
+     *
+     * @param Id    主键
+     * @param clazz 实例class
+     * @param <T>
+     * @return 指定类型实例
+     */
+    @Override
+    public <T> T queryObjectById(Object Id, Class<T> clazz) {
+        if (Objects.isNull(clazz)) {
+            throw new MyBatisRabbitPlugException("queryObjectById -> clazz is null......");
+        }
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        QueryWrapper queryWrapper = new QueryWrapper(obj);
+        TableInfo tableInfo = getTableInfo(clazz);
+        Field pkField = tableInfo.getPrimaryKey();
+        queryWrapper.where(pkField.getName(), Id);
+
+        Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
+        Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        if (CollectionUtils.isEmpty(objMap)) return null;
+        T bean = BeanUtil.mapToBean(objMap, clazz, true);
+        return bean;
+    }
+
+    /**
+     * 自定义sql查询
+     *
+     * @param sql 自定义sql
+     * @return 指定类型实例集合
+     */
+    @Override
+    public List<Map<String, Object>> queryCustomSql(String sql) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(sql)) {
+            throw new MyBatisRabbitPlugException("queryCustomSql -> sql is null......");
+        }
+        List<Map<String, Object>> objMapList = businessMapper.customSqlObject(sql);
+        if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
+        return objMapList;
+    }
+
+    /**
      * 删除实例
      *
      * @param objectId 主键
