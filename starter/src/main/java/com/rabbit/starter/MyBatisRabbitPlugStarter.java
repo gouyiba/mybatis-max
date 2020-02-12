@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.rabbit.core.constructor.QueryWrapper;
 import com.rabbit.core.service.BaseService;
 import com.rabbit.starter.bean.User;
+import com.rabbit.starter.enumation.Sex;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -38,7 +39,7 @@ public class MyBatisRabbitPlugStarter {
      */
     @GetMapping("/test1")
     public void test(){
-        List<User> users=new ArrayList<>();
+        /*List<User> users=new ArrayList<>();
         for (int i=0;i<1955;i++){
             User user=new User();
             //user.setStuUid("duxiaoyu"+i);
@@ -46,8 +47,15 @@ public class MyBatisRabbitPlugStarter {
             user.setStuName("杜晓宇"+i);
             //user.setSex(Sex.MAN.getValue());
             users.add(user);
-        }
-        System.out.println(baseService.addBatchObject(users));
+        }*/
+        //System.out.println(baseService.addBatchObject(users));
+
+        // 枚举转换器测试
+        User user=new User();
+        user.setStuName("杜祥元");
+        user.setStuAge(15);
+        user.setSex(Sex.MAN);
+        System.out.println(baseService.addObject(user));
     }
 
     /**
@@ -121,30 +129,29 @@ public class MyBatisRabbitPlugStarter {
     @GetMapping("/test4")
     public void test4(){
         // 单实例查询
-        /*User user=baseService.queryObject(new QueryWrapper().
-                where("sex",0).
+        User user=baseService.queryObject(new QueryWrapper().
+                where("sex",2).
                 like("stu_name","马").
-                where("stu_age",1001),User.class);
-        System.out.println("query result -> "+JSONUtil.toJsonStr(user));*/
+                where("stu_age",1011),User.class);
+        System.out.println("query result -> "+JSONUtil.toJsonStr(user));
 
         // 多实例查询
        /* QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.
-                where("sex",0).
                 like("stu_name","马").
-                between("stu_age",1001,1003).
-                in("stu_age",1001,1002,1003,1004,1005,1006,1007,1008).
+                between("stu_age",1011,1015).
+                in("stu_age",1011,1012,1013,1014,1015,1016,1017,1018).
                 orderBy("stu_age",QueryWrapper.DESC).limit(0,2);
         List<User> userList=baseService.queryObjectList(queryWrapper,User.class);
         System.out.println("query result -> "+JSONUtil.toJsonStr(userList));*/
 
-       // 主键查询
-        /*User user=baseService.queryObjectById(1001,User.class);
+        // 主键查询
+       /* User user=baseService.queryObjectById("5e182bf8de7cf5871d904dff",User.class);
         System.out.println("query result -> "+JSONUtil.toJsonStr(user));*/
 
         // 自定义sql查询
-        List<Map<String,Object>> result=baseService.queryCustomSql("SELECT count(1) as `num` FROM t_user");
-        System.out.println(JSONUtil.toJsonStr(result.get(0)));
+        /*List<Map<String,Object>> result=baseService.queryCustomSql("SELECT count(1) as `num` FROM t_user");
+        System.out.println(JSONUtil.toJsonStr(result.get(0)));*/
     }
 
 }

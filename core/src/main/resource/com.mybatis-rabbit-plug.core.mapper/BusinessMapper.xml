@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.core.mapper.BusinessMapper">
+    <!-- 公用Mapper -->
+
+    <!--query-sql-->
+    <sql id="querySql">
+        select
+        <if test="sqlMap.setColumn!=null and sqlMap.setColumn!=''">
+            ${sqlMap.setColumn}
+        </if>
+        <if test="sqlMap.setColumn==null or sqlMap.setColumn==''">
+            *
+        </if>
+        from ${sqlMap.TABLE_NAME}
+        <where>
+            <!--优先执行 IN 或者 NOT IN 查询-->
+            <if test="sqlMap.IN!=null and sqlMap.IN!=''">
+                ${sqlMap.IN}
+                <foreach collection="valMap.IN" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sqlMap.NOTIN!=null and sqlMap.NOTIN!=''">
+                ${sqlMap.NOTIN}
+                <foreach collection="valMap.NOTIN" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <!--优先执行 IN 或者 NOT IN 查询-->
+            <if test="sqlMap.WHERE!=null">
+                    <!--普通 where 条件查询-->
+                    <foreach collection="sqlMap.WHERE.keys" item="item" index="index">
+                        ${sqlMap.WHERE[item]}
+                    </foreach>
+                    <!--普通 where 条件查询-->
+            </if>
+        </where>
+        <if test="sqlMap.ORDERBY!=null and sqlMap.ORDERBY!=''">
+            ${sqlMap.ORDERBY}
+        </if>
+        <if test="sqlMap.LIMIT!=null and sqlMap.LIMIT!=''">
+            ${sqlMap.LIMIT}
+        </if>
+    </sql>
+
+    <!--获取实例-->
+    <select id="getObject" parameterType="java.util.Map" resultType="java.util.Map">
+      <include refid="querySql"></include>
+    </select>
+
+    <!--获取实例集合-->
+    <select id="getObjectList" parameterType="java.util.Map" resultType="java.util.Map">
+      <include refid="querySql"></include>
+    </select>
+
+    <!--自定义sql查询-->
+    <select id="customSqlObject" parameterType="java.lang.String" resultType="java.util.Map">
+        ${sql}
+    </select>
+
+    <!-- 新增实例 -->
+    <insert id="addObject" useGeneratedKeys="true" keyProperty="objectMap.tempPrimKey">
+        <if test="sqlMap.INSERT_HEAD!=null and sqlMap.INSERT_HEAD!=''">
+            ${sqlMap.INSERT_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.INSERT_PAM_LEFT_BRA!=null and sqlMap.INSERT_PAM_LEFT_BRA!=''">
+            ${sqlMap.INSERT_PAM_LEFT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_PARAMETER!=null and sqlMap.INSERT_PARAMETER!=''">
+            ${sqlMap.INSERT_PARAMETER}
+        </if>
+        <if test="sqlMap.INSERT_PAM_RIGHT_BRA!=null and sqlMap.INSERT_PAM_RIGHT_BRA!=''">
+            ${sqlMap.INSERT_PAM_RIGHT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_VALUE_KEYWORD!=null and sqlMap.INSERT_VALUE_KEYWORD!=''">
+            ${sqlMap.INSERT_VALUE_KEYWORD}
+        </if>
+        <if test="sqlMap.INSERT_VAL_LEFT_BRA!=null and sqlMap.INSERT_VAL_LEFT_BRA!=''">
+            ${sqlMap.INSERT_VAL_LEFT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_VALUE!=null and sqlMap.INSERT_VALUE!=''">
+            ${sqlMap.INSERT_VALUE}
+        </if>
+        <if test="sqlMap.INSERT_VAL_RIGHT_BRA!=null and sqlMap.INSERT_VAL_RIGHT_BRA!=''">
+            ${sqlMap.INSERT_VAL_RIGHT_BRA}
+        </if>
+    </insert>
+    
+    <!-- 批量新增实例 -->
+    <insert id="addBatchObject">
+        <if test="sqlMap.INSERT_HEAD!=null and sqlMap.INSERT_HEAD!=''">
+            ${sqlMap.INSERT_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.INSERT_PAM_LEFT_BRA!=null and sqlMap.INSERT_PAM_LEFT_BRA!=''">
+            ${sqlMap.INSERT_PAM_LEFT_BRA}
+        </if>
+        <if test="sqlMap.INSERT_PARAMETER!=null and sqlMap.INSERT_PARAMETER!=''">
+            ${sqlMap.INSERT_PARAMETER}
+        </if>
+        <if test="sqlMap.INSERT_PAM_RIGHT_BRA!=null and sqlMap.INSERT_PAM_RIGHT_BRA!=''">
+            ${sqlMap.INSERT_PAM_RIGHT_BRA}
+        </if>
+        values
+        <foreach collection="objectList" item="objectMap" separator=",">
+            <if test="sqlMap.INSERT_VALUE!=null and sqlMap.INSERT_VALUE!=''">
+                (${sqlMap.INSERT_VALUE})
+            </if>
+        </foreach>
+    </insert>
+
+    <!--修改实例-->
+    <update id="updateObject">
+        update ${sqlMap.TABLE_NAME}
+        <trim prefix="set" suffixOverrides=",">
+            <foreach collection="sqlMap.UPDATE_VALUE.keys" item="item" index="i">
+              <if test="objectMap[item]!=null">
+                ${sqlMap.UPDATE_VALUE[item]}
+              </if>
+            </foreach>
+        </trim>
+        <if test="sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''">
+            ${sqlMap.UPDATE_WHERE}
+        </if>
+    </update>
+
+    <!--批量修改实例-->
+    <update id="updateBatchByIdObject">
+      <foreach collection="objectList" item="obj" separator=";">
+          update ${sqlMap.TABLE_NAME}
+          <trim prefix="set" suffixOverrides=",">
+              <foreach collection="sqlMap.UPDATE_VALUE.keys" item="item" index="i">
+                  <if test="obj[item]!=null">
+                      ${sqlMap.UPDATE_VALUE[item]}
+                  </if>
+              </foreach>
+          </trim>
+          <if test="sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''">
+              ${sqlMap.UPDATE_WHERE}
+          </if>
+      </foreach>
+    </update>
+
+    <!--删除实例-->
+    <delete id="deleteObject">
+        <if test="sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''">
+            ${sqlMap.DELETE_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''">
+            ${sqlMap.DELETE_WHERE}
+        </if>
+    </delete>
+
+    <!--批量删除实例-->
+    <delete id="deleteBatchByIdObject">
+        <if test="sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''">
+            ${sqlMap.DELETE_HEAD}
+        </if>
+        <if test="sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''">
+            ${sqlMap.TABLE_NAME}
+        </if>
+        <if test="sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''">
+            ${sqlMap.DELETE_WHERE}
+        </if>
+        <foreach collection="objectList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

@@ -20,7 +20,6 @@ public class TableInfo implements Serializable {
     /**
      * 每张表默认主键字段为id
      */
-    //@Id(generateType = PrimaryKey.SNOWFLAKE,workerId = 1,datacenterId = 1)
     private Integer id;
 
     /**

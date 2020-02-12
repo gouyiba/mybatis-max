@@ -9,8 +9,8 @@ spring:
 
 # mybatis
 mybatis:
-  mapper-locations: classpath*:mapper/*Mapper.xml
+  mapper-locations: classpath:com.mybatis-rabbit-plug.core.mapper/*.xml
   configuration:
     map-underscore-to-camel-case: false
     auto-mapping-behavior: full
-
+  type-handlers-package: com.rabbit.starter.typehandler

@@ -90,7 +90,9 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 Class<?> typeHandlerClass = column.typeHandler();
-                typeHandler = typeHandlerClass.getName();
+                if(!StringUtils.equals("Object",typeHandlerClass.getSimpleName())){
+                    typeHandler = typeHandlerClass.getName();
+                }
             }
             String propertyName = item.getValue().getPropertyName();
             String columnType = item.getValue().getColumnType().getValue();

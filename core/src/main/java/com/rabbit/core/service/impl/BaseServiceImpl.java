@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Update;
+import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.*;
 import com.rabbit.core.enumation.MySqlKeyWord;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,6 +67,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        TableInfo tableInfo = getTableInfo(clazz);
+        convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
         T bean = BeanUtil.mapToBean(objMap, clazz, true);
         return bean;
@@ -89,6 +93,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
 
         List<T> beanList = new ArrayList<>();
+        TableInfo tableInfo = getTableInfo(clazz);
+        convertEnumVal(tableInfo.getColumnMap(), objMapList);
         for (Map<String, Object> item : objMapList) {
             T bean = BeanUtil.mapToBean(item, clazz, true);
             if (!Objects.isNull(bean)) beanList.add(bean);
@@ -120,10 +126,13 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         QueryWrapper queryWrapper = new QueryWrapper(obj);
         TableInfo tableInfo = getTableInfo(clazz);
         Field pkField = tableInfo.getPrimaryKey();
-        queryWrapper.where(pkField.getName(), Id);
+        TableFieldInfo tableFieldInfo = tableInfo.getColumnMap().get(pkField.getName());
+        queryWrapper.where(tableFieldInfo.getColumnName(), Id);
 
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+
+        convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
         T bean = BeanUtil.mapToBean(objMap, clazz, true);
         return bean;
@@ -578,5 +587,43 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         QueryWrapper query = new QueryWrapper(obj);
         source.getSqlMap().put(SqlKey.TABLE_NAME.getValue(), query.getTableInfo().getTableName());
+    }
+
+    /**
+     * 枚举转换
+     *
+     * @param fieldInfoMap
+     */
+    public void convertEnumVal(Map<String, TableFieldInfo> fieldInfoMap, List<Map<String, Object>> objMapList) {
+        Map<String, TableFieldInfo> enumPropertyMap = new HashMap<>();
+        // 查找bean中所有枚举属性
+        for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
+            Class<?> clazz = item.getValue().getPropertyType();
+            if (clazz.isEnum()) {
+                enumPropertyMap.put(item.getKey(), item.getValue());
+            }
+        }
+        // 转换数据库val对应的枚举name
+        for (Map.Entry<String, TableFieldInfo> item : enumPropertyMap.entrySet()) {
+            Class<?> enumClass = item.getValue().getPropertyType();
+            try {
+                Method method = enumClass.getMethod("valueConvertEnum", Integer.class);
+                for (Map<String, Object> objMap : objMapList) {
+                    Object parameter = objMap.get(item.getValue().getColumnName());
+                    // 此处invoke的enum-method必须被static修饰,否则将抛出空指针异常
+                    Enum iEnum = (Enum) method.invoke(null, parameter);
+                    String enumName = iEnum.name();
+                    if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName))
+                        objMap.put(item.getValue().getColumnName(), enumName);
+                }
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }

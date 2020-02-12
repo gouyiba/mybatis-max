@@ -9,6 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 自定义枚举转换器
+ * 用于bean中的枚举属性转换
+ * @param <E>
+ * @author duxiaoyu
+ * @since 2020--2-11
+ */
 public class IEnumTypeHandler<E extends Enum<?> & IEnum<E>> extends BaseTypeHandler<IEnum> {
 
     private Class<E> clazz;
@@ -25,6 +32,7 @@ public class IEnumTypeHandler<E extends Enum<?> & IEnum<E>> extends BaseTypeHand
             throws SQLException {
         ps.setInt(i, (Integer) parameter.getValue());
     }
+
     @Override
     public IEnum getNullableResult(ResultSet rs, String columnName) throws SQLException {
         return convert(clazz, rs.getInt(columnName));
