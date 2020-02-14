@@ -10,6 +10,7 @@ import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.ClassUtils;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.common.utils.StringUtils;
+import com.rabbit.core.enumation.MySqlKeyWord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,9 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -218,9 +222,10 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
      * @return MySqlColumnType
      */
     protected MySqlColumnType getColumnType(Type type) {
+        Class<?> clazz=null;
         if (type instanceof Class<?>) {
             // 判断具体的数据类型
-            Class<?> clazz = (Class<?>) type;
+             clazz= (Class<?>) type;
             if (Integer.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.INTEGER;
             } else if (String.class.isAssignableFrom(clazz)) {
@@ -241,13 +246,19 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
                 return MySqlColumnType.SHORT;
             } else if (Character.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.CHAR;
+            }else if(LocalDate.class.isAssignableFrom(clazz)){
+                return MySqlColumnType.DATE;
+            }else if(LocalDateTime.class.isAssignableFrom(clazz)){
+                return MySqlColumnType.TIMESTAMP;
+            }else if(Timestamp.class.isAssignableFrom(clazz)){
+                return MySqlColumnType.TIMESTAMP;
             }
         }
 
         // 此处可能存在一定的类型判断问题，目前暂时没有发现
-        if (clazz.getClass().isArray()) {
+        if (clazz.isArray()) {
             throw new MyBatisRabbitPlugException("属性类型为数据或集合，无法获取对应的数据类型......");
-        } else if (clazz.getClass().isEnum()) {
+        } else if (clazz.isEnum()) {
             // 默认返回枚举在数据库中对应的TINYINT类型
             return MySqlColumnType.TINYINT;
         } else {

@@ -53,9 +53,8 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
         Field primaryKey = this.tableInfo.getPrimaryKey();
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
 
-        // 将主键字段移除不进行修改
-        fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
-        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap);
+        //fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
+        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap,primaryKey.getName());
         sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
         String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getColumnType().getValue());
         sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
@@ -75,25 +74,28 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
      * @author duxiaoyu
      * @since 2020-01-28
      */
-    private Map<String, String> sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
+    private Map<String, String> sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap, String pkName) {
         Map<String, String> paramterMap = new HashMap<>();
         for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
-            Field field = item.getValue().getField();
-            String typeHandler = "";
-            if (field.isAnnotationPresent(Column.class)) {
-                Column column = field.getAnnotation(Column.class);
-                Class<?> typeHandlerClass = column.typeHandler();
-                if(!StringUtils.equals("Object",typeHandlerClass.getSimpleName())){
-                    typeHandler = typeHandlerClass.getName();
+            // 主键字段不参与修改
+            if (!StringUtils.equals(pkName, item.getKey())) {
+                Field field = item.getValue().getField();
+                String typeHandler = "";
+                if (field.isAnnotationPresent(Column.class)) {
+                    Column column = field.getAnnotation(Column.class);
+                    Class<?> typeHandlerClass = column.typeHandler();
+                    if (!StringUtils.equals("Object", typeHandlerClass.getSimpleName())) {
+                        typeHandler = typeHandlerClass.getName();
+                    }
                 }
-            }
-            String propertyName = item.getValue().getPropertyName();
-            String columnType = item.getValue().getColumnType().getValue();
-            String columnName = item.getValue().getColumnName();
-            if (StringUtils.isNotBlank(typeHandler)) {
-                paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,typeHandler=%s},", columnName, propertyName, typeHandler));
-            } else {
-                paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,jdbcType=%s},", columnName, propertyName, columnType));
+                String propertyName = item.getValue().getPropertyName();
+                String columnType = item.getValue().getColumnType().getValue();
+                String columnName = item.getValue().getColumnName();
+                if (StringUtils.isNotBlank(typeHandler)) {
+                    paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,typeHandler=%s},", columnName, propertyName, typeHandler));
+                } else {
+                    paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,jdbcType=%s},", columnName, propertyName, columnType));
+                }
             }
         }
         return paramterMap;

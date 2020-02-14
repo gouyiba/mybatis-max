@@ -565,7 +565,9 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             for (Field item : fieldList) {
                 Method getMethod = clazz.getMethod("get" + StringUtils.capitalize(item.getName()));
                 Object val = getMethod.invoke(obj);
-                beanMap.put(item.getName(), val);
+                if(val!=null){
+                    beanMap.put(item.getName(), val);
+                }
             }
         }
     }

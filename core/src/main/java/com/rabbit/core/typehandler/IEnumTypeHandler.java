@@ -1,4 +1,4 @@
-package com.rabbit.starter.typehandler;
+package com.rabbit.core.typehandler;
 
 import com.rabbit.core.enumation.IEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
