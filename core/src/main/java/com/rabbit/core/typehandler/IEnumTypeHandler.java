@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 自定义枚举转换器
+ * IEnumTypeHandler
  * 用于bean中的枚举属性转换-int类型
  * @param <E>
  * @author duxiaoyu

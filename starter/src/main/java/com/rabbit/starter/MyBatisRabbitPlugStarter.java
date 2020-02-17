@@ -19,7 +19,8 @@ import java.util.Map;
 
 @ComponentScan(basePackages = {
         "com.rabbit.starter",
-        "com.rabbit.core.service.impl"
+        "com.rabbit.core.service.impl",
+        "com.rabbit.common"
 })
 @MapperScan("com.rabbit.core.mapper")
 @SpringBootApplication
@@ -39,23 +40,23 @@ public class MyBatisRabbitPlugStarter {
      */
     @GetMapping("/test1")
     public void test(){
-        /*List<User> users=new ArrayList<>();
+        List<User> users=new ArrayList<>();
         for (int i=0;i<1955;i++){
             User user=new User();
             //user.setStuUid("duxiaoyu"+i);
             user.setStuAge(i);
-            user.setStuName("杜晓宇"+i);
-            //user.setSex(Sex.MAN.getValue());
+            user.setStuName("杜祥元"+i);
+            user.setSex(Sex.WOMEN);
             users.add(user);
-        }*/
-        //System.out.println(baseService.addBatchObject(users));
+        }
+        System.out.println(baseService.addBatchObject(users));
 
         // 枚举转换器测试
-        User user=new User();
+       /* User user=new User();
         user.setStuName("杜祥元");
         user.setStuAge(15);
         user.setSex(Sex.MAN);
-        System.out.println(baseService.addObject(user));
+        System.out.println(baseService.addObject(user));*/
     }
 
     /**
@@ -100,27 +101,29 @@ public class MyBatisRabbitPlugStarter {
      */
     @GetMapping("/test3")
     public void test3(){
-        //System.out.println(baseService.deleteObject("5e182bf8de7cf5871d904a0d",User.class));
+        System.out.println(baseService.deleteObject("5e182bf8de7cf5871d904dff",User.class));
         String[] stuid={
 //                "5e182bf8de7cf5871d904a0f",
 //                "5e182bf8de7cf5871d904a10"
                 //              "5e182bf8de7cf5871d904a11"
 //                "5e182bf8de7cf5871d904a12",
 //                "5e182bf8de7cf5871d904a13",
-                "5e182bf8de7cf5871d904a14",
-                "5e182bf8de7cf5871d904a15",
-                "5e182bf8de7cf5871d904a16",
-                "5e182bf8de7cf5871d904a17",
-                "5e182bf8de7cf5871d904a18",
-                "5e182bf8de7cf5871d904a19",
-                "5e182bf8de7cf5871d904a1a"
+                "5e182bf8de7cf5871d904e14",
+                "5e182bf8de7cf5871d904e15",
+                "5e182bf8de7cf5871d904e16",
+                "5e182bf8de7cf5871d904e17",
+                "5e182bf8de7cf5871d904e18",
+                "5e182bf8de7cf5871d904e19"
         };
 
-        List<Object> objects=new ArrayList<>();
-        for (int i=1001;i<=1010;i++){
+        /*List<Object> objects=new ArrayList<>();
+        *//*for (int i=1001;i<=1010;i++){
             objects.add(i);
+        }*//*
+        for (String item:stuid){
+            objects.add(item);
         }
-        System.out.println(baseService.deleteBatchByIdObject(objects,User.class));
+        System.out.println(baseService.deleteBatchByIdObject(objects,User.class));*/
     }
 
     /**
@@ -129,21 +132,21 @@ public class MyBatisRabbitPlugStarter {
     @GetMapping("/test4")
     public void test4(){
         // 单实例查询
-        User user=baseService.queryObject(new QueryWrapper().
+        /*User user=baseService.queryObject(new QueryWrapper().
                 where("sex",2).
                 like("stu_name","马").
                 where("stu_age",1011),User.class);
-        System.out.println("query result -> "+JSONUtil.toJsonStr(user));
+        System.out.println("query result -> "+JSONUtil.toJsonStr(user));*/
 
-        // 多实例查询
-       /* QueryWrapper queryWrapper=new QueryWrapper();
+        // 多实例查询 1011,1012,1013,1014,1015,1016,1017,1018
+        QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.
                 like("stu_name","马").
                 between("stu_age",1011,1015).
                 in("stu_age",1011,1012,1013,1014,1015,1016,1017,1018).
                 orderBy("stu_age",QueryWrapper.DESC).limit(0,2);
         List<User> userList=baseService.queryObjectList(queryWrapper,User.class);
-        System.out.println("query result -> "+JSONUtil.toJsonStr(userList));*/
+        System.out.println("query result -> "+JSONUtil.toJsonStr(userList));
 
         // 主键查询
        /* User user=baseService.queryObjectById("5e182bf8de7cf5871d904dff",User.class);

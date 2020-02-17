@@ -17,14 +17,4 @@ public interface IEnum<T extends Serializable> {
      * @return T
      */
     T getValue();
-
-    /**
-     * value转enum
-     * @param val
-     * @return
-     */
-    /*default Enum valueConvertEnum(T val,Enum eEnum){
-        // TODD 待实现
-        return null;
-    } */
 }

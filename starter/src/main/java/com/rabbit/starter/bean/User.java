@@ -2,6 +2,7 @@ package com.rabbit.starter.bean;
 
 import cn.hutool.json.JSONUtil;
 import com.rabbit.core.annotation.Column;
+import com.rabbit.core.annotation.Delete;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Table;
 import com.rabbit.core.constructor.BaseAbstractWrapper;
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 @Data
 @Table(value = "t_user")
-public class User implements Serializable {
+public class User extends BaseBean implements Serializable {
 
     //@Id(isIncrementColumn = true)
     private Integer id;
@@ -33,13 +34,15 @@ public class User implements Serializable {
 
     private Integer stuAge;
 
-    // 自定义枚举转换器有问题，还需改进
     @Column(typeHandler = IEnumTypeHandler.class,columnType = MySqlColumnType.TINYINT)
     private Sex sex;
 
-    private Date createDate;
+    //@Delete(physicsDel = false,value = 5)
+    //private Integer delFlag;
+
+    /*private Date createDate;
 
     private Date updateDate;
 
-    private Integer delFlag;
+    private Integer delFlag;*/
 }

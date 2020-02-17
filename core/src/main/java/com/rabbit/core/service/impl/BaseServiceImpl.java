@@ -6,8 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.rabbit.common.utils.CollectionUtils;
-import com.rabbit.core.annotation.Create;
-import com.rabbit.core.annotation.Update;
+import com.rabbit.core.annotation.*;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.*;
@@ -16,8 +15,6 @@ import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.mapper.BusinessMapper;
 import com.rabbit.core.service.BaseService;
-import com.rabbit.core.annotation.FillingStrategy;
-import com.rabbit.core.annotation.Id;
 import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.StringUtils;
 import org.slf4j.Logger;
@@ -142,7 +139,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @return 指定类型实例集合
+     * @return List<Map       <       String       ,       Object>>
      */
     @Override
     public List<Map<String, Object>> queryCustomSql(String sql) {
@@ -174,10 +171,15 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
+        Class<?> publicClazz = this.getFillingStrategyClass();
+        // 逻辑删除
+        Long logicDelResult = this.logicDel(publicClazz, clazz, Arrays.asList(objectId));
+        if (!Objects.isNull(logicDelResult)) return logicDelResult;
         LOGGER.info(" ");
         LOGGER.info("{}: begin delete data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objectId ==>{}", TAG, objectId);
+        // 物理删除
         long result = businessMapper.deleteObject(objectId, sqlMap);
         LOGGER.info("{}: end delete data...", TAG);
         LOGGER.info(" ");
@@ -211,6 +213,11 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         String where = sqlMap.get(SqlKey.DELETE_WHERE.getValue());
         where = where.substring(0, where.indexOf("=")) + " " + MySqlKeyWord.IN.getValue();
         sqlMap.put(SqlKey.DELETE_WHERE.getValue(), where);
+
+        Class<?> publicClazz = this.getFillingStrategyClass();
+        // 逻辑删除
+        Long logicDelResult = this.logicDel(publicClazz, clazz, objectIdList);
+        if (!Objects.isNull(logicDelResult)) return logicDelResult;
 
         // 开始批量删除
         LOGGER.info(" ");
@@ -270,7 +277,9 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            this.setFillingStrategyContent(beanMap, clazz, Update.class);
+            if (Objects.equals(obj.getClass().getSuperclass(), clazz)) {
+                this.setFillingStrategyContent(beanMap, clazz, Update.class);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -314,8 +323,10 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         // 自定义字段批量填充
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            for (Map<String, Object> item : objMapList) {
-                this.setFillingStrategyContent(item, clazz, Update.class);
+            if (Objects.equals(objectList.get(0).getClass().getSuperclass(), clazz)) {
+                for (Map<String, Object> item : objMapList) {
+                    this.setFillingStrategyContent(item, clazz, Update.class);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -418,10 +429,13 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         // 自定义字段填充
         Class<?> clazz = this.getFillingStrategyClass();
-        try {
-            this.setFillingStrategyContent(beanMap, clazz, Create.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // obj father class is clazz
+        if (Objects.equals(clazz, obj.getClass().getSuperclass())) {
+            try {
+                this.setFillingStrategyContent(beanMap, clazz, Create.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         LOGGER.info(" ");
         LOGGER.info("{}: begin add data...", TAG);
@@ -487,11 +501,13 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
 
         // 批量字段填充
         Class<?> clazz = this.getFillingStrategyClass();
-        for (Map<String, Object> item : objMap) {
-            try {
-                this.setFillingStrategyContent(item, clazz, Create.class);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (Objects.equals(objectList.get(0).getClass().getSuperclass(), clazz)) {
+            for (Map<String, Object> item : objMap) {
+                try {
+                    this.setFillingStrategyContent(item, clazz, Create.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -565,7 +581,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             for (Field item : fieldList) {
                 Method getMethod = clazz.getMethod("get" + StringUtils.capitalize(item.getName()));
                 Object val = getMethod.invoke(obj);
-                if(val!=null){
+                if (val != null) {
                     beanMap.put(item.getName(), val);
                 }
             }
@@ -609,9 +625,13 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         for (Map.Entry<String, TableFieldInfo> item : enumPropertyMap.entrySet()) {
             Class<?> enumClass = item.getValue().getPropertyType();
             try {
+                // 反射自定义枚举中的valueConvertEnum函数，parameter类型为Integer，如果没定义该函数，将抛出MethodNotDefindException
                 Method method = enumClass.getMethod("valueConvertEnum", Integer.class);
                 for (Map<String, Object> objMap : objMapList) {
                     Object parameter = objMap.get(item.getValue().getColumnName());
+                    if (Objects.isNull(parameter)) {
+                        throw new MyBatisRabbitPlugException("enum -> " + item.getValue().getColumnName() + " value is null......");
+                    }
                     // 此处invoke的enum-method必须被static修饰,否则将抛出空指针异常
                     Enum iEnum = (Enum) method.invoke(null, parameter);
                     String enumName = iEnum.name();
@@ -627,5 +647,69 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             }
 
         }
+    }
+
+    /**
+     * 逻辑删除
+     *
+     * @param baseBean     公共bean
+     * @param beanClass    实例bean
+     * @param objectIdList id-list
+     * @return
+     */
+    public Long logicDel(Class<?> baseBean, Class<?> beanClass, List<Object> objectIdList) {
+        Delete delete = null;
+        String delField = "";
+        Object obj = null;
+        List<Field> fieldList = new ArrayList<>();
+        if (!Objects.isNull(baseBean)) {
+            Field[] fields = baseBean.getDeclaredFields();
+            fieldList.addAll(Arrays.asList(fields));
+        }
+
+        if (!Objects.isNull(beanClass)) {
+            Field[] fields = beanClass.getDeclaredFields();
+            fieldList.addAll(Arrays.asList(fields));
+        }
+
+        for (Field item : fieldList) {
+            if (item.isAnnotationPresent(Delete.class)) {
+                delete = item.getAnnotation(Delete.class);
+                delField = item.getName();
+                break;
+            }
+        }
+
+        if (!Objects.isNull(delete)) {
+            boolean physicsDel = delete.physicsDel();
+            if (!physicsDel) {
+                TableInfo tb = getTableInfo(beanClass);
+                TableFieldInfo tbField = tb.getColumnMap().get(tb.getPrimaryKey().getName());
+                int value = delete.value();
+                List<Object> objBeanList = new ArrayList<>();
+                for (Object id : objectIdList) {
+                    try {
+                        obj = beanClass.newInstance();
+                        Method pkMethod = beanClass.getMethod("set" +
+                                StringUtils.capitalize(tbField.getPropertyName()), tbField.getPropertyType());
+                        pkMethod.invoke(obj, id);
+                        Method delMethod = beanClass.getMethod("set" +
+                                StringUtils.capitalize(delField), Integer.class);
+                        delMethod.invoke(obj, value);
+                        objBeanList.add(obj);
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return this.updateBatchByIdObject(objBeanList);
+            }
+        }
+        return null;
     }
 }

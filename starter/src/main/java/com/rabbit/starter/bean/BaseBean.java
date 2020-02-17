@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 公用字段类，存放所有bean的公用字段
+ * 公用字段类，存放所有bean的公用字段,子类继承
  * explain:
  * 1.需要将自定义的公用字段类注入到spring中
  * 2.使用@FillingStrategy进行标注声明该类是一个自定义公用字段类
@@ -25,6 +25,7 @@ public class BaseBean implements Serializable {
 
     private Date updateDate;
 
+    @Delete(physicsDel = false,value = 5)
     private Integer delFlag;
 
     /**
@@ -44,11 +45,4 @@ public class BaseBean implements Serializable {
         this.updateDate=new Date();
     }
 
-    /**
-     * 删除时，字段填充策略
-     */
-    @Delete
-    public void delete(){
-        this.delFlag=2;
-    }
 }

@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,9 +42,11 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
 
     private TableInfo tableInfo;
 
+    private TableInfo baseBean;
+
     public QueryWrapper(E clazz) {
-        super(clazz);
-        this.tableInfo = analysisClazz();
+        this.baseBean = analysisBaseBean();
+        this.tableInfo = analysisClazz(clazz.getClass());
         this.sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
     }
 
@@ -71,7 +74,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper where(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value.getClass());
+        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -88,7 +91,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper or(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value.getClass());
+        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.OR.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -105,7 +108,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper like(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value.getClass());
+        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s like concat('%%',#{%s,jdbcType=%s},'%%')", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -123,7 +126,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper between(String column, Object begin, Object end) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(begin.getClass());
+        MySqlColumnType columnType = getJdbcType(begin==null?null: begin.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s between #{%s,jdbcType=%s} and #{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + "1", columnType.getValue(), VALIDEN + column + "2", columnType.getValue()));
         valMap.put(column + "1", begin);
@@ -193,7 +196,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper notEqual(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value.getClass());
+        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s<>#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -282,7 +285,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
 
     private void isBlank(String column) {
         if (StringUtils.isBlank(column)) {
-            throw new MyBatisRabbitPlugException("表字段为空......");
+            throw new MyBatisRabbitPlugException("要查询的字段为空......");
         }
     }
 
@@ -293,6 +296,9 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
      * @return
      */
     protected MySqlColumnType getJdbcType(Class<?> clazz) {
+        if(Objects.isNull(clazz)){
+            throw new MyBatisRabbitPlugException("query value is null......");
+        }
         if (Integer.class.isAssignableFrom(clazz)) {
             return MySqlColumnType.INTEGER;
         } else if (String.class.isAssignableFrom(clazz)) {

@@ -1,5 +1,7 @@
 package com.rabbit.core.constructor;
 
+import com.rabbit.common.utils.SpringContextUtil;
+import com.rabbit.core.annotation.FillingStrategy;
 import com.rabbit.core.annotation.Table;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
@@ -13,6 +15,12 @@ import com.rabbit.common.utils.StringUtils;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.context.WebServerApplicationContext;
+import org.springframework.boot.web.servlet.context.WebApplicationContextServletContextAwareProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -46,19 +54,9 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
     /**
      * class.bean
      */
-    private E clazz;
+    // private E clazz;
 
-    /**
-     * BaseAbstractWrapper-constructor
-     *
-     * @param clazz
-     */
-    public BaseAbstractWrapper(E clazz) {
-        this.clazz = clazz;
-    }
-
-    public BaseAbstractWrapper() { }
-
+    // public BaseAbstractWrapper(E clazz) { this.clazz = clazz; }
 
     /***************************************** TableInfo 缓存 ***********************************************/
     /**
@@ -86,7 +84,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
     /**
      * 获取所有缓存的TableInfo
      *
-     * @return Map<Class<?> , TableInfo>
+     * @return Map<Class <?> , TableInfo>
      */
     protected Map<Class<?>, TableInfo> getAllTableInfo() {
         return TABLE_INFO_CACHE;
@@ -118,31 +116,32 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
      * @return TableInfo
      * @author duxiaoyu
      */
-    protected TableInfo analysisClazz() {
+    protected TableInfo analysisClazz(Class<?> clazz) {
         TableInfo tableInfo = null;
         // 查找bean.class是否已存在缓存中
-        tableInfo=getTableInfo(clazz.getClass());
-        if(tableInfo!=null){
+        tableInfo = getTableInfo(clazz);
+        if (tableInfo != null) {
             return tableInfo;
         }
+
         String tableName = "";
         Map<String, TableFieldInfo> tbFieldMap = new ConcurrentHashMap<>();
 
         logger.info("{}:开始解析数据库表信息>>>>>>", TAG);
         tableInfo = new TableInfo();
         // 是否标注 @Table
-        if (clazz.getClass().isAnnotationPresent(Table.class)) {
-            Table table = clazz.getClass().getAnnotation(Table.class);
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table table = clazz.getAnnotation(Table.class);
             tableName = table.value();
         } else {
             // 自动解析对应的数据库表名称，默认按照驼峰转下划线格式进行转换，如: GoodsInfo -> goods_info
-            String className = clazz.getClass().getSimpleName();
+            String className = clazz.getSimpleName();
             tableName = StringUtils.camelToUnderline(StringUtils.firstToLowerCase(className));
         }
         logger.info("{}:解析出的数据库表名称:{}", TAG, tableName);
 
         // 开始解析实例中的字段
-        List<Field> fieldList = Arrays.asList(clazz.getClass().getDeclaredFields());
+        List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
         if (!CollectionUtils.isEmpty(fieldList)) {
             logger.info("{}:开始解析数据库表字段信息>>>>>>", TAG);
             for (Field item : fieldList) {
@@ -216,16 +215,39 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
     }
 
     /**
+     * 解析BaseBean
+     * 此处解析会进行全局缓存处理
+     *
+     * @author duxiaoyu
+     */
+    protected TableInfo analysisBaseBean() {
+        Class<?> baseBean = null;
+        ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
+        List<String> classNameList = Arrays.asList(applicationContext.getBeanDefinitionNames());
+        for (String item : classNameList) {
+            Object obj = applicationContext.getBean(item);
+            if (obj.getClass().isAnnotationPresent(FillingStrategy.class)) {
+                baseBean = obj.getClass();
+            }
+        }
+        if (baseBean != null) {
+            TableInfo tbBaseBean = this.analysisClazz(baseBean);
+            return tbBaseBean;
+        }
+        return null;
+    }
+
+    /**
      * 获取数据库中字段的数据类型
      *
      * @param type 类型
      * @return MySqlColumnType
      */
     protected MySqlColumnType getColumnType(Type type) {
-        Class<?> clazz=null;
+        Class<?> clazz = null;
         if (type instanceof Class<?>) {
             // 判断具体的数据类型
-             clazz= (Class<?>) type;
+            clazz = (Class<?>) type;
             if (Integer.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.INTEGER;
             } else if (String.class.isAssignableFrom(clazz)) {
@@ -246,11 +268,11 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
                 return MySqlColumnType.SHORT;
             } else if (Character.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.CHAR;
-            }else if(LocalDate.class.isAssignableFrom(clazz)){
+            } else if (LocalDate.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.DATE;
-            }else if(LocalDateTime.class.isAssignableFrom(clazz)){
+            } else if (LocalDateTime.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.TIMESTAMP;
-            }else if(Timestamp.class.isAssignableFrom(clazz)){
+            } else if (Timestamp.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.TIMESTAMP;
             }
         }
@@ -265,7 +287,5 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
             throw new MyBatisRabbitPlugException("属性类型为未知类型，可能是object或自定义bean，无法获取对应的数据类型......");
         }
     }
-
-    //TODO 更多内容待实现 ...
 
 }

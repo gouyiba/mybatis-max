@@ -1,5 +1,6 @@
 package com.rabbit.core.constructor;
 
+import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
@@ -35,9 +36,11 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      */
     private TableInfo tableInfo;
 
+    private TableInfo baseBean;
+
     public InsertWrapper(E clazz) {
-        super(clazz);
-        this.tableInfo = analysisClazz();
+        this.baseBean = analysisBaseBean();
+        this.tableInfo = analysisClazz(clazz.getClass());
     }
 
     /**
@@ -49,6 +52,13 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      */
     public Map<String, String> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
+
+        Map<String,TableFieldInfo> baseBeanFieldMap=Optional.ofNullable(this.baseBean.getColumnMap()).orElse(null);
+
+        if(CollectionUtils.isNotEmpty(baseBeanFieldMap)){
+            fieldInfoMap.putAll(baseBeanFieldMap);
+        }
+
         sqlMap.put(SqlKey.INSERT_HEAD.getValue(), MySqlKeyWord.INSERT.getValue());
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
         sqlMap.put(SqlKey.INSERT_PAM_LEFT_BRA.getValue(), "(");

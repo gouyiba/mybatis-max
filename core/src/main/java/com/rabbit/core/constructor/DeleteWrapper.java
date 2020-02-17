@@ -42,7 +42,7 @@ public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
 
     public DeleteWrapper(E clazz) {
         super(clazz);
-        this.tableInfo = analysisClazz();
+        this.tableInfo=getTableInfo();
     }
 
     /**

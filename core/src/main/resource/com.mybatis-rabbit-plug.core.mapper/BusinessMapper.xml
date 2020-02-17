@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.rabbit.core.mapper.BusinessMapper">
-    <!-- 公用Mapper -->
+
+    <!-- Mybatis-Rabbit-Plug 1.0 公用Mapper -->
 
     <!--query-sql-->
     <sql id="querySql">
@@ -175,4 +176,6 @@
             #{item}
         </foreach>
     </delete>
+
+    <!-- Mybatis-Rabbit-Plug 1.0 公用Mapper -->
 </mapper>
