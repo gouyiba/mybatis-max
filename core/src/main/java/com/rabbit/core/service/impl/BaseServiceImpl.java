@@ -64,9 +64,10 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        if (CollectionUtils.isEmpty(objMap)) return null;
+
         TableInfo tableInfo = getTableInfo(clazz);
         convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
-        if (CollectionUtils.isEmpty(objMap)) return null;
         T bean = BeanUtil.mapToBean(objMap, clazz, true);
         return bean;
     }
@@ -128,6 +129,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
 
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        if(CollectionUtils.isEmpty(objMap)) return null;
 
         convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
