@@ -16,7 +16,6 @@
     - 优化QueryWrapper、UpdateWrapper、InsertWrapper内部业务逻辑
     
     
-- 
 - 2020.2.24更新
     - 修复查询数据为空返回空指针的异常
     - 修复bean中枚举属性转换异常
