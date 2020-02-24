@@ -9,6 +9,8 @@ package com.rabbit.core.enumation;
 public enum MySqlColumnType implements IEnum<String> {
 
     TINYINT("TINYINT"),
+    SMALLINT("SMALLINT"),
+    MEDIUMINT("MEDIUMINT"),
     BIGINT("BIGINT"),
     SHORT("SHORT"),
     INTEGER("INTEGER"),
@@ -22,6 +24,7 @@ public enum MySqlColumnType implements IEnum<String> {
     VARCHAR("VARCHAR"),
     TEXT("TEXT"),
     MEDIUMTEXT("MEDIUMTEXT"),
+    TINYTEXT("TINYTEXT"),
     LONGTEXT("LONGTEXT");
 
     private String columnType;

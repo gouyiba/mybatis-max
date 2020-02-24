@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -319,6 +322,12 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
             return MySqlColumnType.SHORT;
         } else if (Character.class.isAssignableFrom(clazz)) {
             return MySqlColumnType.CHAR;
+        }else if (LocalDate.class.isAssignableFrom(clazz)) {
+            return MySqlColumnType.DATE;
+        } else if (LocalDateTime.class.isAssignableFrom(clazz)) {
+            return MySqlColumnType.TIMESTAMP;
+        } else if (Timestamp.class.isAssignableFrom(clazz)) {
+            return MySqlColumnType.TIMESTAMP;
         }
         return null;
     }

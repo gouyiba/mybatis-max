@@ -632,7 +632,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                 for (Map<String, Object> objMap : objMapList) {
                     Object parameter = objMap.get(item.getValue().getColumnName());
                     if (Objects.isNull(parameter)) {
-                        throw new MyBatisRabbitPlugException("enum -> " + item.getValue().getColumnName() + " value is null......");
+                        continue;
+                        //throw new MyBatisRabbitPlugException("enum -> " + item.getValue().getColumnName() + " value is null......");
                     }
                     // 此处invoke的enum-method必须被static修饰,否则将抛出空指针异常
                     Enum iEnum = (Enum) method.invoke(null, parameter);
