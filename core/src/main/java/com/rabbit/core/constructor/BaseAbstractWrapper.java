@@ -12,16 +12,9 @@ import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.ClassUtils;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.common.utils.StringUtils;
-import com.rabbit.core.enumation.MySqlKeyWord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.context.WebServerApplicationContext;
-import org.springframework.boot.web.servlet.context.WebApplicationContextServletContextAwareProcessor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

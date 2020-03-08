@@ -141,7 +141,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @return List<Map       <       String       ,       Object>>
+     * @return List<Map<String,Object>>
      */
     @Override
     public List<Map<String, Object>> queryCustomSql(String sql) {
