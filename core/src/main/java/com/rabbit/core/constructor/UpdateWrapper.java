@@ -51,7 +51,10 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
     public Map<String, Object> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
         TableInfo baseBean=getBaseBean();
-        Map<String,TableFieldInfo> baseBeanFieldMap=Optional.ofNullable(baseBean.getColumnMap()).orElse(null);
+        Map<String,TableFieldInfo> baseBeanFieldMap=null;
+        if(baseBean!=null){
+            baseBeanFieldMap=Optional.ofNullable(baseBean.getColumnMap()).orElse(null);
+        }
 
         if(CollectionUtils.isNotEmpty(baseBeanFieldMap)){
             fieldInfoMap.putAll(baseBeanFieldMap);

@@ -52,8 +52,11 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      */
     public Map<String, String> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
+        Map<String,TableFieldInfo> baseBeanFieldMap=null;
+        if (this.baseBean!=null){
+            baseBeanFieldMap=Optional.ofNullable(this.baseBean.getColumnMap()).orElse(null);
+        }
 
-        Map<String,TableFieldInfo> baseBeanFieldMap=Optional.ofNullable(this.baseBean.getColumnMap()).orElse(null);
 
         if(CollectionUtils.isNotEmpty(baseBeanFieldMap)){
             fieldInfoMap.putAll(baseBeanFieldMap);
