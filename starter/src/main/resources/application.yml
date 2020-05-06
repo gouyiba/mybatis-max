@@ -9,7 +9,7 @@ spring:
 
 # mybatis
 mybatis:
-  mapper-locations: classpath:com.mybatis-rabbit-plug.core.mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: false
     auto-mapping-behavior: full

@@ -17,11 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>${springBootVersion}</version>
-        </dependency>
-        <dependency>
             <groupId>com.rabbit</groupId>
             <artifactId>common</artifactId>
             <version>1.0-SNAPSHOT</version>
