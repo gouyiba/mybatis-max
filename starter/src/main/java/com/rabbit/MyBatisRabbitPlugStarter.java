@@ -1,4 +1,4 @@
-package com.rabbit.starter;
+package com.rabbit;
 
 import cn.hutool.json.JSONUtil;
 import com.rabbit.core.constructor.QueryWrapper;
@@ -9,19 +9,15 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@ComponentScan(basePackages = {
-        "com.rabbit.starter",
-        "com.rabbit.core.service.impl",
-        "com.rabbit.common"
-})
+/**
+ * 开发阶段导入，应用阶段移除
+ */
 @MapperScan("com.rabbit.core.mapper")
 @SpringBootApplication
 @Controller
