@@ -20,6 +20,7 @@
 **/build/
 **/out/
 **/target/
+**/.mvn/
 
 ### NetBeans ###
 /nbproject/private/
