@@ -1,10 +1,10 @@
 package com.rabbit.core.constructor;
 
 import com.rabbit.common.utils.CollectionUtils;
+import com.rabbit.core.annotation.Column;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
-import com.rabbit.core.annotation.Column;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
 import org.apache.commons.lang3.StringUtils;

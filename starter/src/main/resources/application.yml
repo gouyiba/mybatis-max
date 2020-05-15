@@ -1,3 +1,5 @@
+# 开发阶段导入，应用阶段移除
+
 server:
   port: 8888
 spring:
@@ -7,10 +9,7 @@ spring:
     password: Duxiaoyu@123
     url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
-# mybatis
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  configuration:
-    map-underscore-to-camel-case: false
-    auto-mapping-behavior: full
-  type-handlers-package: com.rabbit.starter.typehandler
+rabbit-mybatis-plug:
+  banner: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.rabbit.core.entity

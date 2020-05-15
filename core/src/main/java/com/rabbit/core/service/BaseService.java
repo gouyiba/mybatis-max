@@ -1,7 +1,6 @@
 package com.rabbit.core.service;
 
 import com.rabbit.core.constructor.QueryWrapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;

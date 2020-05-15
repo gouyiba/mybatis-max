@@ -1,20 +1,21 @@
 package com.rabbit.core.constructor;
 
+import com.rabbit.common.exception.MyBatisRabbitPlugException;
+import com.rabbit.common.utils.ClassUtils;
+import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.common.utils.SpringContextUtil;
+import com.rabbit.common.utils.StringUtils;
+import com.rabbit.core.annotation.Column;
 import com.rabbit.core.annotation.FillingStrategy;
+import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Table;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.MySqlColumnType;
-import com.rabbit.core.annotation.Column;
-import com.rabbit.core.annotation.Id;
-import com.rabbit.common.exception.MyBatisRabbitPlugException;
-import com.rabbit.common.utils.ClassUtils;
-import com.rabbit.common.utils.CollectionUtils;
-import com.rabbit.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

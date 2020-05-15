@@ -1,0 +1,16 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.rabbit.autoconfigure.RabbitProperties",
+            "name": "rabbit-mybatis-plus",
+            "type": "com.rabbit.autoconfigure.RabbitProperties"
+        },
+        {
+            "sourceType": "com.rabbit.autoconfigure.RabbitProperties",
+            "name": "rabbit-mybatis-plus.configuration",
+            "sourceMethod": "getConfiguration()",
+            "type": "com.rabbit.core.module.RabbitConfiguration"
+        }
+    ],
+    "properties": []
+}

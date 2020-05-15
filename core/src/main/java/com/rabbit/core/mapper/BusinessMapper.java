@@ -1,6 +1,7 @@
 package com.rabbit.core.mapper;
 
 
+import com.rabbit.core.super_mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-public interface BusinessMapper {
+public interface BusinessMapper extends BaseMapper {
 
     /**
      * 获取实例
