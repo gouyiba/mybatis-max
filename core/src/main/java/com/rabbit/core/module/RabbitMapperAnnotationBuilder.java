@@ -53,6 +53,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         this.type = type;
     }
 
+    @Override
     public void parse() {
         String resource = this.type.toString();
         if (!this.configuration.isResourceLoaded(resource)) {

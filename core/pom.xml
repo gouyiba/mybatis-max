@@ -16,6 +16,14 @@
     <description>Mybatis-Rabbit-Plug-Core</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>compile</scope>
+            <version>${lomBokVersion}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.rabbit</groupId>
             <artifactId>common</artifactId>

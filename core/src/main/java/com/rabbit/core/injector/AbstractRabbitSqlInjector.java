@@ -1,5 +1,7 @@
 package com.rabbit.core.injector;
 
+import com.rabbit.common.utils.CollectionUtils;
+import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.entity.User;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
@@ -13,6 +15,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * this class by created wuyongfei on 2020/5/10 20:54
@@ -74,87 +77,21 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
         }
     }
 
+    @Override
     public void inspectInject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass) {
-        Class<?> modelClass = this.extractModelClass(mapperClass);
-        configuration = builderAssistant.getConfiguration();
-        currentNamespace = mapperClass.getName();
-        String sql = "<script>select * from test</script>";
-        SqlSource sqlSource = builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance().createSqlSource(builderAssistant.getConfiguration(), sql, modelClass);
-        MappedStatement.Builder statementBuilder = (new MappedStatement.
-                Builder(builderAssistant.getConfiguration(),
-                mapperClass.getName() + "." + "list",
-                sqlSource,
-                SqlCommandType.SELECT)).resource("com/example/mybatisdemo/mapper/UserMapper.java (best guess)")
-                .fetchSize(null)
-                .timeout(null)
-                .statementType(StatementType.STATEMENT)
-                .keyGenerator(null)
-                .keyProperty(null)
-                .keyColumn(null)
-                .databaseId(null)
-                .lang(builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance())
-                .resultOrdered(false)
-                .resultSets(null)
-                .resultMaps(this.getStatementResultMaps(null, User.class, mapperClass.getName() + "." + "list"))
-                .resultSetType(null)
-                .flushCacheRequired(false)
-                .cache(null);
-
-        MappedStatement statement = statementBuilder.build();
-//        builderAssistant.addMappedStatement(mapperClass.getName() + "." + "list", sqlSource, StatementType.PREPARED, SqlCommandType.SELECT,
-//                null, null, null, null, null, mapperClass.getClass(),
-//                null, false, true, false, null, null, null,
-//                builderAssistant.getConfiguration().getDatabaseId(), builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance(), null);
-        configuration.addMappedStatement(statement);
-
-        String sql1 = "<script>select count(*) from test</script>";
-        SqlSource sqlSource1 = builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance().createSqlSource(builderAssistant.getConfiguration(), sql1, modelClass);
-        MappedStatement.Builder statementBuilder1 = (new MappedStatement.
-                Builder(builderAssistant.getConfiguration(),
-                mapperClass.getName() + "." + "count",
-                sqlSource1,
-                SqlCommandType.SELECT)).resource("com/example/mybatisdemo/mapper/UserMapper.java (best guess)")
-                .fetchSize(null)
-                .timeout(null)
-                .statementType(StatementType.STATEMENT)
-                .keyGenerator(null)
-                .keyProperty(null)
-                .keyColumn(null)
-                .databaseId(null)
-                .lang(builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance())
-                .resultOrdered(false)
-                .resultSets(null)
-                .resultMaps(this.getStatementResultMaps(null, Integer.class, mapperClass.getName() + "." + "list"))
-                .resultSetType(null)
-                .flushCacheRequired(false)
-                .cache(null);
-
-        MappedStatement statement1 = statementBuilder1.build();
-//        builderAssistant.addMappedStatement(mapperClass.getName() + "." + "list", sqlSource, StatementType.PREPARED, SqlCommandType.SELECT,
-//                null, null, null, null, null, mapperClass.getClass(),
-//                null, false, true, false, null, null, null,
-//                builderAssistant.getConfiguration().getDatabaseId(), builderAssistant.getConfiguration().getDefaultScriptingLanguageInstance(), null);
-        configuration.addMappedStatement(statement1);
-/*        if (modelClass != null) {
-            String className = mapperClass.toString();
-            Set<String> mapperRegistryCache = GlobalConfigUtils.getMapperRegistryCache(builderAssistant.getConfiguration());
-            if (!mapperRegistryCache.contains(className)) {
-                *//*List<AbstractMethod> methodList = this.getMethodList(mapperClass);
-                if (CollectionUtils.isNotEmpty(methodList)) {
-                    TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
-                    methodList.forEach((m) -> {
-                        m.inject(builderAssistant, mapperClass, modelClass, tableInfo);
-                    });
-                } else {
-                    logger.debug(mapperClass.toString() + ", No effective injection method was found.");
-//                }
-*//*
-                mapperRegistryCache.add(className);
-            }
-        }*/
+        Class<?> modelClass = extractModelClass(mapperClass);
+        List<RabbitAbstractMethod> methodList = this.getMethodList(mapperClass);
+        if (CollectionUtils.isNotEmpty(methodList)) {
+            // 此处暂时不获取TableInfo，留着以后用
+            //TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
+            // 循环注入自定义方法
+            methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass,null));
+        } else {
+            logger.debug(mapperClass.toString() + ", No effective injection method was found.");
+        }
     }
 
-//    public abstract List<AbstractMethod> getMethodList(Class<?> mapperClass);
+    public abstract List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass);
 
     protected Class<?> extractModelClass(Class<?> mapperClass) {
         Type[] types = mapperClass.getGenericInterfaces();

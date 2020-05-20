@@ -1,23 +1,21 @@
 package com.rabbit.core.entity;
 
-public class User {
+import com.rabbit.core.annotation.Id;
+import com.rabbit.core.annotation.Table;
+import lombok.Data;
+
+@Data
+@Table("t_user")
+public class User extends BaseBean{
+
     private String id;
 
+    @Id
+    private String stuUid;
+
+    private String stuName;
+
+    private Integer stuAge;
+
     private String type;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

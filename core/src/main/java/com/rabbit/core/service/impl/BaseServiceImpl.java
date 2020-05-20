@@ -129,7 +129,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
 
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
-        if(CollectionUtils.isEmpty(objMap)) return null;
+        if (CollectionUtils.isEmpty(objMap)) return null;
 
         convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
@@ -141,7 +141,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @return List<Map<String,Object>>
+     * @return List<Map < String, Object>>
      */
     @Override
     public List<Map<String, Object>> queryCustomSql(String sql) {
@@ -459,6 +459,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * @param <E>        实例类型
      * @return 受影响行数
      */
+    @Override
     public <E> Long addBatchObject(List<E> objectList) {
         if (CollectionUtils.isEmpty(objectList)) {
             throw new MyBatisRabbitPlugException("新增实例集合为空......");
@@ -682,7 +683,6 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                 break;
             }
         }
-
         if (!Objects.isNull(delete)) {
             boolean physicsDel = delete.physicsDel();
             if (!physicsDel) {

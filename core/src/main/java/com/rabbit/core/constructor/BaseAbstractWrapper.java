@@ -121,7 +121,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
         String tableName = "";
         Map<String, TableFieldInfo> tbFieldMap = new ConcurrentHashMap<>();
 
-        logger.info("{}:开始解析数据库表信息>>>>>>", TAG);
+        logger.info("{} - start analysis tableInfo ......", TAG);
         tableInfo = new TableInfo();
         // 是否标注 @Table
         if (clazz.isAnnotationPresent(Table.class)) {
@@ -132,12 +132,11 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
             String className = clazz.getSimpleName();
             tableName = StringUtils.camelToUnderline(StringUtils.firstToLowerCase(className));
         }
-        logger.info("{}:解析出的数据库表名称:{}", TAG, tableName);
+        logger.info("{} - analysis result db.tableName ==> {}", TAG, tableName);
 
         // 开始解析实例中的字段
         List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
         if (!CollectionUtils.isEmpty(fieldList)) {
-            logger.info("{}:开始解析数据库表字段信息>>>>>>", TAG);
             for (Field item : fieldList) {
                 if (item.isAnnotationPresent(Column.class)) {
                     Column column = item.getAnnotation(Column.class);
@@ -192,7 +191,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
                 tbField.setPropertyType(clazzFieldType);
                 tbFieldMap.put(propertyName, tbField);
             }
-            logger.info("{}:完成解析数据库表字段信息>>>>>>", TAG);
+            logger.info("{} - complete analysis tableInfo ......", TAG);
         } else {
             throw new MyBatisRabbitPlugException("解析Class-Field异常，未能获取到Field......");
         }
