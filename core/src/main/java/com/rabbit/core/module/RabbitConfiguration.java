@@ -81,6 +81,7 @@ public class RabbitConfiguration extends Configuration {
         getLanguageRegistry().setDefaultDriverClass(driver);
     }
 
+    @Override
     public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
         executorType = executorType == null ? this.defaultExecutorType : executorType;
         executorType = executorType == null ? ExecutorType.SIMPLE : executorType;

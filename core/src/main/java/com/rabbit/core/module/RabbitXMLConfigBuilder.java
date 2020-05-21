@@ -76,6 +76,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         this.parser = parser;
     }
 
+    @Override
     public RabbitConfiguration getConfiguration() {
         return (RabbitConfiguration)this.configuration;
     }

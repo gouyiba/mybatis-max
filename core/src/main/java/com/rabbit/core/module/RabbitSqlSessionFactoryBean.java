@@ -189,6 +189,7 @@ public class RabbitSqlSessionFactoryBean implements FactoryBean<SqlSessionFactor
         this.banner = banner;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(this.dataSource, "Property 'dataSource' is required");
         Assert.state(this.configuration == null && this.configLocation == null || this.configuration == null || this.configLocation == null, "Property 'configuration' and 'configLocation' can not specified with together");
@@ -332,6 +333,7 @@ public class RabbitSqlSessionFactoryBean implements FactoryBean<SqlSessionFactor
         return sqlSessionFactory;
     }
 
+    @Override
     public SqlSessionFactory getObject() throws Exception {
         if (this.sqlSessionFactory == null) {
             this.afterPropertiesSet();
@@ -340,14 +342,17 @@ public class RabbitSqlSessionFactoryBean implements FactoryBean<SqlSessionFactor
         return this.sqlSessionFactory;
     }
 
+    @Override
     public Class<? extends SqlSessionFactory> getObjectType() {
         return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass();
     }
 
+    @Override
     public boolean isSingleton() {
         return true;
     }
 
+    @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (this.failFast && event instanceof ContextRefreshedEvent) {
             this.sqlSessionFactory.getConfiguration().getMappedStatementNames();

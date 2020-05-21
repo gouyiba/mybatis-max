@@ -2,7 +2,6 @@ package com.rabbit.core.injector;
 
 import com.rabbit.core.injector.method.service.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Insert;
 
 import java.util.List;
 import java.util.stream.Collectors;
