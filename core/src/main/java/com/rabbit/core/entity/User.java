@@ -17,5 +17,5 @@ public class User extends BaseBean{
 
     private Integer stuAge;
 
-    private String type;
+    //private String type;
 }
