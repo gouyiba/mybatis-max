@@ -1,7 +1,7 @@
 package com.rabbit.core.mapper;
 
 
-import com.rabbit.core.super_mapper.BaseMapper;
+import com.rabbit.core.supermapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.rabbit.core.config;
 
 import com.rabbit.core.injector.IRabbitSqlInjector;
-import com.rabbit.core.super_mapper.BaseMapper;
+import com.rabbit.core.supermapper.BaseMapper;
 
 import java.io.Serializable;
 

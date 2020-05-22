@@ -103,13 +103,13 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     /**
      * 按实例主键查询
      *
-     * @param Id    主键
+     * @param id    主键
      * @param clazz 实例class
      * @param <T>
      * @return 指定类型实例
      */
     @Override
-    public <T> T queryObjectById(Object Id, Class<T> clazz) {
+    public <T> T queryObjectById(Object id, Class<T> clazz) {
         if (Objects.isNull(clazz)) {
             throw new MyBatisRabbitPlugException("queryObjectById -> clazz is null......");
         }
@@ -126,7 +126,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         TableInfo tableInfo = getTableInfo(clazz);
         Field pkField = tableInfo.getPrimaryKey();
         TableFieldInfo tableFieldInfo = tableInfo.getColumnMap().get(pkField.getName());
-        queryWrapper.where(tableFieldInfo.getColumnName(), Id);
+        queryWrapper.where(tableFieldInfo.getColumnName(), id);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
         Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
         if (CollectionUtils.isEmpty(objMap)) return null;
@@ -564,7 +564,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * @param fieldInfoMap
      */
     public void convertEnumVal(Map<String, TableFieldInfo> fieldInfoMap, List<Map<String, Object>> objMapList) {
-        Map<String, TableFieldInfo> enumPropertyMap = new HashMap<>();
+        Map<String, TableFieldInfo> enumPropertyMap = new HashMap<>(16);
         // 查找bean中所有枚举属性
         for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
             Class<?> clazz = item.getValue().getPropertyType();
