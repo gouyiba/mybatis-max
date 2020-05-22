@@ -498,7 +498,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      *
      * @return
      */
-    public Class<?> getFillingStrategyClass() {
+    private Class<?> getFillingStrategyClass() {
         List<String> classNameList = Arrays.asList(applicationContext.getBeanDefinitionNames());
         for (String item : classNameList) {
             Object obj = applicationContext.getBean(item);
@@ -517,7 +517,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * @param methodType 公用字段赋值方法类型Annotation: create/update/delete
      * @throws Exception
      */
-    public void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz, Class<? extends Annotation> methodType) throws Exception {
+    private void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz, Class<? extends Annotation> methodType) throws Exception {
         if (!Objects.isNull(clazz)) {
             List<Method> methodList = Arrays.asList(clazz.getMethods());
             Method addMethod = methodList.stream().filter(x ->
@@ -542,7 +542,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * @param source
      * @return
      */
-    public void copyQueryWrapper(QueryWrapper source, Class<?> clazz) {
+    private void copyQueryWrapper(QueryWrapper source, Class<?> clazz) {
         Object obj = null;
         try {
             obj = clazz.newInstance();
@@ -560,7 +560,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      *
      * @param fieldInfoMap
      */
-    public void convertEnumVal(Map<String, TableFieldInfo> fieldInfoMap, List<Map<String, Object>> objMapList) {
+    private void convertEnumVal(Map<String, TableFieldInfo> fieldInfoMap, List<Map<String, Object>> objMapList) {
         Map<String, TableFieldInfo> enumPropertyMap = new HashMap<>(16);
         // 查找bean中所有枚举属性
         for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
@@ -606,7 +606,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * @param objectIdList id-list
      * @return
      */
-    public Long logicDel(Class<?> baseBean, Class<?> beanClass, List<Object> objectIdList) {
+    private Long logicDel(Class<?> baseBean, Class<?> beanClass, List<Object> objectIdList) {
         Delete delete = null;
         String delField = "";
         Object obj = null;
@@ -671,7 +671,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * @param <T>
      * @return
      */
-    public <T> long batchExecute(List<T> list, Map<String, String> sqlMap, Map<String, Object> upSqlMap, Class<? extends Annotation> methodType) {
+    private  <T> long batchExecute(List<T> list, Map<String, String> sqlMap, Map<String, Object> upSqlMap, Class<? extends Annotation> methodType) {
         if (CollectionUtils.isEmpty(list)) {
             throw new MyBatisRabbitPlugException(" target list is null......");
         }
