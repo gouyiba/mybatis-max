@@ -8,7 +8,6 @@ import java.util.Map;
 
 /**
  * 公用Dao接口，用于BaseService
- * 全自动化SQL，与Mapper弱耦合
  *
  * @author duxiaoyu
  * @since 2019-12-12

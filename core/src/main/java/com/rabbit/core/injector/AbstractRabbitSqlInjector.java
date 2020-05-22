@@ -96,6 +96,11 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
 
     public abstract List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass);
 
+    /**
+     * 提取泛型
+     * @param mapperClass
+     * @return
+     */
     protected Class<?> extractModelClass(Class<?> mapperClass) {
         Type[] types = mapperClass.getGenericInterfaces();
         ParameterizedType target = null;
