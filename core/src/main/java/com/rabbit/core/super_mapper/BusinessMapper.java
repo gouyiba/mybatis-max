@@ -1,8 +1,8 @@
-package com.rabbit.core.mapper;
+package com.rabbit.core.super_mapper;
 
 
-import com.rabbit.core.super_mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,8 @@ import java.util.Map;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-public interface BusinessMapper extends BaseMapper {
+@Component
+public interface BusinessMapper {
 
     /**
      * 获取实例

@@ -4,6 +4,7 @@ import com.rabbit.core.config.RabbitConfig;
 import com.rabbit.core.injector.IRabbitSqlInjector;
 import com.rabbit.core.module.RabbitConfiguration;
 import com.rabbit.core.module.RabbitSqlSessionFactoryBean;
+import com.rabbit.core.super_mapper.BusinessMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;

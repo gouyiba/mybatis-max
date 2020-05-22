@@ -15,14 +15,15 @@ import com.rabbit.core.constructor.*;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.SqlKey;
-import com.rabbit.core.mapper.BusinessMapper;
 import com.rabbit.core.service.BaseService;
+import com.rabbit.core.super_mapper.BusinessMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

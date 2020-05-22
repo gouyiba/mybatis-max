@@ -23,7 +23,7 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
     @Override
     public List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass) {
         String mapperName=mapperClass.getName();
-        if(StringUtils.equals(mapperName,"com.rabbit.core.mapper.BusinessMapper")){
+        if(StringUtils.equals(mapperName,"com.rabbit.core.super_mapper.BusinessMapper")){
             return Stream.of(
                     new AddBatchObject(),
                     new AddObject(),

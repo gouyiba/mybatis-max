@@ -1,6 +1,7 @@
 package com.rabbit.core.module;
 
 import com.rabbit.core.config.RabbitConfig;
+import com.rabbit.core.super_mapper.BusinessMapper;
 import com.rabbit.core.util.RabbitConfigUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cache.Cache;
@@ -329,6 +330,9 @@ public class RabbitSqlSessionFactoryBean implements FactoryBean<SqlSessionFactor
 //            System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN).a(":: rabbit-mybatis-plug ::") + ("   (v" + MybatisPlusVersion.getVersion() + ")\n"));
             System.out.println(" (v " + RabbitMybatisPlugVersion.getVersion() + ")\n");
         }
+
+        configuration.addMapper(BusinessMapper.class);
+
         return sqlSessionFactory;
     }
 

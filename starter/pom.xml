@@ -2,14 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>mybatis-rabbit-plug</artifactId>
         <groupId>com.rabbit</groupId>
         <version>1.0.0.alpha</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.rabbit</groupId>
     <artifactId>starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>starter</name>
+    <description>Mybatis-Rabbit-Plug-Starter</description>
 
     <properties>
         <moduleVersion>1.0-SNAPSHOT</moduleVersion>
@@ -24,6 +29,24 @@
             <groupId>com.rabbit</groupId>
             <artifactId>core</artifactId>
             <version>${moduleVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- @ConfigurationProperties annotation processing (metadata for IDEs) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- 开发阶段导入，应用阶段移除 -->
         <dependency>

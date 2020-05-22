@@ -3,6 +3,7 @@ package com.rabbit.core.injector;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.entity.User;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
@@ -13,6 +14,8 @@ import org.apache.ibatis.session.Configuration;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -80,6 +83,9 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
     @Override
     public void inspectInject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass) {
         Class<?> modelClass = extractModelClass(mapperClass);
+
+
+
         List<RabbitAbstractMethod> methodList = this.getMethodList(mapperClass);
         if (CollectionUtils.isNotEmpty(methodList)) {
             // 此处暂时不获取TableInfo，留着以后用
@@ -103,7 +109,7 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
             Type type = var4[var6];
             if (type instanceof ParameterizedType) {
                 Type[] typeArray = ((ParameterizedType)type).getActualTypeArguments();
-               /* if (ArrayUtils.isNotEmpty(typeArray)) {
+                if (ArrayUtils.isNotEmpty(typeArray)) {
                     int var10 = typeArray.length;
                     byte var11 = 0;
                     if (var11 < var10) {
@@ -112,7 +118,7 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
                             target = (ParameterizedType)type;
                         }
                     }
-                }*/
+                }
                 break;
             }
         }

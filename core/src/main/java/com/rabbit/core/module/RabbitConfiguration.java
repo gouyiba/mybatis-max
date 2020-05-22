@@ -1,6 +1,7 @@
 package com.rabbit.core.module;
 
 import com.rabbit.core.config.RabbitConfig;
+import com.rabbit.core.super_mapper.BusinessMapper;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.executor.*;
 import org.apache.ibatis.logging.Log;
@@ -50,6 +51,7 @@ public class RabbitConfiguration extends Configuration {
 
     @Override
     public <T> void addMapper(Class<T> type) {
+        logger.debug("addMapper: " + type.getName());
         this.mybatisMapperRegistry.addMapper(type);
     }
 
