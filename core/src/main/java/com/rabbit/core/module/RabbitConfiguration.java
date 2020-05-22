@@ -1,7 +1,6 @@
 package com.rabbit.core.module;
 
 import com.rabbit.core.config.RabbitConfig;
-import com.rabbit.core.super_mapper.BusinessMapper;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.executor.*;
 import org.apache.ibatis.logging.Log;
@@ -83,6 +82,7 @@ public class RabbitConfiguration extends Configuration {
         getLanguageRegistry().setDefaultDriverClass(driver);
     }
 
+    @Override
     public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
         executorType = executorType == null ? this.defaultExecutorType : executorType;
         executorType = executorType == null ? ExecutorType.SIMPLE : executorType;

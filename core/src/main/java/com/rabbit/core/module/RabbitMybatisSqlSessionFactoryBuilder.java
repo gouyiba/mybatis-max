@@ -18,6 +18,7 @@ public class RabbitMybatisSqlSessionFactoryBuilder extends SqlSessionFactoryBuil
     public RabbitMybatisSqlSessionFactoryBuilder() {
     }
 
+    @Override
     public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
         SqlSessionFactory factory;
         try {
@@ -36,6 +37,7 @@ public class RabbitMybatisSqlSessionFactoryBuilder extends SqlSessionFactoryBuil
         return factory;
     }
 
+    @Override
     public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
         SqlSessionFactory factory;
         try {
@@ -57,6 +59,7 @@ public class RabbitMybatisSqlSessionFactoryBuilder extends SqlSessionFactoryBuil
         return factory;
     }
 
+    @Override
     public SqlSessionFactory build(Configuration config) {
         RabbitConfiguration configuration = (RabbitConfiguration)config;
         SqlSessionFactory factory = super.build(configuration);

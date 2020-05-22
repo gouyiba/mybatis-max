@@ -1,4 +1,4 @@
-package com.rabbit.core.entity;
+package com.rabbit.entity;
 
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Table;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Table("t_user")
-public class User extends BaseBean{
+public class User extends BaseBean {
 
     private String id;
 
@@ -17,5 +17,5 @@ public class User extends BaseBean{
 
     private Integer stuAge;
 
-    private String type;
+    //private String type;
 }

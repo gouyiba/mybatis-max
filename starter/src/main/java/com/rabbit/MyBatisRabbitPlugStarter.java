@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 开发阶段导入，应用阶段移除
  */
-@MapperScan("com.rabbit.core.mapper")
+@MapperScan("com.rabbit.mapper")
 @SpringBootApplication
 public class MyBatisRabbitPlugStarter {
 

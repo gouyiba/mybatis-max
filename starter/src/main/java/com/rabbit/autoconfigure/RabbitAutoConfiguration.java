@@ -4,7 +4,6 @@ import com.rabbit.core.config.RabbitConfig;
 import com.rabbit.core.injector.IRabbitSqlInjector;
 import com.rabbit.core.module.RabbitConfiguration;
 import com.rabbit.core.module.RabbitSqlSessionFactoryBean;
-import com.rabbit.core.super_mapper.BusinessMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
@@ -168,6 +167,7 @@ public class RabbitAutoConfiguration implements InitializingBean {
         public MapperScannerRegistrarNotFoundConfiguration() {
         }
 
+        @Override
         public void afterPropertiesSet() {
             RabbitAutoConfiguration.logger.debug("Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.");
         }
@@ -179,6 +179,7 @@ public class RabbitAutoConfiguration implements InitializingBean {
         public AutoConfiguredMapperScannerRegistry() {
         }
 
+        @Override
         public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
             if (!AutoConfigurationPackages.has(this.beanFactory)) {
                 RabbitAutoConfiguration.logger.debug("Could not determine auto-configuration package, automatic mapper scanning disabled.");
@@ -204,6 +205,7 @@ public class RabbitAutoConfiguration implements InitializingBean {
             }
         }
 
+        @Override
         public void setBeanFactory(BeanFactory beanFactory) {
             this.beanFactory = beanFactory;
         }
@@ -224,6 +226,7 @@ public class RabbitAutoConfiguration implements InitializingBean {
         factory.setConfiguration(configuration);
     }
 
+    @Override
     public void afterPropertiesSet() {
         if (!CollectionUtils.isEmpty(this.rabbitPropertiesCustomizers)) {
             this.rabbitPropertiesCustomizers.forEach((i) -> {

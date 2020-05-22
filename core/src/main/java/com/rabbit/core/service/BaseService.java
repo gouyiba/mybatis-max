@@ -47,7 +47,6 @@ public interface BaseService {
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @param <T>
      * @return
      */
     List<Map<String, Object>> queryCustomSql(String sql);

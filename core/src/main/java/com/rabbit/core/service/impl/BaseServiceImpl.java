@@ -16,14 +16,12 @@ import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.service.BaseService;
-import com.rabbit.core.super_mapper.BusinessMapper;
+import com.rabbit.core.mapper.BaseMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -37,8 +35,7 @@ import java.util.stream.Collectors;
  * @author duxiaoyu
  * @since 2019-12-12
  */
-@Service("baseServiceImpl")
-public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService {
+public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrapper implements BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseServiceImpl.class);
 
@@ -46,8 +43,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     private ApplicationContext applicationContext;
 
     @Autowired
-    private BusinessMapper businessMapper;
-
+    private Mapper baseMapper;
 
     /**
      * 查询实例
@@ -64,7 +60,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        Map<String, Object> objMap = baseMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
         if (CollectionUtils.isEmpty(objMap)) return null;
 
         TableInfo tableInfo = getTableInfo(clazz);
@@ -88,7 +84,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        List<Map<String, Object>> objMapList = businessMapper.getObjectList(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        List<Map<String, Object>> objMapList = baseMapper.getObjectList(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
         if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
 
         List<T> beanList = new ArrayList<>();
@@ -122,16 +118,15 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
         QueryWrapper queryWrapper = new QueryWrapper(obj);
         TableInfo tableInfo = getTableInfo(clazz);
         Field pkField = tableInfo.getPrimaryKey();
         TableFieldInfo tableFieldInfo = tableInfo.getColumnMap().get(pkField.getName());
         queryWrapper.where(tableFieldInfo.getColumnName(), Id);
-
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String, Object> objMap = businessMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        Map<String, Object> objMap = baseMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
         if (CollectionUtils.isEmpty(objMap)) return null;
-
         convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
         T bean = BeanUtil.mapToBean(objMap, clazz, true);
@@ -142,14 +137,14 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @return List<Map < String, Object>>
+     * @return List<Map                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               String                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Object>>
      */
     @Override
     public List<Map<String, Object>> queryCustomSql(String sql) {
         if (org.apache.commons.lang3.StringUtils.isBlank(sql)) {
             throw new MyBatisRabbitPlugException("queryCustomSql -> sql is null......");
         }
-        List<Map<String, Object>> objMapList = businessMapper.customSqlObject(sql);
+        List<Map<String, Object>> objMapList = baseMapper.customSqlObject(sql);
         if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
         return objMapList;
     }
@@ -183,7 +178,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objectId ==>{}", TAG, objectId);
         // 物理删除
-        long result = businessMapper.deleteObject(objectId, sqlMap);
+        long result = baseMapper.deleteObject(objectId, sqlMap);
         LOGGER.info("{}: end delete data...", TAG);
         LOGGER.info(" ");
         return result;
@@ -228,26 +223,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objectIdList ==>{}", TAG, JSONUtil.toJsonStr(objectIdList));
         long result = 0;
-        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
-        if (objectIdList.size() > 500) {
-            int currentBatch = 1;
-            int total = objectIdList.size();
-            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
-            int limit = (currentBatch - 1) * 500;
-            List<Object> tempList = new LinkedList<>();
-            for (int x = 1; x <= batch; x++) {
-                if ((limit + 500) > total) {
-                    tempList = objectIdList.subList(limit, objectIdList.size());
-                } else {
-                    tempList = objectIdList.subList(limit, x * 500);
-                }
-                result += businessMapper.deleteBatchByIdObject(tempList, sqlMap);
-                currentBatch++;
-                limit = (currentBatch - 1) * 500;
-            }
-        } else {
-            result = businessMapper.deleteBatchByIdObject(objectIdList, sqlMap);
-        }
+        result = this.batchExecute(objectIdList, sqlMap, null, Delete.class);
         long endTime = System.currentTimeMillis();
         LOGGER.info("{}: success total: {}", TAG, result);
         LOGGER.info("{}: 本次批量删除共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
@@ -290,7 +266,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: begin update data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
-        long result = businessMapper.updateObject(beanMap, sqlMap);
+        long result = baseMapper.updateObject(beanMap, sqlMap);
         LOGGER.info("{}: end update data...", TAG);
         LOGGER.info(" ");
         return result;
@@ -341,26 +317,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMapList));
         long result = 0;
-        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
-        if (objMapList.size() > 500) {
-            int currentBatch = 1;
-            int total = objMapList.size();
-            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
-            int limit = (currentBatch - 1) * 500;
-            List<Map<String, Object>> tempList = new LinkedList<>();
-            for (int x = 1; x <= batch; x++) {
-                if ((limit + 500) > total) {
-                    tempList = objMapList.subList(limit, objMapList.size());
-                } else {
-                    tempList = objMapList.subList(limit, x * 500);
-                }
-                result += businessMapper.updateBatchByIdObject(tempList, sqlMap);
-                currentBatch++;
-                limit = (currentBatch - 1) * 500;
-            }
-        } else {
-            result = businessMapper.updateBatchByIdObject(objMapList, sqlMap);
-        }
+        result = this.batchExecute(objMapList, null, sqlMap, Update.class);
         long endTime = System.currentTimeMillis();
         LOGGER.info("{}: success total: {}", TAG, result);
         LOGGER.info("{}: 本次批量修改共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
@@ -419,6 +376,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                         Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
                         beanMap.put(primaryKey.getName(), snowflake.nextId());
                         break;
+                    default:
+                        break;
                 }
                 // 策略主键
                 pk = beanMap.get(primaryKey.getName()).toString();
@@ -444,11 +403,12 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: begin add data...", TAG);
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: beanMap ==>{}", TAG, JSONUtil.toJsonStr(beanMap));
-        businessMapper.addObject(beanMap, sqlMap);
+        baseMapper.addObject(beanMap, sqlMap);
         LOGGER.info("{}: end add data...", TAG);
         LOGGER.info(" ");
-        if (org.apache.commons.lang3.StringUtils.equals("default-tab-pk", pk))
+        if (org.apache.commons.lang3.StringUtils.equals("default-tab-pk", pk)) {
             pk = beanMap.get("tempPrimKey").toString();
+        }
         return pk;
     }
 
@@ -499,6 +459,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                         Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
                         item.put(primaryKey.getName(), snowflake.nextId());
                         break;
+                    default:
+                        break;
                 }
             }
         }
@@ -521,26 +483,8 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
         LOGGER.info("{}: sqlMap ==>{}", TAG, JSONUtil.toJsonStr(sqlMap));
         LOGGER.info("{}: objMap ==>{}", TAG, JSONUtil.toJsonStr(objMap));
         long result = 0;
-        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
-        if (objMap.size() > 500) {
-            int currentBatch = 1;
-            int total = objMap.size();
-            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
-            int limit = (currentBatch - 1) * 500;
-            List<Map<String, Object>> tempList = new LinkedList<>();
-            for (int x = 1; x <= batch; x++) {
-                if ((limit + 500) > total) {
-                    tempList = objMap.subList(limit, objMap.size());
-                } else {
-                    tempList = objMap.subList(limit, x * 500);
-                }
-                result += businessMapper.addBatchObject(tempList, sqlMap);
-                currentBatch++;
-                limit = (currentBatch - 1) * 500;
-            }
-        } else {
-            result = businessMapper.addBatchObject(objMap, sqlMap);
-        }
+        // 批量执行
+        result = this.batchExecute(objMap, sqlMap, null, Create.class);
         long endTime = System.currentTimeMillis();
         LOGGER.info("{}: success total: {}", TAG, result);
         LOGGER.info("{}: 本次批量新增共耗时: {}s", TAG, (endTime - beginTime) / 1000f);
@@ -612,7 +556,7 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
     }
 
     /**
-     * 枚举转换
+     * 处理返回查询结果集枚举字段转换
      *
      * @param fieldInfoMap
      */
@@ -640,8 +584,9 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
                     // 此处invoke的enum-method必须被static修饰,否则将抛出空指针异常
                     Enum iEnum = (Enum) method.invoke(null, parameter);
                     String enumName = iEnum.name();
-                    if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName))
+                    if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName)) {
                         objMap.put(item.getValue().getColumnName(), enumName);
+                    }
                 }
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -650,12 +595,11 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
     /**
-     * 逻辑删除
+     * 处理逻辑删除
      *
      * @param baseBean     公共bean
      * @param beanClass    实例bean
@@ -715,5 +659,59 @@ public class BaseServiceImpl extends BaseAbstractWrapper implements BaseService 
             }
         }
         return null;
+    }
+
+    /**
+     * 批量执行
+     *
+     * @param list       目标集合
+     * @param methodType 批量操作类型:Create/Update/Delete
+     * @param sqlMap     insert/delete-sqlMap
+     * @param upSqlMap   update-sqlMap
+     * @param <T>
+     * @return
+     */
+    public <T> long batchExecute(List<T> list, Map<String, String> sqlMap, Map<String, Object> upSqlMap, Class<? extends Annotation> methodType) {
+        if (CollectionUtils.isEmpty(list)) {
+            throw new MyBatisRabbitPlugException(" target list is null......");
+        }
+        long result = 0;
+        // 批量操作限制: 如果总记录数大于500条，则分批执行，每批执行500条记录
+        if (list.size() > 500) {
+            int currentBatch = 1;
+            // 总记录数
+            int total = list.size();
+            // 执行批次
+            int batch = total % 500 == 0 ? (total / 500) : (total / 500) + 1;
+            // 集合下标位置偏移量
+            int limit = (currentBatch - 1) * 500;
+            // 截取数据集合
+            List<T> tempList = new LinkedList<>();
+            for (int x = 1; x <= batch; x++) {
+                if ((limit + 500) > total) {
+                    tempList = list.subList(limit, list.size());
+                } else {
+                    tempList = list.subList(limit, x * 500);
+                }
+                if (Objects.equals(methodType, Create.class)) {
+                    result += baseMapper.addBatchObject((List<Map<String, Object>>) tempList, sqlMap);
+                } else if (Objects.equals(methodType, Update.class)) {
+                    result += baseMapper.updateBatchByIdObject((List<Map<String, Object>>) tempList, upSqlMap);
+                } else if (Objects.equals(methodType, Delete.class)) {
+                    result += baseMapper.deleteBatchByIdObject((List<Object>) tempList, sqlMap);
+                }
+                currentBatch++;
+                limit = (currentBatch - 1) * 500;
+            }
+        } else {
+            if (Objects.equals(methodType, Create.class)) {
+                result = baseMapper.addBatchObject((List<Map<String, Object>>) list, sqlMap);
+            } else if (Objects.equals(methodType, Update.class)) {
+                result = baseMapper.updateBatchByIdObject((List<Map<String, Object>>) list, upSqlMap);
+            } else if (Objects.equals(methodType, Delete.class)) {
+                result = baseMapper.deleteBatchByIdObject((List<Object>) list, sqlMap);
+            }
+        }
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-package com.rabbit.core.entity;
+package com.rabbit.entity;
 
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Delete;
@@ -28,7 +28,7 @@ public class BaseBean implements Serializable {
 
     private Date updateDate;
 
-    @Delete(physicsDel = false,value = 5)
+    @Delete(physicsDel = false,value = 4)
     private Integer delFlag;
 
     /**
