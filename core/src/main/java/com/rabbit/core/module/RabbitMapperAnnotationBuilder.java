@@ -77,9 +77,9 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
                     this.configuration.addIncompleteMethod(new MethodResolver(this, method));
                 }
             }
-//            if (RabbitConfigUtils.isSupperMapperChildren(this.configuration, this.type)) {
+            if (RabbitConfigUtils.isSupperMapperChildren(this.configuration, this.type)) {
                 RabbitConfigUtils.getSqlInjector(this.configuration).inspectInject(this.assistant, this.type);
-//            }
+            }
         }
         this.parsePendingMethods();
     }

@@ -1,15 +1,13 @@
 package com.rabbit.core.injector;
 
 import com.rabbit.common.utils.CollectionUtils;
-import com.rabbit.core.bean.TableInfo;
-import com.rabbit.core.entity.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
 
 import java.lang.reflect.ParameterizedType;
@@ -18,7 +16,6 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * this class by created wuyongfei on 2020/5/10 20:54

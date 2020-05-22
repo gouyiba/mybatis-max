@@ -3,7 +3,6 @@ package com.rabbit.core.injector.method.service;
 import com.rabbit.common.utils.SqlScriptUtil;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.injector.RabbitAbstractMethod;
-import com.sun.javafx.collections.MappingChange;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
