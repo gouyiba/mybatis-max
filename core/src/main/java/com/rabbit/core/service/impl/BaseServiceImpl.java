@@ -232,30 +232,30 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
     }
 
     /**
-     * 修改实例
-     * 目前根据主键进行修改
+     * 根据条件修改实例
      *
-     * @param obj bean
+     * @param updateWrapper 修改实例的条件
      * @return 受影响行数
      */
     @Override
-    public Long updateObject(Object obj) {
-        if (Objects.isNull(obj)) {
+    public Long updateObject(UpdateWrapper updateWrapper) {
+        if (Objects.isNull(updateWrapper.getObj())) {
             throw new MyBatisRabbitPlugException("bean为空......");
         }
-        UpdateWrapper updateWrapper = new UpdateWrapper(obj);
+
+        //UpdateWrapper updateWrapper = new UpdateWrapper(obj);
         Map<String, Object> sqlMap = updateWrapper.sqlGenerate();
-        TableInfo tableInfo = getTableInfo(obj.getClass());
+        TableInfo tableInfo = getTableInfo(updateWrapper.getObj().getClass());
         Field pk = tableInfo.getPrimaryKey();
-        Map<String, Object> beanMap = BeanUtil.beanToMap(obj);
-        if (Objects.isNull(beanMap.get(pk.getName()))) {
+        Map<String, Object> beanMap = BeanUtil.beanToMap(updateWrapper.getObj());
+        /*if (Objects.isNull(beanMap.get(pk.getName()))) {
             throw new MyBatisRabbitPlugException("要修改的bean主键为空......");
-        }
+        }*/
 
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            if (Objects.equals(obj.getClass().getSuperclass(), clazz)) {
+            if (Objects.equals(updateWrapper.getObj().getClass().getSuperclass(), clazz)) {
                 this.setFillingStrategyContent(beanMap, clazz, Update.class);
             }
         } catch (Exception e) {

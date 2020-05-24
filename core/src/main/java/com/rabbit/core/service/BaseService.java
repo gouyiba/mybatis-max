@@ -1,6 +1,7 @@
 package com.rabbit.core.service;
 
 import com.rabbit.core.constructor.QueryWrapper;
+import com.rabbit.core.constructor.UpdateWrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -88,13 +89,12 @@ public interface BaseService {
     <E> Long addBatchObject(List<E> objectList);
 
     /**
-     * 修改实例
-     * 目前根据主键进行修改
+     * 根据条件修改实例
      *
-     * @param obj bean
+     * @param updateWrapper 修改实例的条件
      * @return 受影响行数
      */
-    Long updateObject(Object obj);
+    Long updateObject(UpdateWrapper updateWrapper);
 
     /**
      * 批量修改实例
