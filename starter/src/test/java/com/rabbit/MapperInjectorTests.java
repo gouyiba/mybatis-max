@@ -30,7 +30,7 @@ class MapperInjectorTests {
         user.setStuName("罗志祥");
         user.setStuAge(40);
 
-        UpdateWrapper wrapper=new UpdateWrapper();
+        UpdateWrapper wrapper=new UpdateWrapper(user);
         wrapper.where("stu_uid","5e182bf8de7cf5871d904dff").
                 where("stu_name","马化腾").
                 where("stu_age",111);
