@@ -25,9 +25,9 @@ class MapperInjectorTests {
         accountMapper.findById("1");
         // 单实例查询
         User user = userService.queryObject(new QueryWrapper().
-                where("sex", 2).
+                where("sex", 1).
                 like("stu_name", "马").
-                where("stu_age", 1011), User.class);
+                where("stu_age", 111), User.class);
         System.out.println("query result -> " + JSONUtil.toJsonStr(user));
 
         // 多实例查询 1011,1012,1013,1014,1015,1016,1017,1018

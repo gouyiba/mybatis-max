@@ -6,6 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.rabbit.common.exception.MyBatisRabbitPlugException;
+import com.rabbit.common.utils.ArrayUtils;
 import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.common.utils.StringUtils;
 import com.rabbit.core.annotation.*;
@@ -23,9 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -573,8 +572,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         for (Map.Entry<String, TableFieldInfo> item : enumPropertyMap.entrySet()) {
             Class<?> enumClass = item.getValue().getPropertyType();
             try {
-                // 反射自定义枚举中的valueConvertEnum函数，parameter类型为Integer，如果没定义该函数，将抛出MethodNotDefindException
-                Method method = enumClass.getMethod("valueConvertEnum", Integer.class);
+                // 调用自定义枚举中的valueConvertEnum函数，如果没定义该函数，将抛出异常
+                Class<?> parameterClass=this.extractModelClass(enumClass);
+                Method method = enumClass.getMethod("valueConvertEnum", parameterClass);
                 for (Map<String, Object> objMap : objMapList) {
                     Object parameter = objMap.get(item.getValue().getColumnName());
                     if (Objects.isNull(parameter)) {
@@ -713,5 +713,32 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
             }
         }
         return result;
+    }
+
+    /**
+     * 获取泛型类型,多泛型的时候请将泛型T放在第一位
+     * @param clazz 目标class
+     * @return
+     */
+    private Class<?> extractModelClass(Class<?> clazz) {
+        Type[] types = clazz.getGenericInterfaces();
+        ParameterizedType target = null;
+        for (Type type : types) {
+            if (type instanceof ParameterizedType) {
+                Type[] typeArray = ((ParameterizedType) type).getActualTypeArguments();
+                if (ArrayUtils.isNotEmpty(typeArray)) {
+                    for (Type t : typeArray) {
+                        if (t instanceof TypeVariable || t instanceof WildcardType) {
+                            break;
+                        } else {
+                            target = (ParameterizedType) type;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return target == null ? null : (Class<?>) target.getActualTypeArguments()[0];
     }
 }
