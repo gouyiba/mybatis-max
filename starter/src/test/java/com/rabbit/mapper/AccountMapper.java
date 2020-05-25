@@ -1,6 +1,6 @@
 package com.rabbit.mapper;
 
-import com.rabbit.core.supermapper.BaseMapper;
+import com.rabbit.core.mapper.BaseMapper;
 import com.rabbit.entity.User;
 
 /**

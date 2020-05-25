@@ -1,7 +1,5 @@
 package com.rabbit;
 
-import cn.hutool.json.JSONUtil;
-import com.rabbit.core.constructor.QueryWrapper;
 import com.rabbit.core.constructor.UpdateWrapper;
 import com.rabbit.entity.User;
 import com.rabbit.enumatioon.Sex;
@@ -24,7 +22,6 @@ class MapperInjectorTests {
 
     @Test
     void testBaseService() {
-
         User user=new User();
         user.setSex(Sex.WOMEN);
         user.setStuName("罗志祥");
