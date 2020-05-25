@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootTest
 class MapperInjectorTests {
@@ -25,19 +28,45 @@ class MapperInjectorTests {
     @Test
     void testBaseService() {
 
-        User user=new User();
-        user.setSex(Sex.WOMEN);
-        user.setStuName("罗志祥");
-        user.setStuAge(40);
+        /*User user=new User();
+        user.setSex(Sex.MAX);
+        user.setStuName("广州分祥");
+        user.setStuAge(66);
 
-        UpdateWrapper wrapper=new UpdateWrapper(user);
-        wrapper.where("stu_uid","5e182bf8de7cf5871d904dff").
-                where("stu_name","马化腾").
-                where("stu_age",111);
-        long result=userService.updateObject(wrapper);
+        UpdateWrapper wrapper=new UpdateWrapper();
+        wrapper.where("stu_uid","5e182bf8de7cf5871d904dff");
+        long result=userService.updateObject(user,wrapper);
         if(result>0){
             System.out.println("修改成功");
-        }
+        }*/
+
+        /*User user1=new User();
+        user1.setStuUid("5e182bf8de7cf5871d904e00");
+        user1.setSex(Sex.MAX);
+        user1.setStuName("南京分祥");
+        user1.setStuAge(1);
+
+        User user2=new User();
+        user2.setStuUid("5e182bf8de7cf5871d904e01");
+        user2.setSex(Sex.MAX);
+        user2.setStuName("东北分祥");
+        user2.setStuAge(2);
+
+        User user3=new User();
+        user3.setStuUid("5e182bf8de7cf5871d904e02");
+        user3.setSex(Sex.MAX);
+        user3.setStuName("新疆分祥");
+        user3.setStuAge(3);
+
+        List<User> userList= Stream.of(
+                user1,user2,user3
+        ).collect(Collectors.toList());
+
+        long result=userService.updateBatchByIdObject(userList);
+        if(result>0){
+            System.out.println("批量修改成功");
+        }*/
+
         /*accountMapper.findById("1");
         // 单实例查询
         User user = userService.queryObject(new QueryWrapper().

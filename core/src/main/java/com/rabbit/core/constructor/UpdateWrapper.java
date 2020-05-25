@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,18 +33,12 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
     private final Map<String, Object> sqlMap = new ConcurrentHashMap<>();
 
     /**
-     * 目标实例
-     */
-    private Object obj;
-
-    /**
      * 解析后的TableInfo
      */
     private TableInfo tableInfo;
 
     public UpdateWrapper(E clazz) {
         super(clazz);
-        this.obj=(Object) clazz;
         this.tableInfo=getTableInfo();
     }
 
@@ -56,7 +51,7 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
      * @author duxiaoyu
      * @since 2020-01-28
      */
-    public Map<String, Object> sqlGenerate() {
+    public Map<String, Object> sqlGenerate(Map<String,Object> mergeSqlMap) {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
         TableInfo baseBean=getBaseBean();
         Map<String,TableFieldInfo> baseBeanFieldMap=null;
@@ -78,12 +73,18 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
         sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
         //String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getColumnType().getValue());
         // 替换sql条件目标参数
-        Map<String,Object> mergeSqlMap=mergeSqlMap();
-        Map<String,String> where=(Map<String, String>) mergeSqlMap.get(MySqlKeyWord.WHERE.getValue());
-        for (String item:where.keySet()){
-            where.put(item,where.get(item).replace("valMap","sqlMap.UPDATE_WHERE.VALUE"));
+        if(!Objects.isNull(mergeSqlMap)){
+            // 根据条件修改
+            Map<String,String> where=(Map<String, String>) mergeSqlMap.get(MySqlKeyWord.WHERE.getValue());
+            for (String item:where.keySet()){
+                where.put(item,where.get(item).replace("valMap","sqlMap.UPDATE_WHERE.VALUE"));
+            }
+            sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), mergeSqlMap);
+        }else {
+            // 根据指定主键修改
+            String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getColumnType().getValue());
+            sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
         }
-        sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), mergeSqlMap);
         return sqlMap;
     }
 
@@ -125,9 +126,5 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
             }
         }
         return paramterMap;
-    }
-
-    public Object getObj(){
-        return this.obj;
     }
 }

@@ -234,28 +234,33 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
     /**
      * 根据条件修改实例
      *
-     * @param updateWrapper 修改实例的条件
+     * @param object 实例参数
+     * @param updateWrapper 修改实例条件,可以为null或为空 = 无条件修改，谨慎操作
      * @return 受影响行数
      */
     @Override
-    public Long updateObject(UpdateWrapper updateWrapper) {
-        if (Objects.isNull(updateWrapper.getObj())) {
-            throw new MyBatisRabbitPlugException("bean为空......");
+    public <E> Long updateObject(E object,UpdateWrapper updateWrapper) {
+        if (Objects.isNull(object)) {
+            throw new MyBatisRabbitPlugException("要修改的bean为空......");
         }
 
-        //UpdateWrapper updateWrapper = new UpdateWrapper(obj);
-        Map<String, Object> sqlMap = updateWrapper.sqlGenerate();
-        TableInfo tableInfo = getTableInfo(updateWrapper.getObj().getClass());
-        Field pk = tableInfo.getPrimaryKey();
-        Map<String, Object> beanMap = BeanUtil.beanToMap(updateWrapper.getObj());
-        /*if (Objects.isNull(beanMap.get(pk.getName()))) {
-            throw new MyBatisRabbitPlugException("要修改的bean主键为空......");
-        }*/
+        Map<String, Object> beanMap = BeanUtil.beanToMap(object);
+        UpdateWrapper updateSqlGenerate = new UpdateWrapper(object);
+        TableInfo tableInfo = getTableInfo(object.getClass());
+        // Field pk = tableInfo.getPrimaryKey();
+        Map<String,Object> mergeSqlMap=null;
+        if(!Objects.isNull(updateWrapper)){
+            mergeSqlMap=updateWrapper.mergeSqlMap();
+        }else {
+            // 为null时默认获取一个空mergeSqlMap
+            mergeSqlMap=updateSqlGenerate.mergeSqlMap();
+        }
+        Map<String, Object> sqlMap = updateSqlGenerate.sqlGenerate(mergeSqlMap);
 
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            if (Objects.equals(updateWrapper.getObj().getClass().getSuperclass(), clazz)) {
+            if (Objects.equals(object.getClass().getSuperclass(), clazz)) {
                 this.setFillingStrategyContent(beanMap, clazz, Update.class);
             }
         } catch (Exception e) {
@@ -289,7 +294,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         UpdateWrapper updateWrapper = new UpdateWrapper(objectList.get(0));
         TableInfo tableInfo = getTableInfo(objectList.get(0).getClass());
         List<Map<String, Object>> objMapList = objectList.stream().map(x -> BeanUtil.beanToMap(x)).collect(Collectors.toList());
-        Map<String, Object> sqlMap = updateWrapper.sqlGenerate();
+        Map<String, Object> sqlMap = updateWrapper.sqlGenerate(null);
         String where = sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();
         where = where.replace("objectMap", "obj");
         sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
