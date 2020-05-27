@@ -1,10 +1,10 @@
 package com.rabbit.test;
 
-import com.rabbit.common.utils.Assert;
 import com.rabbit.entity.Account;
 import com.rabbit.mapper.AccountMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -16,12 +16,12 @@ public class BaseMapperMethodTest {
     private AccountMapper accountMapper;
 
     @Test
-    public void testInsert() {
+    public void testInsertMethod() {
         Account account = new Account();
         account.setId(UUID.randomUUID().toString());
         account.setUserName("root");
-        account.setPass("521");
+        account.setPass(null);
         account.setCreatedBy(UUID.randomUUID().toString());
-        Assert.isTrue(accountMapper.insert(account) > 0, "insert success.");
+        Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");
     }
 }
