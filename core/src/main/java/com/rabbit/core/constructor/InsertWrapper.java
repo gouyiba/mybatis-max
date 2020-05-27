@@ -1,6 +1,5 @@
 package com.rabbit.core.constructor;
 
-import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.core.annotation.Column;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
@@ -36,11 +35,8 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      */
     private TableInfo tableInfo;
 
-    private TableInfo baseBean;
-
     public InsertWrapper(E clazz) {
-        this.baseBean = analysisBaseBean();
-        this.tableInfo = analysisClazz(clazz.getClass());
+        this.tableInfo = parseClazzToTableInfo(clazz.getClass());
     }
 
     /**
@@ -52,7 +48,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
      */
     public Map<String, String> sqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
-        Map<String,TableFieldInfo> baseBeanFieldMap=null;
+        /*Map<String,TableFieldInfo> baseBeanFieldMap=null;
         if (this.baseBean!=null){
             baseBeanFieldMap=Optional.ofNullable(this.baseBean.getColumnMap()).orElse(null);
         }
@@ -60,7 +56,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
 
         if(CollectionUtils.isNotEmpty(baseBeanFieldMap)){
             fieldInfoMap.putAll(baseBeanFieldMap);
-        }
+        }*/
 
         sqlMap.put(SqlKey.INSERT_HEAD.getValue(), MySqlKeyWord.INSERT.getValue());
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
@@ -108,7 +104,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
                 }
             }
             String propertyName = item.getValue().getPropertyName();
-            String columnType = item.getValue().getColumnType().getValue();
+            String columnType = item.getValue().getJdbcType().getValue();
             if (StringUtils.isNotBlank(typeHandler)) {
                 sj.add(String.format("#{objectMap.%s,typeHandler=%s}", propertyName, typeHandler));
             } else {

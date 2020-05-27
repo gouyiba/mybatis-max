@@ -15,6 +15,11 @@ import java.lang.reflect.Field;
 @Data
 public class TableFieldInfo implements Serializable {
 
+    public TableFieldInfo() {
+        this.jdbcType = MySqlColumnType.VARCHAR;
+        this.typeHandler = Object.class;
+    }
+
     /**
      * 属性
      */
@@ -38,5 +43,10 @@ public class TableFieldInfo implements Serializable {
     /**
      * 数据库表字段类型
      */
-    private MySqlColumnType columnType;
+    private MySqlColumnType jdbcType;
+
+    /**
+     * ORM类型处理
+     */
+    private Class<?> typeHandler;
 }

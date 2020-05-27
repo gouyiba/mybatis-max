@@ -58,7 +58,7 @@ public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
         sqlMap.put(SqlKey.DELETE_HEAD.getValue(), MySqlKeyWord.DELETE.getValue() + " " + MySqlKeyWord.FROM.getValue());
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
-        String where = String.format("%s %s=#{%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), "objectId", columnPK.getColumnType().getValue());
+        String where = String.format("%s %s=#{%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), "objectId", columnPK.getJdbcType().getValue());
         sqlMap.put(SqlKey.DELETE_WHERE.getValue(), where);
         return sqlMap;
     }

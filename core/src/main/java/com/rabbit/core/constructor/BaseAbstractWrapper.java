@@ -2,7 +2,6 @@ package com.rabbit.core.constructor;
 
 import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.ClassUtils;
-import com.rabbit.common.utils.CollectionUtils;
 import com.rabbit.common.utils.SpringContextUtil;
 import com.rabbit.common.utils.StringUtils;
 import com.rabbit.core.annotation.Column;
@@ -12,10 +11,12 @@ import com.rabbit.core.annotation.Table;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.MySqlColumnType;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -110,20 +111,20 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
      * @return TableInfo
      * @author duxiaoyu
      */
-    protected TableInfo analysisClazz(Class<?> clazz) {
-        TableInfo tableInfo = null;
+    protected TableInfo parseClazzToTableInfo(Class<?> clazz) {
         // 查找bean.class是否已存在缓存中
-        tableInfo = getTableInfo(clazz);
+        TableInfo tableInfo = getTableInfo(clazz);
         if (tableInfo != null) {
             return tableInfo;
         }
 
-        String tableName = "";
-        Map<String, TableFieldInfo> tbFieldMap = new ConcurrentHashMap<>();
+        Map<String, TableFieldInfo> tbFieldMap = new HashMap<>();
 
-        logger.info("{} - start analysis tableInfo ......", TAG);
+        logger.info("{} - start parse tableInfo ......", TAG);
         tableInfo = new TableInfo();
-        // 是否标注 @Table
+
+        String tableName; // 数据库表名
+
         if (clazz.isAnnotationPresent(Table.class)) {
             Table table = clazz.getAnnotation(Table.class);
             tableName = table.value();
@@ -132,57 +133,30 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
             String className = clazz.getSimpleName();
             tableName = StringUtils.camelToUnderline(StringUtils.firstToLowerCase(className));
         }
-        logger.info("{} - analysis result db.tableName ==> {}", TAG, tableName);
+        tableInfo.setTableName(tableName);
+
+        //tableInfo.setId(1);// 表默认主键，暂时没有用到的地方，如果后面有需要用到的地方，再启用
+
+        logger.info("{} - parse result db.tableName ==> {}", TAG, tableName);
 
         // 开始解析实例中的字段
-        List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
-        if (!CollectionUtils.isEmpty(fieldList)) {
-            for (Field item : fieldList) {
-                if (item.isAnnotationPresent(Column.class)) {
-                    Column column = item.getAnnotation(Column.class);
-                    // 判断是否是数据库表字段，如果不是，直接忽略不进行解析
-                    if (!column.isTableColumn()) {
-                        continue;
-                    }
-                }
+        List<Field> fieldList = getClassFields(clazz);
 
-                TableFieldInfo tbField = new TableFieldInfo();
-                String columnName = "";// 数据库表字段名
-                String propertyName = "";// bean属性名
+        for (Field item : fieldList) {
+            if (item.isAnnotationPresent(Transient.class)) {
+                continue;
+            }
+            TableFieldInfo tbField = new TableFieldInfo();
 
-                // 是否标注 @Column 或 @Id
-                if (item.isAnnotationPresent(Column.class) || item.isAnnotationPresent(Id.class)) {
-                    Column column = item.getAnnotation(Column.class);
-                    Id id = item.getAnnotation(Id.class);
-                    if (!Objects.isNull(column)) {
-                        columnName = column.value();
-                    } else if (!Objects.isNull(id)) {
-                        columnName = id.value();
-                        // 设置table的主键字段
-                        tableInfo.setPrimaryKey(item);
-                    }
-                    // 判断 @column 是否设置了对应的数据库表字段名称，如果没有设置，自动解析字段，默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
-                    if (org.apache.commons.lang3.StringUtils.isBlank(columnName)) {
-                        propertyName = item.getName();
-                        columnName = StringUtils.camelToUnderline(propertyName);
-                    }
+            String columnName = "";// 数据库表字段名
+            String propertyName = "";// bean属性名
 
-                    // 获取字段对应的数据类型: 如果设置了对应的数据类型，就直接获取，如果没有就自动获取默认数据类型
-                    if (!Objects.isNull(column)) {
-                        // 此处在设置数据库字段类型时，如果没有指定，会拿默认的数据库类型varchar，
-                        // 但是这个情况是不符合实际情况的，如果是枚举类型，其实对应的应该不是varchar，此处问题不大，所以暂时先不做处理
-                        tbField.setColumnType(column.columnType());
-                    }
-
-                    if (!Objects.isNull(id)) {
-                        tbField.setColumnType(id.columnType());
-                    }
-                } else {
-                    // 自动解析字段，默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
-                    propertyName = item.getName();
-                    columnName = StringUtils.camelToUnderline(propertyName);
-                    tbField.setColumnType(this.getColumnType(item.getGenericType()));
-                }
+            // 未标注 @Column 或 @Id
+            if (!item.isAnnotationPresent(Column.class) && !item.isAnnotationPresent(Id.class)) {
+                // 自动解析字段，默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
+                propertyName = item.getName();
+                columnName = StringUtils.camelToUnderline(propertyName);
+                tbField.setJdbcType(this.getColumnType(item.getGenericType()));
                 // 设置解析后的字段内容
                 tbField.setField(item);
                 tbField.setColumnName(columnName);
@@ -190,22 +164,76 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
                 Class<?> clazzFieldType = item.getType();
                 tbField.setPropertyType(clazzFieldType);
                 tbFieldMap.put(propertyName, tbField);
+                continue;
             }
-            logger.info("{} - complete analysis tableInfo ......", TAG);
-        } else {
-            throw new MyBatisRabbitPlugException("解析Class-Field异常，未能获取到Field......");
-        }
 
-        //tableInfo.setId(1);// 表默认主键，暂时没有用到的地方，如果后面有需要用到的地方，再启用
-        tableInfo.setTableName(tableName);
-        tableInfo.setColumnMap(tbFieldMap);
-        if (Objects.isNull(tableInfo)) {
-            throw new MyBatisRabbitPlugException("解析bean.Class异常，TableInfo为空，缓存失败......");
+            // 标注 @Column 或 @Id
+            Column column = item.getAnnotation(Column.class);
+            Id id = item.getAnnotation(Id.class);
+            if (!Objects.isNull(column)) {
+                // 判断是否是数据库表字段，如果不是，直接忽略不进行解析
+                if (!column.isTableColumn()) {
+                    continue;
+                }
+                columnName = column.value();
+
+                // 字段对应的数据类型：此处在设置数据库字段类型时，如果没有指定，会拿默认的数据库类型varchar，
+                // 但是这个情况是不符合实际情况的，如果是枚举类型，其实对应的应该不是varchar，此处问题不大，所以暂时先不做处理
+                tbField.setJdbcType(column.jdbcType());
+                if (MySqlColumnType.VARCHAR.equals(column.jdbcType())) {
+                    tbField.setJdbcType(this.getColumnType(item.getGenericType()));
+                }
+
+                tbField.setTypeHandler(column.typeHandler());
+            } else if (!Objects.isNull(id)) {
+                columnName = id.value();
+                // 设置table的主键字段
+                tableInfo.setPrimaryKey(item);
+
+                tbField.setJdbcType(id.jdbcType());
+                if (MySqlColumnType.VARCHAR.equals(id.jdbcType())) {
+                    tbField.setJdbcType(this.getColumnType(item.getGenericType()));
+                }
+            }
+
+            // 判断 @column 是否设置了对应的数据库表字段名称，如果没有设置，自动解析字段
+            // 默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
+            if (StringUtils.isBlank(columnName)) {
+                propertyName = item.getName();
+                columnName = StringUtils.camelToUnderline(propertyName);
+            }
+            // 设置解析后的字段内容
+            tbField.setField(item);
+            tbField.setColumnName(columnName);
+            tbField.setPropertyName(propertyName);
+            Class<?> clazzFieldType = item.getType();
+            tbField.setPropertyType(clazzFieldType);
+            tbFieldMap.put(propertyName, tbField);
         }
+        logger.info("{} - complete parse tableInfo ......", TAG);
+
+        tableInfo.setColumnMap(tbFieldMap);
+
         // 缓存 TableInfo
-        TABLE_INFO_CACHE.put(ClassUtils.getUserClass(clazz), tableInfo);
+        addTableInfoCache(ClassUtils.getUserClass(clazz), tableInfo);
         return tableInfo;
     }
+
+    /**
+     * 获取此类及基类字段
+     *
+     * @param parameterType
+     * @return
+     */
+    private List<Field> getClassFields(Class parameterType) {
+        List<Field> fieldList = new ArrayList(Arrays.asList(parameterType.getDeclaredFields()));
+        if (ObjectUtils.isEmpty(parameterType.getSuperclass())) {
+            return fieldList;
+        }
+        fieldList.addAll(getClassFields(parameterType.getSuperclass()));
+        return fieldList;
+    }
+
 
     /**
      * 解析BaseBean
@@ -213,7 +241,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
      *
      * @author duxiaoyu
      */
-    protected TableInfo analysisBaseBean() {
+    protected TableInfo parseBaseBean() {
         Class<?> baseBean = null;
         ApplicationContext applicationContext = SpringContextUtil.getApplicationContext();
         List<String> classNameList = Arrays.asList(applicationContext.getBeanDefinitionNames());
@@ -224,7 +252,7 @@ public abstract class BaseAbstractWrapper<E> implements Serializable {
             }
         }
         if (baseBean != null) {
-            TableInfo tbBaseBean = this.analysisClazz(baseBean);
+            TableInfo tbBaseBean = this.parseClazzToTableInfo(baseBean);
             return tbBaseBean;
         }
         return null;

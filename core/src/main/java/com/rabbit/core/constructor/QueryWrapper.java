@@ -45,11 +45,8 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
 
     private TableInfo tableInfo;
 
-    private TableInfo baseBean;
-
     public QueryWrapper(E clazz) {
-        this.baseBean = analysisBaseBean();
-        this.tableInfo = analysisClazz(clazz.getClass());
+        this.tableInfo = parseClazzToTableInfo(clazz.getClass());
         this.sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
     }
 

@@ -40,5 +40,5 @@ public @interface Column {
      * 数据库字段类型，默认VARCHAR
      * @return
      */
-    MySqlColumnType columnType() default MySqlColumnType.VARCHAR;
+    MySqlColumnType jdbcType() default MySqlColumnType.VARCHAR;
 }

@@ -91,10 +91,11 @@ public interface BaseService {
     /**
      * 根据条件修改实例
      *
-     * @param updateWrapper 修改实例的条件
+     * @param object 实例参数
+     * @param updateWrapper 修改实例条件,可以为null或为空 = 无条件修改，谨慎操作
      * @return 受影响行数
      */
-    Long updateObject(UpdateWrapper updateWrapper);
+    <E> Long updateObject(E object, UpdateWrapper updateWrapper);
 
     /**
      * 批量修改实例

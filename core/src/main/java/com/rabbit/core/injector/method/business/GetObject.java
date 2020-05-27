@@ -1,24 +1,22 @@
-package com.rabbit.core.injector.method.service;
+package com.rabbit.core.injector.method.business;
 
 import com.rabbit.common.utils.SqlScriptUtil;
-import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.injector.RabbitAbstractMethod;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.Map;
 
 /**
- * @ClassName GetObjectList
- * @ClassExplain: 查询多个实例
+ * @ClassName GetObject
+ * @ClassExplain: 查询单个实例
  * @Author Duxiaoyu
- * @Date 2020/5/5 11:05
+ * @Date 2020/5/5 11:03
  * @Since V 1.0
  */
-public class GetObjectList extends RabbitAbstractMethod {
+public class GetObject extends RabbitAbstractMethod {
 
     @Override
-    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+    public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         StringBuffer sql = new StringBuffer("<script>");
         sql.append("\nselect");
         sql.append(SqlScriptUtil.convertIf("sqlMap.setColumn!=null and sqlMap.setColumn!=''", "${sqlMap.setColumn}"));
@@ -35,6 +33,6 @@ public class GetObjectList extends RabbitAbstractMethod {
         sql.append(SqlScriptUtil.convertIf("sqlMap.LIMIT!=null and sqlMap.LIMIT!=''","${sqlMap.LIMIT}"));
         sql.append("\n</script>");
         SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
-        return addSelectMappedStatementForOther(mapperClass,"getObjectList",sqlSource,Map.class);
+        addSelectMappedStatementForOther(mapperClass,"getObject",sqlSource,Map.class);
     }
 }

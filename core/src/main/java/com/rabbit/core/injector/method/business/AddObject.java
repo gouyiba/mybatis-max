@@ -1,10 +1,8 @@
-package com.rabbit.core.injector.method.service;
+package com.rabbit.core.injector.method.business;
 
 import com.rabbit.common.utils.SqlScriptUtil;
-import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.injector.RabbitAbstractMethod;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.Map;
@@ -20,7 +18,7 @@ import java.util.Map;
 public class AddObject extends RabbitAbstractMethod {
 
     @Override
-    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+    public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         StringBuffer sql=new StringBuffer("<script>");
         sql.append(SqlScriptUtil.convertIf("sqlMap.INSERT_HEAD!=null and sqlMap.INSERT_HEAD!=''","${sqlMap.INSERT_HEAD}"));
         sql.append(SqlScriptUtil.convertIf("sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''","${sqlMap.TABLE_NAME}"));
@@ -34,6 +32,6 @@ public class AddObject extends RabbitAbstractMethod {
         sql.append("\n</script>");
         SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
         // 此处keyColumn主键默认是 ‘id’ 字段
-        return addInsertMappedStatement(mapperClass, Map.class,"addObject",sqlSource,new NoKeyGenerator(),"objectMap.tempPrimKey","id");
+        addInsertMappedStatement(mapperClass, Map.class,"addObject",sqlSource,new NoKeyGenerator(),"objectMap.tempPrimKey","id");
     }
 }

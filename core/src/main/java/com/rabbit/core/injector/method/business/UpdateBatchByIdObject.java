@@ -1,9 +1,7 @@
-package com.rabbit.core.injector.method.service;
+package com.rabbit.core.injector.method.business;
 
 import com.rabbit.common.utils.SqlScriptUtil;
-import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.injector.RabbitAbstractMethod;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.Map;
@@ -18,7 +16,7 @@ import java.util.Map;
 public class UpdateBatchByIdObject extends RabbitAbstractMethod {
 
     @Override
-    public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
+    public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         StringBuffer sql=new StringBuffer("<script>");
         sql.append(SqlScriptUtil.convertForeach("objectList","obj",null,null,";",null,
                 "update ${sqlMap.TABLE_NAME}"+
@@ -28,6 +26,6 @@ public class UpdateBatchByIdObject extends RabbitAbstractMethod {
                 SqlScriptUtil.convertIf("sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''","${sqlMap.UPDATE_WHERE}")));
         sql.append("\n</script>");
         SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
-        return addUpdateMappedStatement(mapperClass,Map.class,"updateBatchByIdObject",sqlSource);
+        addUpdateMappedStatement(mapperClass,Map.class,"updateBatchByIdObject",sqlSource);
     }
 }

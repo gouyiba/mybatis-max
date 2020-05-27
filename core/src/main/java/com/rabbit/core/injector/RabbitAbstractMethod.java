@@ -1,6 +1,5 @@
 package com.rabbit.core.injector;
 
-import com.rabbit.core.bean.TableInfo;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -22,11 +21,11 @@ public abstract class RabbitAbstractMethod {
     public RabbitAbstractMethod() {
     }
 
-    public void inject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass, Class<?> modelClass,TableInfo tableInfo) {
+    public void inject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass, Class<?> modelClass) {
         this.configuration = builderAssistant.getConfiguration();
         this.builderAssistant = builderAssistant;
         this.languageDriver = this.configuration.getDefaultScriptingLanguageInstance();
-        this.injectMappedStatement(mapperClass, modelClass, null);
+        this.injectMappedStatement(mapperClass, modelClass);
     }
 
     private boolean hasMappedStatement(String mappedStatement) {
@@ -161,5 +160,5 @@ public abstract class RabbitAbstractMethod {
         }
     }
 
-    public abstract MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo);
+    public abstract void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass);
 }

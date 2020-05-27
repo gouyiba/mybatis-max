@@ -1,6 +1,7 @@
 package com.rabbit.core.injector;
 
-import com.rabbit.core.injector.method.service.*;
+import com.rabbit.core.injector.method.base.Insert;
+import com.rabbit.core.injector.method.business.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
     @Override
     public List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass) {
         return Stream.of(
+                // business
                 new AddBatchObject(),
                 new AddObject(),
                 new CustomSqlObject(),
@@ -30,7 +32,9 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
                 new GetObject(),
                 new GetObjectList(),
                 new UpdateBatchByIdObject(),
-                new UpdateObject()
+                new UpdateObject(),
+                // base
+                new Insert()
         ).collect(Collectors.toList());
     }
 }

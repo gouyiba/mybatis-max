@@ -80,15 +80,10 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
     @Override
     public void inspectInject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass) {
         Class<?> modelClass = extractModelClass(mapperClass);
-
-
-
         List<RabbitAbstractMethod> methodList = this.getMethodList(mapperClass);
         if (CollectionUtils.isNotEmpty(methodList)) {
-            // 此处暂时不获取TableInfo，留着以后用
-            //TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
             // 循环注入自定义方法
-            methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass,null));
+            methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass));
         } else {
             logger.debug(mapperClass.toString() + ", No effective injection method was found.");
         }
