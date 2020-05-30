@@ -53,7 +53,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param idList 主键ID列表(不能为 null 以及 empty)
      * @return 受影响行数
      */
-    int deleteBatchIds(List<T> idList);
+    int deleteBatchById(List<T> idList);
 
     /**
      * 根据 ID 修改
@@ -69,7 +69,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param entityIds 实体集合
      * @return 受影响行数
      */
-    int updateById(List<T> entityIds);
+    int updateBatchById(List<T> entityIds);
 
     /**
      * 根据 updateWrapper 条件，更新记录
