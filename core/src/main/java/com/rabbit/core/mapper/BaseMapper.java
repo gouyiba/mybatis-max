@@ -5,7 +5,6 @@ import com.rabbit.core.constructor.QueryWrapper;
 import com.rabbit.core.constructor.UpdateWrapper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 公用Mapper，用于其他Dao接口继承，继承该接口后，即可拥有CRUD功能
@@ -41,14 +40,6 @@ public interface BaseMapper<T> extends BusinessMapper {
     int deleteById(Object id);
 
     /**
-     * 根据 columnMap 条件，删除记录
-     *
-     * @param columnMap 表字段 map 对象
-     * @return 受影响行数
-     */
-    int deleteByMap(Map<String, Object> columnMap);
-
-    /**
      * 根据 DeleteWrapper 条件，删除记录
      *
      * @param wrapper 实体对象封装操作类（可以为 null）
@@ -73,6 +64,14 @@ public interface BaseMapper<T> extends BusinessMapper {
     int updateById(T entity);
 
     /**
+     * 根据 ID 批量修改
+     *
+     * @param entityIds 实体集合
+     * @return 受影响行数
+     */
+    int updateById(List<T> entityIds);
+
+    /**
      * 根据 updateWrapper 条件，更新记录
      *
      * @param entity        实体对象 (set 更新值,可以为 null)
@@ -80,15 +79,6 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @return 受影响行数
      */
     int update(T entity, UpdateWrapper<T> updateWrapper);
-
-    /**
-     * 根据 updateWrapper 条件，批量更新记录
-     *
-     * @param entityList    实体对象集合 (set 更新值,可以为 null)
-     * @param updateWrapper 条件封装操作类（可以为 null,用于生成 where 语句）
-     * @return 受影响行数
-     */
-    int updateBatch(List<T> entityList, UpdateWrapper<T> updateWrapper);
 
     /**
      * 根据 ID 查询
@@ -107,14 +97,6 @@ public interface BaseMapper<T> extends BusinessMapper {
     List<T> selectBatchIds(List<T> idList);
 
     /**
-     * 查询（根据 columnMap 条件）
-     *
-     * @param columnMap 表字段 map 对象
-     * @return 实体集合
-     */
-    List<T> selectByMap(Map<String, Object> columnMap);
-
-    /**
      * 根据 QueryWrapper 条件，查询一条记录
      *
      * @param queryWrapper 实体对象封装操作类（可以为 null）
@@ -128,7 +110,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param queryWrapper 实体对象封装操作类（可以为 null
      * @return 总记录数
      */
-    Long selectCount(QueryWrapper<T> queryWrapper);
+    long selectCount(QueryWrapper<T> queryWrapper);
 
     /**
      * 根据 QueryWrapper 条件，查询记录
@@ -138,13 +120,14 @@ public interface BaseMapper<T> extends BusinessMapper {
      */
     List<T> selectList(QueryWrapper<T> queryWrapper);
 
+    /* 2.0.0 实现 */
     /**
      * 根据 QueryWrapper 条件，查询记录
      *
      * @param queryWrapper 实体对象封装操作类（可以为 null）
      * @return Map集合
      */
-    List<Map<String, Object>> selectMaps(QueryWrapper<T> queryWrapper);
+    // List<Map<String, Object>> selectMaps(QueryWrapper<T> queryWrapper);
 
     /**
      * 根据自定义Sql查询记录
@@ -152,5 +135,30 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param sql 自定义Sql
      * @return Map集合
      */
-    List<Map<String, Object>> selectCustomSql(String sql);
+    // List<Map<String, Object>> selectCustomSql(String sql);
+
+    /**
+     * 根据 columnMap 条件，删除记录
+     *
+     * @param columnMap 表字段 map 对象
+     * @return 受影响行数
+     */
+    // int deleteByMap(Map<String, Object> columnMap);
+
+    /**
+     * 根据 updateWrapper 条件，批量更新记录
+     *
+     * @param entityList    实体对象集合 (set 更新值,可以为 null)
+     * @param updateWrapper 条件封装操作类（可以为 null,用于生成 where 语句）
+     * @return 受影响行数
+     */
+    // int updateBatch(List<T> entityList, UpdateWrapper<T> updateWrapper);
+
+    /**
+     * 查询（根据 columnMap 条件）
+     *
+     * @param columnMap 表字段 map 对象
+     * @return 实体集合
+     */
+    // List<T> selectByMap(Map<String, Object> columnMap);
 }
