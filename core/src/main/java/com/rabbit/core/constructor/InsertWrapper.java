@@ -6,6 +6,7 @@ import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
+import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
     private TableInfo tableInfo;
 
     public InsertWrapper(E clazz) {
-        this.tableInfo = parseClazzToTableInfo(clazz.getClass());
+        this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());
     }
 
     /**

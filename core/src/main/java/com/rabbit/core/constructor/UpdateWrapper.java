@@ -5,6 +5,7 @@ import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
+import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,7 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
     private TableInfo tableInfo;
 
     public UpdateWrapper(E clazz) {
-        super(clazz);
-        this.tableInfo=getTableInfo();
+        this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());
     }
 
     public UpdateWrapper(){}

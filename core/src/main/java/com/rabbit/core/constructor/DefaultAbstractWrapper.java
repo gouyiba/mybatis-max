@@ -11,31 +11,25 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class DefaultAbstractWrapper extends BaseAbstractWrapper {
 
-    private final Map<String, String> sqlMap = new HashMap<>();
-
-    /**
-     * 解析后的TableInfo
-     */
     private TableInfo tableInfo;
 
-    public TableInfo getTableInfo() {
-        return this.tableInfo;
-    }
-
-    public DefaultAbstractWrapper(Class parameterType) {
-        this.tableInfo = super.parseClazzToTableInfo(parameterType);
+    public DefaultAbstractWrapper(TableInfo tableInfo) {
+        this.tableInfo = tableInfo;
     }
 
     /**
-     * 新增 sql 生成:
+     * 新增 sql 生成: INSERT INTO table VALUES (#{field})
      * 用于新增sql的参数和value的生成
      *
      * @author duxiaoyu
      * @since 2019-12-25
      */
     public Map<String, String> insertSqlGenerate() {
+        Map<String, String> sqlMap = new HashMap<>();
+
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
 
         sqlMap.put(SqlKey.INSERT_HEAD.getValue(), MySqlKeyWord.INSERT.getValue());
@@ -53,14 +47,21 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
         sqlMap.put(SqlKey.INSERT_VALUE_KEYWORD.getValue(), MySqlKeyWord.VALUE.getValue());
         sqlMap.put(SqlKey.INSERT_VAL_LEFT_BRA.getValue(), "(");
 
-        String sqlValue = this.insertSqlValueConvert(fieldInfoMap);
+        String sqlValue = this.sqlValueConvert(fieldInfoMap);
         sqlMap.put(SqlKey.INSERT_VALUE.getValue(), sqlValue);
 
         sqlMap.put(SqlKey.INSERT_VAL_RIGHT_BRA.getValue(), ");");
         return sqlMap;
     }
 
-    private String insertSqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
+    /**
+     * Java Field to SQL dynamic Field convert -> #{}, #{} ......
+     * 将Java字段转换为SQL动态字段
+     *
+     * @param fieldInfoMap
+     * @return
+     */
+    private String sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
         StringJoiner values = new StringJoiner(",");
         for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
             StringJoiner value = new StringJoiner(",", "#{", "}");

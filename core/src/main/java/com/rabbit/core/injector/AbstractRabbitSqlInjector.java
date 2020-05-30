@@ -38,7 +38,7 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
             String[] var6 = resultMapNames;
             int var7 = resultMapNames.length;
 
-            for(int var8 = 0; var8 < var7; ++var8) {
+            for (int var8 = 0; var8 < var7; ++var8) {
                 String resultMapName = var6[var8];
 
                 try {
@@ -48,7 +48,7 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
                 }
             }
         } else if (resultType != null) {
-            ResultMap inlineResultMap = (new ResultMap.Builder(this.configuration, statementId + "-Inline", resultType, new ArrayList(), (Boolean)null)).build();
+            ResultMap inlineResultMap = (new ResultMap.Builder(this.configuration, statementId + "-Inline", resultType, new ArrayList(), (Boolean) null)).build();
             resultMaps.add(inlineResultMap);
         }
 
@@ -93,6 +93,7 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
 
     /**
      * 提取泛型
+     *
      * @param mapperClass
      * @return
      */
@@ -102,17 +103,17 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
         Type[] var4 = types;
         int var5 = types.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             Type type = var4[var6];
             if (type instanceof ParameterizedType) {
-                Type[] typeArray = ((ParameterizedType)type).getActualTypeArguments();
+                Type[] typeArray = ((ParameterizedType) type).getActualTypeArguments();
                 if (ArrayUtils.isNotEmpty(typeArray)) {
                     int var10 = typeArray.length;
                     byte var11 = 0;
                     if (var11 < var10) {
                         Type t = typeArray[var11];
                         if (!(t instanceof TypeVariable) && !(t instanceof WildcardType)) {
-                            target = (ParameterizedType)type;
+                            target = (ParameterizedType) type;
                         }
                     }
                 }
@@ -120,6 +121,6 @@ public abstract class AbstractRabbitSqlInjector implements IRabbitSqlInjector {
             }
         }
 
-        return target == null ? null : (Class)target.getActualTypeArguments()[0];
+        return target == null ? null : (Class) target.getActualTypeArguments()[0];
     }
 }

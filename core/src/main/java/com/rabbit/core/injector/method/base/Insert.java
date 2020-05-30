@@ -3,9 +3,11 @@ package com.rabbit.core.injector.method.base;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.DefaultAbstractWrapper;
 import com.rabbit.core.injector.RabbitAbstractMethod;
+import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.SqlSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
@@ -15,11 +17,10 @@ public class Insert extends RabbitAbstractMethod {
         if (ObjectUtils.isEmpty(modelClass)) {
             return;
         }
-        DefaultAbstractWrapper defaultAbstractWrapper = new DefaultAbstractWrapper(modelClass);
 
-        TableInfo tableInfo = defaultAbstractWrapper.getTableInfo();
+        TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
 
-        Map<String, String> map = defaultAbstractWrapper.insertSqlGenerate();
+        Map<String, String> map = new DefaultAbstractWrapper(tableInfo).insertSqlGenerate();
 
         StringBuffer sql = new StringBuffer("<script>");
         sql.append(map.get("INSERT_HEAD") + "\t");

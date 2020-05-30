@@ -6,19 +6,14 @@ import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.enumation.MySqlColumnType;
 import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
+import com.rabbit.core.parse.ParseClass2TableInfo;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,7 +41,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     private TableInfo tableInfo;
 
     public QueryWrapper(E clazz) {
-        this.tableInfo = parseClazzToTableInfo(clazz.getClass());
+        this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());
         this.sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
     }
 
@@ -74,7 +69,8 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper where(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -91,7 +87,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper or(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s=#{%s,jdbcType=%s}", MySqlKeyWord.OR.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -108,7 +104,8 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper like(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s like concat('%%',#{%s,jdbcType=%s},'%%')", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -126,7 +123,8 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper between(String column, Object begin, Object end) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(begin==null?null: begin.getClass());
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType(begin == null ? null : begin.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s between #{%s,jdbcType=%s} and #{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + "1", columnType.getValue(), VALIDEN + column + "2", columnType.getValue()));
         valMap.put(column + "1", begin);
@@ -196,7 +194,8 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     public QueryWrapper notEqual(String column, Object value) {
         isBlank(column);
         joinNum++;
-        MySqlColumnType columnType = getJdbcType(value==null?null: value.getClass());
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType(value == null ? null : value.getClass());
         whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
                 String.format(" %s %s<>#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
         valMap.put(column + joinNum, value);
@@ -287,46 +286,6 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
         if (StringUtils.isBlank(column)) {
             throw new MyBatisRabbitPlugException("要查询的字段为空......");
         }
-    }
-
-    /**
-     * 获取字段val对应的JdbcType
-     *
-     * @param clazz
-     * @return
-     */
-    protected MySqlColumnType getJdbcType(Class<?> clazz) {
-        if(Objects.isNull(clazz)){
-            throw new MyBatisRabbitPlugException("query value is null......");
-        }
-        if (Integer.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.INTEGER;
-        } else if (String.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.VARCHAR;
-        } else if (Double.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.DOUBLE;
-        } else if (Float.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.FLOAT;
-        } else if (BigDecimal.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.DECIMAL;
-        } else if (Date.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.DATE;
-        } else if (Long.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.BIGINT;
-        } else if (Boolean.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.TINYINT;
-        } else if (Short.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.SHORT;
-        } else if (Character.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.CHAR;
-        }else if (LocalDate.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.DATE;
-        } else if (LocalDateTime.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.TIMESTAMP;
-        } else if (Timestamp.class.isAssignableFrom(clazz)) {
-            return MySqlColumnType.TIMESTAMP;
-        }
-        return null;
     }
 
     /**
