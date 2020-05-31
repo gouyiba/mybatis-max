@@ -1,6 +1,6 @@
 package com.rabbit.core.injector;
 
-import com.rabbit.core.injector.method.base.Insert;
+import com.rabbit.core.injector.method.base.*;
 import com.rabbit.core.injector.method.business.*;
 
 import java.util.List;
@@ -34,7 +34,14 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
                 new UpdateBatchByIdObject(),
                 new UpdateObject(),
                 // base
-                new Insert()
+                new Insert(),
+                new InsertBatch(),
+                new DeleteById(),
+                new DeleteBatchById(),
+                new Delete(),
+                new UpdateById(),
+                new UpdateBatchById(),
+                new Update()
         ).collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.rabbit.core.constructor;
 
+import com.rabbit.core.annotation.Column;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
@@ -55,6 +56,28 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
     }
 
     /**
+     * 修改sql生成 : update tableName set #{field}
+     * @return
+     */
+    public Map<String, Object> updateSqlGenerate() {
+        Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
+        Map<String, Object> sqlMap = new HashMap<>();
+        sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
+
+        Field primaryKey = this.tableInfo.getPrimaryKey();
+        TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
+
+        //fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
+        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap,primaryKey.getName());
+        sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
+
+        // 根据指定主键修改
+        String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getJdbcType().getValue());
+        sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
+        return sqlMap;
+    }
+
+    /**
      * Java Field to SQL dynamic Field convert -> #{}, #{} ......
      * 将Java字段转换为SQL动态字段
      *
@@ -88,6 +111,46 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
             values.add(value.toString());
         }
         return values.toString();
+    }
+
+    /**
+     * 修改时 sql-value-format 格式化:
+     * 根据属性和数据库字段类型进行value类型格式转换
+     * 需要考虑sql注入风险: 考虑使用 #{} 进行赋值操作，sql的value会生成: #{stuid,jdbcType=BIGINT} 格式的sql
+     * 字段value进行转换时，如: 字段是枚举类型，如果指定了typeHandler，则使用指定的typeHandler进行转换，未指定，则使用默认的typeHandler进行转换
+     * 将最终的完整sql交给mybatis进行预编译，避免sql的注入风险
+     * 同时，在修改时考虑到非空值，所以会自动生成动态sql的非空验证
+     *
+     * @param fieldInfoMap 字段Map
+     * @return value 转换后的字符串
+     * @author duxiaoyu
+     * @since 2020-01-28
+     */
+    private Map<String, String> sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap, String pkName) {
+        Map<String, String> paramterMap = new HashMap<>();
+        for (Map.Entry<String, TableFieldInfo> item : fieldInfoMap.entrySet()) {
+            // 主键字段不参与修改
+            if (!StringUtils.equals(pkName, item.getKey())) {
+                Field field = item.getValue().getField();
+                String typeHandler = "";
+                if (field.isAnnotationPresent(Column.class)) {
+                    Column column = field.getAnnotation(Column.class);
+                    Class<?> typeHandlerClass = column.typeHandler();
+                    if (!StringUtils.equals("Object", typeHandlerClass.getSimpleName())) {
+                        typeHandler = typeHandlerClass.getName();
+                    }
+                }
+                String propertyName = item.getValue().getPropertyName();
+                String columnType = item.getValue().getJdbcType().getValue();
+                String columnName = item.getValue().getColumnName();
+                if (StringUtils.isNotBlank(typeHandler)) {
+                    paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,typeHandler=%s},", columnName, propertyName, typeHandler));
+                } else {
+                    paramterMap.put(propertyName, String.format("%s=#{objectMap.%s,jdbcType=%s},", columnName, propertyName, columnType));
+                }
+            }
+        }
+        return paramterMap;
     }
 
     /**

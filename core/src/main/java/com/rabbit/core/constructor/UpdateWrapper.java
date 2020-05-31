@@ -31,6 +31,16 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
     // update-sql-cache-map
     private final Map<String, Object> sqlMap = new ConcurrentHashMap<>();
 
+    private E entity;
+
+    public E getEntity() {
+        return entity;
+    }
+
+    public void setEntity(E entity) {
+        this.entity = entity;
+    }
+
     /**
      * 解析后的TableInfo
      */
