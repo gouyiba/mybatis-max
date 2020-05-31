@@ -31,7 +31,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param entityList 实体集合
      * @return 受影响行数
      */
-    int insertBatch(List<T> entityList);
+    int insertBatch(@Param("entityList") List<T> entityList);
 
     /**
      * 根据 ID 删除
@@ -55,7 +55,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param idList 主键ID列表(不能为 null 以及 empty)
      * @return 受影响行数
      */
-    int deleteBatchById(List<T> idList);
+    int deleteBatchById(@Param("idList") List<Object> idList);
 
     /**
      * 根据 ID 修改
@@ -71,16 +71,15 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param entityIds 实体集合
      * @return 受影响行数
      */
-    int updateBatchById(List<T> entityIds);
+    int updateBatchById(@Param("entityIds") List<T> entityIds);
 
     /**
      * 根据 updateWrapper 条件，更新记录
      *
-     * @param entity        实体对象 (set 更新值,可以为 null)
      * @param updateWrapper 条件封装操作类（可以为 null,用于生成 where 语句）
      * @return 受影响行数
      */
-    int update(T entity, UpdateWrapper<T> updateWrapper);
+    int update(UpdateWrapper<T> updateWrapper);
 
     /**
      * 根据 ID 查询

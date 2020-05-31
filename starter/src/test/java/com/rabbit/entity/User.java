@@ -13,7 +13,7 @@ public class User extends BaseBean {
 
     private String id;
 
-    @Id
+    @Id(isKeyGenerator = true)
     private String stuUid;
 
     private String stuName;

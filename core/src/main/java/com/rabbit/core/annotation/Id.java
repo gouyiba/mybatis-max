@@ -29,6 +29,12 @@ public @interface Id {
     boolean isIncrementColumn() default false;
 
     /**
+     * 是否根据策略自动生成主键
+     * @return
+     */
+    boolean isKeyGenerator() default false;
+
+    /**
      * 主键生成策略
      * @return
      */

@@ -35,6 +35,13 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
                 new UpdateObject(),
                 // base
                 new Insert(),
+                new InsertBatch(),
+                new DeleteById(),
+                new DeleteBatchById(),
+                new Delete(),
+                new UpdateById(),
+                new UpdateBatchById(),
+                new Update(),
                 new SelectById(),
                 new SelectBatchIds(),
                 new SelectCount(),

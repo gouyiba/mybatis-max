@@ -45,6 +45,8 @@ public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
         this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());
     }
 
+    public DeleteWrapper(){}
+
     /**
      * 删除 sql 生成:
      * 用于删除sql的参数和value的生成
