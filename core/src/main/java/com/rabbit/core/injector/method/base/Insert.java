@@ -7,7 +7,6 @@ import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.SqlSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 

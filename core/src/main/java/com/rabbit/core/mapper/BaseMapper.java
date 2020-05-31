@@ -3,7 +3,9 @@ package com.rabbit.core.mapper;
 import com.rabbit.core.constructor.DeleteWrapper;
 import com.rabbit.core.constructor.QueryWrapper;
 import com.rabbit.core.constructor.UpdateWrapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -94,7 +96,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param idList 主键ID列表(不能为 null 以及 empty)
      * @return 实体集合
      */
-    List<T> selectBatchIds(List<T> idList);
+    List<T> selectBatchIds(@Param("idList") Collection idList);
 
     /**
      * 根据 QueryWrapper 条件，查询一条记录
@@ -102,7 +104,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param queryWrapper 实体对象封装操作类（可以为 null）
      * @return 实体类型
      */
-    T selectOne(QueryWrapper<T> queryWrapper);
+    T selectOne(@Param("queryWrapper") QueryWrapper<T> queryWrapper);
 
     /**
      * 根据 QueryWrapper 条件，查询总记录数
@@ -110,7 +112,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param queryWrapper 实体对象封装操作类（可以为 null
      * @return 总记录数
      */
-    long selectCount(QueryWrapper<T> queryWrapper);
+    Integer selectCount(@Param("queryWrapper") QueryWrapper<T> queryWrapper);
 
     /**
      * 根据 QueryWrapper 条件，查询记录
@@ -118,7 +120,7 @@ public interface BaseMapper<T> extends BusinessMapper {
      * @param queryWrapper 实体对象封装操作类（可以为 null
      * @return 实体集合
      */
-    List<T> selectList(QueryWrapper<T> queryWrapper);
+    List<T> selectList(@Param("queryWrapper") QueryWrapper<T> queryWrapper);
 
     /* 2.0.0 实现 */
     /**

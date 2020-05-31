@@ -52,7 +52,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     private int joinNum = 0;
 
     // final-variable
-    private final String VALIDEN = "valMap.";
+    private final String VALIDEN = "queryWrapper.valMap.";
 
     // global-final-static-variable
     public static final String ASC = "ASC";
@@ -66,7 +66,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
      * @param value
      * @return
      */
-    public QueryWrapper where(String column, Object value) {
+    public QueryWrapper where(String column, Object value, String... val) {
         isBlank(column);
         joinNum++;
         // 获取字段val对应的JdbcType
