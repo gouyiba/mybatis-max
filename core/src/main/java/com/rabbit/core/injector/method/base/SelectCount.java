@@ -1,14 +1,11 @@
 package com.rabbit.core.injector.method.base;
 
-import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.injector.RabbitAbstractMethod;
 import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;
-
-import java.util.Map;
 
 /**
  * this class by created wuyongfei on 2020/5/31 14:59

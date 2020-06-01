@@ -8,7 +8,6 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.scripting.LanguageDriver;
-import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -30,7 +29,7 @@ public class RabbitConfiguration extends Configuration {
     public RabbitConfiguration() {
         this.mybatisMapperRegistry = new RabbitMapperRegistry(this);
         this.mapUnderscoreToCamelCase = true;
-        this.languageRegistry.setDefaultDriverClass(XMLLanguageDriver.class);
+        this.languageRegistry.setDefaultDriverClass(RabbitXMLLanguageDriver.class);
     }
 
     @Override
@@ -77,7 +76,7 @@ public class RabbitConfiguration extends Configuration {
     @Override
     public void setDefaultScriptingLanguage(Class<? extends LanguageDriver> driver) {
         if (driver == null) {
-            driver = XMLLanguageDriver.class;
+            driver = RabbitXMLLanguageDriver.class;
         }
         getLanguageRegistry().setDefaultDriverClass(driver);
     }

@@ -2,7 +2,6 @@ package com.rabbit.core.injector.method.base;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
-import com.rabbit.common.exception.MyBatisRabbitPlugException;
 import com.rabbit.common.utils.SqlScriptUtil;
 import com.rabbit.common.utils.StringPool;
 import com.rabbit.core.annotation.Id;

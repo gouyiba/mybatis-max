@@ -139,6 +139,16 @@ public class BaseMapperMethodTest {
         Assert.isTrue(!ObjectUtils.isEmpty(paramAccount), "select one failed.");
     }
 
+    @Test
+    public void testFillMethodExecute() {
+        insert();
+        Account account = accountMapper.selectById(SYS_UUID_CONTAINER.get(0));
+        accountMapper.updateById(account);
+        log.info("init updatedOn值：{}", account.getUpdatedOn());
+        accountMapper.updateById(account);
+        log.info("last updatedOn值：{}", account.getUpdatedOn());
+    }
+
     public void insert() {
         String id = UUID.randomUUID().toString();
         Account account = new Account();
