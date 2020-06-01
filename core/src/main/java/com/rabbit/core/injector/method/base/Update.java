@@ -8,6 +8,7 @@ import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.injector.RabbitAbstractMethod;
 import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.Map;
@@ -28,23 +29,23 @@ public class Update extends RabbitAbstractMethod {
             return;
         }
 
-        TableInfo tableInfo= ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
-        Map<String,Object> sqlMap=new DefaultAbstractWrapper(tableInfo).updateSqlGenerate();
-        Map<String,String> sqlValMap=(Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
+        TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
+        Map<String, Object> sqlMap = new DefaultAbstractWrapper(tableInfo).updateSqlGenerate();
+        Map<String, String> sqlValMap = (Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
         // 批量修改目标实例参数
         for (String item : sqlValMap.keySet()) {
             sqlValMap.put(item, sqlValMap.get(item).replace("objectMap", "entity"));
         }
-        StringBuffer sqlVal=new StringBuffer("");
-        for (Map.Entry<String,String> item:sqlValMap.entrySet()){
-            sqlVal.append(SqlScriptUtil.convertIf("entity."+item.getKey()+"!=null",item.getValue()));
+        StringBuffer sqlVal = new StringBuffer("");
+        for (Map.Entry<String, String> item : sqlValMap.entrySet()) {
+            sqlVal.append(SqlScriptUtil.convertIf("entity." + item.getKey() + "!=null", item.getValue()));
         }
 
 
-        StringBuffer sql=new StringBuffer("<script>");
-        sql.append(MySqlKeyWord.UPDATE+"\t");
-        sql.append(tableInfo.getTableName()+"\t");
-        sql.append(SqlScriptUtil.convertTrim("set",null,null,",",sqlVal.toString()));
+        StringBuffer sql = new StringBuffer("<script>");
+        sql.append(MySqlKeyWord.UPDATE + "\t");
+        sql.append(tableInfo.getTableName() + "\t");
+        sql.append(SqlScriptUtil.convertTrim("set", null, null, ",", sqlVal.toString()));
         sql.append(SqlScriptUtil.convertWhere(
                 SqlScriptUtil.convertIf("sqlMap.IN!=null and sqlMap.IN!=''", SqlScriptUtil.unSafeParam("sqlMap.IN") +
                         SqlScriptUtil.convertForeach("valMap.IN", "item", null, "(", ",", ")", SqlScriptUtil.safeParam("item"))) +
@@ -55,6 +56,6 @@ public class Update extends RabbitAbstractMethod {
         ));
         sql.append("</script>");
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), modelClass);
-        addUpdateMappedStatement(mapperClass,modelClass, "update", sqlSource);
+        addUpdateMappedStatement(mapperClass, modelClass, StringUtils.uncapitalize(this.getClass().getSimpleName()), sqlSource);
     }
 }

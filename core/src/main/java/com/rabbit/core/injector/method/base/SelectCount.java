@@ -22,8 +22,6 @@ public class SelectCount extends RabbitAbstractMethod {
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
 
-        Map<String, TableFieldInfo> columnMap = tableInfo.getColumnMap();
-
         // in value foreach node
         String inValueNode = "\n<foreach collection=\"item\" index=\"index\" item=\"value\" open=\"(\" separator=\",\" close=\")\">#{value}</foreach>\n";
 
