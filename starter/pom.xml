@@ -12,15 +12,14 @@
 
     <groupId>com.rabbit</groupId>
     <artifactId>starter</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.alpha</version>
     <name>starter</name>
     <description>Mybatis-Rabbit-Plug-Starter</description>
 
     <properties>
-        <moduleVersion>1.0-SNAPSHOT</moduleVersion>
+        <moduleVersion>1.0.0.alpha</moduleVersion>
         <springBootMavenPluginVersion>2.2.0.RELEASE</springBootMavenPluginVersion>
         <mavenCompilerPluginVersion>3.6.0</mavenCompilerPluginVersion>
-        <applicationMainClassPath>com.rabbit.MyBatisRabbitPlugStarter</applicationMainClassPath>
         <java.version>1.8</java.version>
     </properties>
 
@@ -48,12 +47,6 @@
             <artifactId>spring-boot-autoconfigure-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- 开发阶段导入，应用阶段移除 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${springBootVersion}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -68,6 +61,7 @@
     </dependencies>
 
     <build>
+        <finalName>${parent.artifactId}-${parent.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,24 +71,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <!--多模块项目仅仅需要在启动类所在的模块添加打包插件即可-->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springBootMavenPluginVersion}</version>
-                <configuration>
-                    <mainClass>${applicationMainClassPath}</mainClass>
-                    <fork>true</fork>
-                    <includeSystemScope>true</includeSystemScope>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

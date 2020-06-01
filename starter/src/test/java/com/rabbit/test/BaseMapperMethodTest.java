@@ -23,7 +23,7 @@ public class BaseMapperMethodTest {
     @Resource
     private AccountMapper accountMapper;
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     private static List<String> SYS_UUID_CONTAINER = new ArrayList<>();

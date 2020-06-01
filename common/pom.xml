@@ -12,7 +12,7 @@
 
     <groupId>com.rabbit</groupId>
     <artifactId>common</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0.alpha</version>
     <name>common</name>
     <description>Mybatis-Rabbit-Plug-Common</description>
 
