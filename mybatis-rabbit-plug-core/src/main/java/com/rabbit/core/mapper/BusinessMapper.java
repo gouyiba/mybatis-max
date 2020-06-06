@@ -21,7 +21,7 @@ public interface BusinessMapper {
      * @param valMap valMap
      * @return
      */
-    Map<String, Object> getObject(@Param("sqlMap") Map<String, Object> sqlMap, @Param("valMap") Map<String, Object> valMap);
+    Map<String, Object> getObject(@Param("sqlMap") Map<String, Object> sqlMap, @Param("queryWrapper") Map<String, Object> valMap);
 
     /**
      * 获取实例集合
@@ -30,7 +30,7 @@ public interface BusinessMapper {
      * @param valMap valMap
      * @return
      */
-    List<Map<String, Object>> getObjectList(@Param("sqlMap") Map<String, Object> sqlMap, @Param("valMap") Map<String, Object> valMap);
+    List<Map<String, Object>> getObjectList(@Param("sqlMap") Map<String, Object> sqlMap, @Param("queryWrapper") Map<String, Object> valMap);
 
     /**
      * 自定义sql查询

@@ -1,8 +1,15 @@
 package com.rabbit.core.module;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
+import com.rabbit.common.utils.StringUtils;
 import com.rabbit.core.annotation.Create;
+import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Update;
 import com.rabbit.core.bean.TableInfo;
+import com.rabbit.core.constructor.DeleteWrapper;
+import com.rabbit.core.constructor.UpdateWrapper;
+import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.executor.ErrorContext;
@@ -16,12 +23,15 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
     private final TypeHandlerRegistry typeHandlerRegistry;
@@ -38,8 +48,15 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
         this.parameterObject = parameterObject;
         this.boundSql = boundSql;
 
+        Class<?> parameterClass = null;
+        if (parameterObject instanceof List) {
+            List<Object> objectList = (List<Object>) parameterObject;
+            parameterClass = objectList.get(0).getClass();
+        } else {
+            parameterClass = parameterObject.getClass();
+        }
         // 检查执行填充方法
-        TableInfo tableInfo = ParseClass2TableInfo.getTableInfo(parameterObject.getClass());
+        TableInfo tableInfo = ParseClass2TableInfo.getTableInfo(parameterClass);
         if (ObjectUtils.isNotEmpty(tableInfo)) {
             // 拿到解析后的填充方法
             Map<Class<? extends Annotation>, Method> fillMethodMap = tableInfo.getFillMethods();
@@ -58,11 +75,65 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                 updateMethod.setAccessible(true); // 公开私有
                 updateMethod.invoke(parameterObject);
             }
-
         }
 
         // TODO: 主键生成
+        Field primaryKey = Objects.isNull(tableInfo) ? null : tableInfo.getPrimaryKey();
+        if (Objects.nonNull(primaryKey) && mappedStatement.getSqlCommandType() == SqlCommandType.INSERT) {
+            Id id = primaryKey.getAnnotation(Id.class);
+            PrimaryKey pkEnum = id.generateType();
+            Object idValue = null;
+            List<Object> objectList = new ArrayList<>();
+            if (parameterObject instanceof List) {
+                objectList = (List<Object>) parameterObject;
+            } else {
+                objectList.add(parameterObject);
+            }
+            if (id.isKeyGenerator() && !id.isIncrementColumn()) {
+                for (Object item : objectList) {
+                    switch (pkEnum) {
+                        case UUID32:
+                            idValue = IdUtil.simpleUUID();
+                            break;
+                        case OBJECTID:
+                            idValue = IdUtil.objectId();
+                            break;
+                        case SNOWFLAKE:
+                            // 根据雪花算法生成64bit大小的分布式Long类型id，需要在 @id 中设置workerId和datacenterId
+                            Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
+                            idValue = snowflake.nextId();
+                            break;
+                        default:
+                            break;
+                    }
+                    try {
+                        // 处理主键生成
+                        Method setPrimaryKey = parameterObject.getClass().getMethod("set" + StringUtils.capitalize(primaryKey.getName()));
+                        setPrimaryKey.setAccessible(true);
+                        setPrimaryKey.invoke(parameterObject, idValue);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
 
+        // 处理BaseMapper中的update和delete方法条件参数问题
+        if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE || mappedStatement.getSqlCommandType() == SqlCommandType.DELETE) {
+            if (parameterObject instanceof UpdateWrapper) {
+                UpdateWrapper updateWrapper = (UpdateWrapper) parameterObject;
+                Map<String, String> where = updateWrapper.getWhereSqlMap();
+                for (String item : where.keySet()) {
+                    where.put(item, where.get(item).replace("queryWrapper.valMap", "valMap"));
+                }
+            } else if (parameterObject instanceof DeleteWrapper) {
+                DeleteWrapper deleteWrapper = (DeleteWrapper) parameterObject;
+                Map<String, String> where = deleteWrapper.getWhereSqlMap();
+                for (String item : where.keySet()) {
+                    where.put(item, where.get(item).replace("queryWrapper.valMap", "valMap"));
+                }
+            }
+        }
     }
 
     @Override

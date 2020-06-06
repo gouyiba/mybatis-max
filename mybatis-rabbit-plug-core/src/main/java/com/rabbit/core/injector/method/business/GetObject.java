@@ -24,15 +24,15 @@ public class GetObject extends RabbitAbstractMethod {
         sql.append("\nfrom ${sqlMap.TABLE_NAME}");
         sql.append(SqlScriptUtil.convertWhere(
                 SqlScriptUtil.convertIf("sqlMap.IN!=null and sqlMap.IN!=''",
-                        "${sqlMap.IN}" + SqlScriptUtil.convertForeach("valMap.IN", "item", null, "(", ",", ")", "\n#{item}")) +
+                        "${sqlMap.IN}" + SqlScriptUtil.convertForeach("queryWrapper.valMap.IN", "item", null, "(", ",", ")", "\n#{item}")) +
                         SqlScriptUtil.convertIf("sqlMap.NOTIN!=null and sqlMap.NOTIN!=''",
-                                "${sqlMap.NOTIN}" + SqlScriptUtil.convertForeach("valMap.NOTIN", "item", null, "(", ",", ")", "\n#{item}")) +
+                                "${sqlMap.NOTIN}" + SqlScriptUtil.convertForeach("queryWrapper.valMap.NOTIN", "item", null, "(", ",", ")", "\n#{item}")) +
                         SqlScriptUtil.convertIf("sqlMap.WHERE!=null", SqlScriptUtil.convertForeach("sqlMap.WHERE.keys", "item", "index", null, null, null, "\n${sqlMap.WHERE[item]}"))
         ));
-        sql.append(SqlScriptUtil.convertIf("sqlMap.ORDERBY!=null and sqlMap.ORDERBY!=''","${sqlMap.ORDERBY}"));
-        sql.append(SqlScriptUtil.convertIf("sqlMap.LIMIT!=null and sqlMap.LIMIT!=''","${sqlMap.LIMIT}"));
+        sql.append(SqlScriptUtil.convertIf("sqlMap.ORDERBY!=null and sqlMap.ORDERBY!=''", "${sqlMap.ORDERBY}"));
+        sql.append(SqlScriptUtil.convertIf("sqlMap.LIMIT!=null and sqlMap.LIMIT!=''", "${sqlMap.LIMIT}"));
         sql.append("\n</script>");
-        SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
-        addSelectMappedStatementForOther(mapperClass,"getObject",sqlSource,Map.class);
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), Map.class);
+        addSelectMappedStatementForOther(mapperClass, "getObject", sqlSource, Map.class);
     }
 }

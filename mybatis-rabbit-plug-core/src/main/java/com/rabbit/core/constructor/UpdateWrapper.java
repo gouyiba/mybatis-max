@@ -76,7 +76,7 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
             // 根据条件修改
             Map<String,String> where=(Map<String, String>) mergeSqlMap.get(MySqlKeyWord.WHERE.getValue());
             for (String item:where.keySet()){
-                where.put(item,where.get(item).replace("valMap","sqlMap.UPDATE_WHERE.VALUE"));
+                where.put(item,where.get(item).replace("queryWrapper.valMap","sqlMap.UPDATE_WHERE.VALUE"));
             }
             sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), mergeSqlMap);
         }else {

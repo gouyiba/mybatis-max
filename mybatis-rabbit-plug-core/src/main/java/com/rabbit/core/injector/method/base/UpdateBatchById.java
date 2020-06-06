@@ -11,8 +11,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @ClassName UpdateBatchById
@@ -30,6 +32,10 @@ public class UpdateBatchById extends RabbitAbstractMethod {
         }
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
+        Field primaryKey = tableInfo.getPrimaryKey();
+        if(Objects.isNull(primaryKey)){
+            return;
+        }
         Map<String, Object> sqlMap = new DefaultAbstractWrapper(tableInfo).updateSqlGenerate();
         Map<String, String> sqlValMap = (Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
         // 批量修改目标实例参数
