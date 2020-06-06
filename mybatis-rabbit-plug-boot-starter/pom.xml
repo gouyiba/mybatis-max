@@ -5,72 +5,72 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>mybatis-rabbit-plug</artifactId>
+        <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
         <groupId>com.rabbit</groupId>
         <version>1.0.0.alpha</version>
     </parent>
 
-    <groupId>com.rabbit</groupId>
-    <artifactId>starter</artifactId>
-    <version>1.0.0.alpha</version>
-    <name>starter</name>
-    <description>Mybatis-Rabbit-Plug-Starter</description>
-
-    <properties>
-        <moduleVersion>1.0.0.alpha</moduleVersion>
-        <springBootMavenPluginVersion>2.2.0.RELEASE</springBootMavenPluginVersion>
-        <mavenCompilerPluginVersion>3.6.0</mavenCompilerPluginVersion>
-        <java.version>1.8</java.version>
-    </properties>
+    <artifactId>mybatis-rabbit-plug-boot-start</artifactId>
+    <name>mybatis-rabbit-plug-boot-start</name>
 
     <dependencies>
         <dependency>
             <groupId>com.rabbit</groupId>
-            <artifactId>core</artifactId>
-            <version>${moduleVersion}</version>
+            <artifactId>mybatis-rabbit-plug-core</artifactId>
+            <version>${module-version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring-boot-version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>${spring-boot-version}</version>
+            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
 
-        <!-- @ConfigurationProperties annotation processing (metadata for IDEs) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure-processor</artifactId>
-            <optional>true</optional>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>${spring-boot-version}</version>
+            <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.18</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>${parent.artifactId}-${parent.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${mavenCompilerPluginVersion}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
+                <version>${maven-compiler-plugin-version}</version>
             </plugin>
         </plugins>
     </build>

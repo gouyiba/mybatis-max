@@ -4,69 +4,65 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>mybatis-rabbit-plug</artifactId>
+        <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
         <groupId>com.rabbit</groupId>
         <version>1.0.0.alpha</version>
     </parent>
 
-    <groupId>com.rabbit</groupId>
-    <artifactId>core</artifactId>
-    <version>1.0.0.alpha</version>
-    <name>core</name>
-    <description>Mybatis-Rabbit-Plug-Core</description>
+    <artifactId>mybatis-rabbit-plug-core</artifactId>
+    <name>mybatis-rabbit-plug-core</name>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>compile</scope>
-            <version>${lomBokVersion}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.rabbit</groupId>
-            <artifactId>common</artifactId>
-            <version>${moduleVersion}</version>
+            <artifactId>mybatis-rabbit-plug-common</artifactId>
+            <version>${module-version}</version>
             <scope>compile</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.2</version>
+            <version>${mybatis-version}</version>
+            <scope>compile</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
-            <version>2.0.2</version>
+            <version>${mybatis-spring-version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring-version}</version>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.fusesource.jansi/jansi -->
         <dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.18</version>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>javax.persistence</artifactId>
             <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-version}</version>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

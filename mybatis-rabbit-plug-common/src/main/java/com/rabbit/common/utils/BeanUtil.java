@@ -1,8 +1,5 @@
 package com.rabbit.common.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -18,8 +15,6 @@ import java.util.Map;
  * @since 2020-02-08
  */
 public class BeanUtil {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BeanUtil.class);
 
     /**
      * 将Map转为Bean

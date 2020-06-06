@@ -8,9 +8,8 @@ import com.rabbit.core.enumation.MySqlKeyWord;
 import com.rabbit.core.enumation.SqlKey;
 import com.rabbit.core.parse.ParseClass2TableInfo;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -24,9 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2019-12-12
  */
 @Data
+@Slf4j
 public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializable {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(QueryWrapper.class);
 
     // query-sql-cache-map
 
@@ -297,7 +295,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
         sqlMap.put(MySqlKeyWord.WHERE.getValue(), whereSqlMap);
         sqlMap.put(MySqlKeyWord.JOINWD.getValue(), joinSqlMap);
         sqlMap.put(MySqlKeyWord.VALUE.getValue(), valMap);
-        LOGGER.info("{}: QueryWrapper -> Sql: {}", TAG, JSONUtil.toJsonStr(sqlMap));
+        log.info("{}: QueryWrapper -> Sql: {}", TAG, JSONUtil.toJsonStr(sqlMap));
         return sqlMap;
     }
 }
