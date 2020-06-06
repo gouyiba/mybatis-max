@@ -60,7 +60,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String, Object> objMap = baseMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        Map<String,Object> queryValMap=new HashMap<>(16);
+        queryValMap.put("valMap",sqlMap.get("VALUE"));
+        Map<String, Object> objMap = baseMapper.getObject(sqlMap, queryValMap);
         if (CollectionUtils.isEmpty(objMap)) return null;
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz);
@@ -84,7 +86,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        List<Map<String, Object>> objMapList = baseMapper.getObjectList(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        Map<String,Object> queryValMap=new HashMap<>(16);
+        queryValMap.put("valMap",sqlMap.get("VALUE"));
+        List<Map<String, Object>> objMapList = baseMapper.getObjectList(sqlMap, queryValMap);
         if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
 
         List<T> beanList = new ArrayList<>();
@@ -168,6 +172,10 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
             e.printStackTrace();
         }
         DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
+        TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(obj.getClass());
+        if(Objects.isNull(tableInfo.getPrimaryKey())){
+            throw new MyBatisRabbitPlugException("未指定主键字段...");
+        }
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
         Class<?> publicClazz = this.getFillingStrategyClass();
         // 逻辑删除
@@ -206,6 +214,10 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
 
         DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
+        TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(obj.getClass());
+        if(Objects.isNull(tableInfo.getPrimaryKey())){
+            throw new MyBatisRabbitPlugException("未指定主键字段...");
+        }
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
         // 修改sql格式
         String where = sqlMap.get(SqlKey.DELETE_WHERE.getValue());
@@ -294,6 +306,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         long beginTime = System.currentTimeMillis();
         UpdateWrapper updateWrapper = new UpdateWrapper(objectList.get(0));
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(objectList.get(0).getClass());
+        if(Objects.isNull(tableInfo.getPrimaryKey())){
+            throw new MyBatisRabbitPlugException("未指定主键字段...");
+        }
         List<Map<String, Object>> objMapList = objectList.stream().map(x -> BeanUtil.beanToMap(x)).collect(Collectors.toList());
         Map<String, Object> sqlMap = updateWrapper.sqlGenerate(null);
         String where = sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();

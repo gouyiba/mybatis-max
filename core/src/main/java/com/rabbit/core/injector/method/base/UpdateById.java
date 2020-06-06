@@ -10,7 +10,9 @@ import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.mapping.SqlSource;
 
+import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @ClassName UpdateById
@@ -27,6 +29,10 @@ public class UpdateById extends RabbitAbstractMethod {
             return;
         }
         TableInfo tableInfo= ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
+        Field primaryKey = tableInfo.getPrimaryKey();
+        if(Objects.isNull(primaryKey)){
+            return;
+        }
         Map<String,Object> sqlMap=new DefaultAbstractWrapper(tableInfo).updateSqlGenerate();
         Map<String,String> sqlValMap=(Map<String, String>) sqlMap.get(SqlKey.UPDATE_VALUE.getValue());
         // 批量修改目标实例参数

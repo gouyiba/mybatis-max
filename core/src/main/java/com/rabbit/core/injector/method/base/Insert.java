@@ -37,44 +37,11 @@ public class Insert extends RabbitAbstractMethod {
         }
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
-
         Map<String, String> map = new DefaultAbstractWrapper(tableInfo).insertSqlGenerate();
 
         String keyProperty = null;
         String keyColumn = null;
         KeyGenerator keyGenerator = new NoKeyGenerator();
-        Field primaryKey = tableInfo.getPrimaryKey();
-        /*if (Objects.isNull(primaryKey)) {
-            throw new MyBatisRabbitPlugException("解析时未获取到主键字段......");
-        }*/
-        if (Objects.nonNull(primaryKey)) {
-            Id id = primaryKey.getAnnotation(Id.class);
-            PrimaryKey pkEnum = id.generateType();
-            Object idValue = null;
-            if (id.isKeyGenerator() && !id.isIncrementColumn()) {
-                switch (pkEnum) {
-                    case UUID32:
-                        idValue = IdUtil.simpleUUID();
-                        break;
-                    case OBJECTID:
-                        idValue = IdUtil.objectId();
-                        break;
-                    case SNOWFLAKE:
-                        // 根据雪花算法生成64bit大小的分布式Long类型id，需要在 @id 中设置workerId和datacenterId
-                        Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
-                        idValue = snowflake.nextId();
-                        break;
-                    default:
-                        break;
-                }
-                // 处理主键生成
-                keyGenerator = this.getKeyGenerator("insert", tableInfo, builderAssistant, idValue.toString());
-                Map<String, TableFieldInfo> columnMap = tableInfo.getColumnMap();
-                keyProperty = columnMap.get(tableInfo.getPrimaryKey().getName()).getPropertyName();
-                keyColumn = columnMap.get(tableInfo.getPrimaryKey().getName()).getColumnName();
-            }
-        }
-
         StringBuffer sql = new StringBuffer("<script>");
         sql.append(map.get("INSERT_HEAD") + "\t");
         sql.append(map.get("TABLE_NAME") + "\t");
@@ -86,31 +53,7 @@ public class Insert extends RabbitAbstractMethod {
         sql.append(map.get("INSERT_VALUE"));
         sql.append(map.get("INSERT_VAL_RIGHT_BRA"));
         sql.append("</script>");
-
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), modelClass);
         addInsertMappedStatement(mapperClass, modelClass, StringUtils.uncapitalize(this.getClass().getSimpleName()), sqlSource, keyGenerator, keyProperty, keyColumn);
-    }
-
-    /**
-     * 自动生成主键
-     *
-     * @param baseStatementId
-     * @param tableInfo
-     * @param builderAssistant
-     * @return
-     */
-    public SelectKeyGenerator getKeyGenerator(String baseStatementId, TableInfo tableInfo, MapperBuilderAssistant builderAssistant, String idValue) {
-        Configuration configuration = builderAssistant.getConfiguration();
-        String id = builderAssistant.getCurrentNamespace() + StringPool.DOT + baseStatementId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
-        Class<?> primaryKeyType = tableInfo.getColumnMap().get(tableInfo.getPrimaryKey().getName()).getPropertyType();
-        ResultMap resultMap = new ResultMap.Builder(builderAssistant.getConfiguration(), id, primaryKeyType, new ArrayList<>()).build();
-        String selectKeySql = "SELECT concat('','" + idValue + "','') as primKey";
-        MappedStatement mappedStatement = new MappedStatement.Builder(builderAssistant.getConfiguration(), id,
-                new StaticSqlSource(configuration, selectKeySql), SqlCommandType.SELECT)
-                .keyProperty(tableInfo.getPrimaryKey().getName())
-                .resultMaps(Collections.singletonList(resultMap))
-                .build();
-        configuration.addMappedStatement(mappedStatement);
-        return new SelectKeyGenerator(mappedStatement, true);
     }
 }

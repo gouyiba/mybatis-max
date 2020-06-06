@@ -13,6 +13,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @ClassName DeleteBatchIds
@@ -32,6 +33,9 @@ public class DeleteBatchById extends RabbitAbstractMethod {
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
         Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
         Field primaryKey = tableInfo.getPrimaryKey();
+        if(Objects.isNull(primaryKey)){
+            return;
+        }
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
         String where = String.format("%s %s in ", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName());
 
