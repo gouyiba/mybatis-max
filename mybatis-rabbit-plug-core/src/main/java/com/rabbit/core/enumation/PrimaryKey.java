@@ -15,12 +15,6 @@ public enum PrimaryKey implements IEnum<String> {
     UUID32("UUID32"),
 
     /**
-     * UUID64位
-     * type: String
-     */
-    UUID64("UUID64"),
-
-    /**
      * objectID(mongoDB主键生成策略)
      * type: String
      */

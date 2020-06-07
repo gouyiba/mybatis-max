@@ -68,10 +68,10 @@ public interface BaseMapper<T> extends BusinessMapper {
     /**
      * 根据 ID 批量修改
      *
-     * @param entityIds 实体集合
+     * @param entityList 实体集合
      * @return 受影响行数
      */
-    int updateBatchById(@Param("entityIds") List<T> entityIds);
+    int updateBatchById(@Param("entityList") List<T> entityList);
 
     /**
      * 根据 updateWrapper 条件，更新记录

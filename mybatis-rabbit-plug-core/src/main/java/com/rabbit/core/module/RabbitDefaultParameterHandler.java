@@ -6,6 +6,7 @@ import com.rabbit.common.utils.StringUtils;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Update;
+import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.DeleteWrapper;
 import com.rabbit.core.constructor.UpdateWrapper;
@@ -49,12 +50,26 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
         this.boundSql = boundSql;
 
         Class<?> parameterClass = null;
-        if (parameterObject instanceof List) {
-            List<Object> objectList = (List<Object>) parameterObject;
-            parameterClass = objectList.get(0).getClass();
+        List<Object> objectList = new ArrayList<>();
+        if (parameterObject instanceof Map) {
+            Map<String, Object> paramMap = (Map<String, Object>) parameterObject;
+            for (Map.Entry<String, Object> key : paramMap.entrySet()) {
+                if (key.getValue() instanceof List) {
+                    objectList = (List<Object>) key.getValue();
+                    break;
+                }else {
+                    objectList.add(key.getValue());
+                    break;
+                }
+            }
+            if (objectList.size() > 0) {
+                parameterClass = objectList.get(0).getClass();
+            }
         } else {
+            objectList.add(parameterObject);
             parameterClass = parameterObject.getClass();
         }
+
         // 检查执行填充方法
         TableInfo tableInfo = ParseClass2TableInfo.getTableInfo(parameterClass);
         if (ObjectUtils.isNotEmpty(tableInfo)) {
@@ -68,12 +83,16 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
 
             if (mappedStatement.getSqlCommandType() == SqlCommandType.INSERT && ObjectUtils.isNotEmpty(createMethod)) {
                 createMethod.setAccessible(true); // 公开私有
-                createMethod.invoke(parameterObject);
+                for (Object item : objectList) {
+                    createMethod.invoke(item);
+                }
             }
 
             if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE && ObjectUtils.isNotEmpty(createMethod)) {
                 updateMethod.setAccessible(true); // 公开私有
-                updateMethod.invoke(parameterObject);
+                for (Object item : objectList) {
+                    updateMethod.invoke(item);
+                }
             }
         }
 
@@ -83,12 +102,6 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
             Id id = primaryKey.getAnnotation(Id.class);
             PrimaryKey pkEnum = id.generateType();
             Object idValue = null;
-            List<Object> objectList = new ArrayList<>();
-            if (parameterObject instanceof List) {
-                objectList = (List<Object>) parameterObject;
-            } else {
-                objectList.add(parameterObject);
-            }
             if (id.isKeyGenerator() && !id.isIncrementColumn()) {
                 for (Object item : objectList) {
                     switch (pkEnum) {
@@ -108,9 +121,10 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                     }
                     try {
                         // 处理主键生成
-                        Method setPrimaryKey = parameterObject.getClass().getMethod("set" + StringUtils.capitalize(primaryKey.getName()));
+                        Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
+                        Method setPrimaryKey = item.getClass().getMethod("set" + StringUtils.capitalize(primaryKey.getName()), fieldInfoMap.get(primaryKey.getName()).getPropertyType());
                         setPrimaryKey.setAccessible(true);
-                        setPrimaryKey.invoke(parameterObject, idValue);
+                        setPrimaryKey.invoke(item, idValue);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

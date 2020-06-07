@@ -1,7 +1,11 @@
 package com.rabbit.test;
 
+import com.rabbit.core.constructor.DeleteWrapper;
 import com.rabbit.core.constructor.QueryWrapper;
+import com.rabbit.core.constructor.UpdateWrapper;
 import com.rabbit.entity.Account;
+import com.rabbit.entity.User;
+import com.rabbit.enumatioon.Sex;
 import com.rabbit.mapper.AccountMapper;
 import com.rabbit.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,8 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootTest
 @Slf4j
@@ -29,61 +35,106 @@ public class BaseMapperMethodTest {
 
     @Test
     public void testInsertMethod() {
-        /*Account account = new Account();
-        account.setId(UUID.randomUUID().toString());
-        account.setUserName("root");
-        account.setPass(null);
-        account.setCreatedBy(UUID.randomUUID().toString());
-        Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");*/
-
-        /*User user1=new User();
-        user1.setStuUid("5e182bf8de7cf5871d904e06");
-        user1.setStuName("superAdmin");
-        user1.setStuAge(23);
-        user1.setSex(Sex.MAX);
-
-        User user2=new User();
-        user2.setStuUid("5e182bf8de7cf5871d904e07");
-        user2.setStuName("superAdmin13");
-        user2.setStuAge(13);
-        user2.setSex(Sex.WOMEN);
-
-        User user3=new User();
-        user3.setStuUid("5e182bf8de7cf5871d904e08");
-        user3.setStuName("superAdmin15");
-        user3.setStuAge(15);
-        user3.setSex(Sex.MAX);
-        List<User> userList= Arrays.asList(user1,user2,user3);*/
-        /*int result=userMapper.insert(user1);
-        int result2=userMapper.insert(user2);
-        int result3=userMapper.insert(user3);*/
-        // int result=userMapper.insertBatch(userList);
-        // System.out.println("执行结果："+result);
-
-        //int result=userMapper.deleteById("5e182bf8de7cf5871d904dff");
-        //int result=userMapper.deleteBatchById(Arrays.asList("5e182bf8de7cf5871d904e00","5e182bf8de7cf5871d904e01","5e182bf8de7cf5871d904e02"));
-        //int result=userMapper.delete((DeleteWrapper) new DeleteWrapper().where("stu_uid","5e182bf8de7cf5871d904e04").isNotNull("stu_uid"));
-
-       /* User user=new User();
-        user.setStuUid("5e182bf8de7cf5871d904e05");
-        user.setStuName("superAdmin13");
-        user.setStuAge(13);
-        user.setSex(Sex.WOMEN);
-        int result=userMapper.updateById(user);*/
-
-       //int result=userMapper.updateBatchById(userList);
-
-       /* User user=new User();
-        //user.setStuUid("5e182bf8de7cf5871d904e05");
-        user.setStuName("superAdmin1234");
-        user.setStuAge(45);
+        User user = new User();
+        // 自动生成uuid主键
+        user.setStuName("小明");
+        user.setStuAge(20);
         user.setSex(Sex.MAX);
 
-        UpdateWrapper updateWrapper=new UpdateWrapper();
-        updateWrapper.where("stu_uid","5e182bf8de7cf5871d904e05");
-        updateWrapper.isNotNull("stu_uid");
-        updateWrapper.setEntity(user);
-        int result=userMapper.update(updateWrapper);*/
+        int result = userMapper.insert(user);
+        log.info(result > 0 ? "insert success..." : "insert failed...");
+    }
+
+    @Test
+    public void testInsertBatchMethod() {
+        // 自动生成uuid主键
+        List<User> entityList = Stream.of(
+                new User("", "小明1", 20, Sex.MAX),
+                new User("", "小明2", 21, Sex.WOMEN),
+                new User("", "小明3", 22, Sex.MAX),
+                new User("", "小明4", 23, Sex.WOMEN),
+                new User("", "小明5", 24, Sex.MAX)
+        ).collect(Collectors.toList());
+
+        int result = userMapper.insertBatch(entityList);
+        log.info(result > 0 ? "insertBatch success..." : "insertBatch failed...");
+    }
+
+    @Test
+    public void testUpdateByIdMethod() {
+        User user = new User();
+        user.setStuUid("558fdc1e53ab44bb840deb1a9b3014af");
+        user.setStuName("小张");
+        user.setStuAge(25);
+        user.setSex(Sex.MAX);
+
+        int result = userMapper.updateById(user);
+        log.info(result > 0 ? "updateById success..." : "updateById failed...");
+    }
+
+    @Test
+    public void testUpdateBatchByIdMethod() {
+        List<User> entityList = Stream.of(
+                new User("5e182bf8de7cf5871d904e05", "小明1", 20, Sex.MAX),
+                new User("5e182bf8de7cf5871d904e06", "小明2", 21, Sex.WOMEN),
+                new User("5e182bf8de7cf5871d904e07", "小明3", 22, Sex.MAX),
+                new User("5e182bf8de7cf5871d904e08", "小明4", 23, Sex.WOMEN),
+                new User("5e182bf8de7cf5871d904e09", "小明5", 24, Sex.MAX)
+        ).collect(Collectors.toList());
+
+        int result = userMapper.updateBatchById(entityList);
+        log.info(result > 0 ? "updateBatchById success..." : "updateBatchById failed...");
+    }
+
+    @Test
+    public void testDeleteById() {
+        int result = userMapper.deleteById("5e182bf8de7cf5871d904e0a");
+        log.info(result > 0 ? "deleteById success..." : "deleteById failed...");
+    }
+
+    @Test
+    public void testDeleteBatchById() {
+        List<Object> idList = Stream.of(
+                "5e182bf8de7cf5871d904e05",
+                "5e182bf8de7cf5871d904e06",
+                "5e182bf8de7cf5871d904e07",
+                "5e182bf8de7cf5871d904e08",
+                "5e182bf8de7cf5871d904e09"
+        ).collect(Collectors.toList());
+        int result = userMapper.deleteBatchById(idList);
+        log.info(result > 0 ? "deleteBatchById success..." : "deleteBatchById failed...");
+    }
+
+    /**
+     * update暂时在解析参数字段映射有问题，暂时无法使用
+     */
+    @Test
+    public void testUpdateMethod() {
+        User user = new User();
+        user.setStuName("小张");
+        user.setStuAge(25);
+        user.setSex(Sex.MAX);
+
+        UpdateWrapper wrapper = new UpdateWrapper();
+        wrapper.setEntity(user);
+        wrapper.where("stu_uid", "558fdc1e53ab44bb840deb1a9b3014af");
+        wrapper.where("del_flag", 1);
+
+        int result = userMapper.update(wrapper);
+        log.info(result > 0 ? "update success..." : "update failed...");
+    }
+
+    /**
+     * delete暂时在解析参数字段映射有问题，暂时无法使用
+     */
+    @Test
+    public void testDeleteMethod() {
+        DeleteWrapper wrapper = new DeleteWrapper();
+        wrapper.where("stu_uid", "558fdc1e53ab44bb840deb1a9b3014af");
+        wrapper.where("del_flag", 1);
+
+        int result = userMapper.delete(wrapper);
+        log.info(result > 0 ? "delete success..." : "delete failed...");
     }
 
     @Test

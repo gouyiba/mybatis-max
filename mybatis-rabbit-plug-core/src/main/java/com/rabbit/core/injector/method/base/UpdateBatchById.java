@@ -46,13 +46,13 @@ public class UpdateBatchById extends RabbitAbstractMethod {
         // TODO: 第一版全量更新
         StringBuffer sqlVal = new StringBuffer("");
         for (Map.Entry<String, String> item : sqlValMap.entrySet()) {
-            sqlVal.append(item.getValue());
+            sqlVal.append(SqlScriptUtil.convertIf("item."+item.getKey()+"!=null",item.getValue()));
         }
 
         String where = sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();
         where = where.replace("objectMap", "item");
         StringBuffer sql = new StringBuffer("<script>");
-        sql.append(SqlScriptUtil.convertForeach("entityIds", "item", null, null, ";", null,
+        sql.append(SqlScriptUtil.convertForeach("entityList", "item", null, null, ";", null,
                 MySqlKeyWord.UPDATE + "\t" + tableInfo.getTableName() + "\t" +
                         SqlScriptUtil.convertTrim("set", null, null, ",", sqlVal.toString()) + where
         ));

@@ -43,7 +43,7 @@ public class UpdateById extends RabbitAbstractMethod {
         // TODO: 第一版全量更新
         StringBuffer sqlVal=new StringBuffer("");
         for (Map.Entry<String,String> item:sqlValMap.entrySet()){
-            sqlVal.append(item.getValue());
+            sqlVal.append(SqlScriptUtil.convertIf(item.getKey()+"!=null",item.getValue()));
         }
 
         String where=sqlMap.get(SqlKey.UPDATE_WHERE.getValue()).toString();

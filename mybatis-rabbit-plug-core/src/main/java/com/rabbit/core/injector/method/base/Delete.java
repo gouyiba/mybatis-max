@@ -30,9 +30,9 @@ public class Delete extends RabbitAbstractMethod {
         }
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
-        Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
+        /*Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
         Field primaryKey = tableInfo.getPrimaryKey();
-        TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
+        TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());*/
 
         StringBuffer sql = new StringBuffer("<script>");
         sql.append(MySqlKeyWord.DELETE.getValue() + " " + MySqlKeyWord.FROM.getValue() + "\t");
