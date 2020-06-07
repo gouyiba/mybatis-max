@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>mybatis-rabbit-plug-core</artifactId>
-    <name>mybatis-rabbit-plug-core</name>
 
     <dependencies>
         <dependency>
