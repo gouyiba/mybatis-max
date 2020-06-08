@@ -40,7 +40,7 @@ public class SelectById extends RabbitAbstractMethod {
 
         // 拼接完整SQL
         String selectByIdSql = String.format("<script>\nSELECT %s FROM %s WHERE %s = #{id}\n</script>",
-                selectedColumnJoin.toString(), tableInfo.getTableName(), primaryKey.getName());
+                selectedColumnJoin.toString(), tableInfo.getTableName(), columnMap.get(primaryKey.getName()).getColumnName());
 
         // dynamic XMLLanguageDriver
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdSql, modelClass);

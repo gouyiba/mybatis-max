@@ -47,7 +47,7 @@ public class SelectBatchIds extends RabbitAbstractMethod {
         // 拼接完整SQL
         String selectByIdsSql = String.format(
                 "<script>\nSELECT %s FROM %s WHERE %s IN %s\n</script>",
-                selectedColumnJoin.toString(), tableInfo.getTableName(), primaryKey.getName(), foreachNode);
+                selectedColumnJoin.toString(), tableInfo.getTableName(), columnMap.get(primaryKey.getName()).getColumnName(), foreachNode);
 
         // dynamic XMLLanguageDriver
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdsSql, modelClass);
