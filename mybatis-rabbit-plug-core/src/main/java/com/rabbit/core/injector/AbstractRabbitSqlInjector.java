@@ -1,7 +1,7 @@
 package com.rabbit.core.injector;
 
+import com.rabbit.common.utils.ArrayUtils;
 import com.rabbit.common.utils.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;

@@ -67,12 +67,11 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
         Field primaryKey = this.tableInfo.getPrimaryKey();
         TableFieldInfo columnPK=null;
         if(Objects.nonNull(primaryKey)){
-             columnPK  = fieldInfoMap.get(primaryKey.getName());
+            columnPK  = fieldInfoMap.get(primaryKey.getName());
         }
         //fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
-        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap,primaryKey.getName());
+        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap,primaryKey==null?"":primaryKey.getName());
         sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
-
         // 根据指定主键修改
         if(Objects.nonNull(columnPK)){
             String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getJdbcType().getValue());
