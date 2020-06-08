@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,19 +28,20 @@ public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
     // delete-sql-cache-map
     private final Map<String, String> sqlMap = new ConcurrentHashMap<>();
 
+    private Map<String,Object> queryWrapper=new HashMap<>(16);
+
+    public Map<String,Object> getQueryWrapper(){
+        return queryWrapper;
+    }
+
+    public void setQueryWrapper(Map<String,Object> valMap){
+        this.queryWrapper.put("valMap",valMap);
+    }
+
     /**
      * 解析后的TableInfo
      */
     private TableInfo tableInfo;
-
-    /*
-     *
-     * DeleteWrapper继承自QueryWrapper，所以拥有QueryWrapper的条件拼接生成能力
-     * TODO 构建思路待实现...
-     *
-     *
-     *
-     * */
 
     public DeleteWrapper(E clazz) {
         this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());

@@ -136,16 +136,10 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
         if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE || mappedStatement.getSqlCommandType() == SqlCommandType.DELETE) {
             if (parameterObject instanceof UpdateWrapper) {
                 UpdateWrapper updateWrapper = (UpdateWrapper) parameterObject;
-                Map<String, String> where = updateWrapper.getWhereSqlMap();
-                for (String item : where.keySet()) {
-                    where.put(item, where.get(item).replace("queryWrapper.valMap", "valMap"));
-                }
+                updateWrapper.setQueryWrapper(updateWrapper.getValMap());
             } else if (parameterObject instanceof DeleteWrapper) {
                 DeleteWrapper deleteWrapper = (DeleteWrapper) parameterObject;
-                Map<String, String> where = deleteWrapper.getWhereSqlMap();
-                for (String item : where.keySet()) {
-                    where.put(item, where.get(item).replace("queryWrapper.valMap", "valMap"));
-                }
+                deleteWrapper.setQueryWrapper(deleteWrapper.getValMap());
             }
         }
     }

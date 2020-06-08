@@ -33,6 +33,9 @@ public class BaseMapperMethodTest {
 
     private static List<String> SYS_UUID_CONTAINER = new ArrayList<>();
 
+
+    /*********************************************************************** INSERT/UPDATE/DELETE ***********************************************************************/
+
     @Test
     public void testInsertMethod() {
         User user = new User();
@@ -105,15 +108,12 @@ public class BaseMapperMethodTest {
         log.info(result > 0 ? "deleteBatchById success..." : "deleteBatchById failed...");
     }
 
-    /**
-     * update暂时在解析参数字段映射有问题，暂时无法使用
-     */
     @Test
     public void testUpdateMethod() {
         User user = new User();
-        user.setStuName("小张");
-        user.setStuAge(25);
-        user.setSex(Sex.MAX);
+        user.setStuName("小李");
+        user.setStuAge(21);
+        user.setSex(Sex.WOMEN);
 
         UpdateWrapper wrapper = new UpdateWrapper();
         wrapper.setEntity(user);
@@ -124,9 +124,6 @@ public class BaseMapperMethodTest {
         log.info(result > 0 ? "update success..." : "update failed...");
     }
 
-    /**
-     * delete暂时在解析参数字段映射有问题，暂时无法使用
-     */
     @Test
     public void testDeleteMethod() {
         DeleteWrapper wrapper = new DeleteWrapper();
@@ -136,6 +133,10 @@ public class BaseMapperMethodTest {
         int result = userMapper.delete(wrapper);
         log.info(result > 0 ? "delete success..." : "delete failed...");
     }
+
+
+    /*********************************************************************** SELECT ***********************************************************************/
+
 
     @Test
     public void testSelectByIdMethod() {

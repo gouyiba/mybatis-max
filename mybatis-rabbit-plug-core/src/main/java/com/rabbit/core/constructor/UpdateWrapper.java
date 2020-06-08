@@ -31,6 +31,16 @@ public class UpdateWrapper<E> extends QueryWrapper<E> implements Serializable {
     // update-sql-cache-map
     private final Map<String, Object> sqlMap = new ConcurrentHashMap<>();
 
+    private Map<String,Object> queryWrapper=new HashMap<>(16);
+
+    public Map<String,Object> getQueryWrapper(){
+        return queryWrapper;
+    }
+
+    public void setQueryWrapper(Map<String,Object> valMap){
+        this.queryWrapper.put("valMap",valMap);
+    }
+
     private E entity;
 
     public E getEntity() {
