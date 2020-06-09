@@ -25,7 +25,7 @@ import java.util.Map;
  * &&$$%%$&%|!;;%&$&$|;::|
  *
  *
- * 顶级Service接口，声明Service-Method并实现，无需编写Mapper和Service，注入即可获得CRUD功能
+ * 顶级Service接口，声明Service-Method并实现，继承后即可获得CRUD功能
  *
  * @author duxiaoyu
  * @date 2019-12-12

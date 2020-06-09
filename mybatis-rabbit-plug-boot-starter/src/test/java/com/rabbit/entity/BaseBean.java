@@ -28,7 +28,7 @@ public class BaseBean implements Serializable {
 
     private Date updateDate;
 
-    @Delete(physicsDel = false,value = 4)
+    //@Delete(physicsDel = false,value = 5)
     private Integer delFlag;
 
     /**

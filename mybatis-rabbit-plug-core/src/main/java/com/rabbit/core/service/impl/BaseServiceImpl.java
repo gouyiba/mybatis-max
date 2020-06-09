@@ -21,6 +21,7 @@ import com.rabbit.core.parse.ParseClass2TableInfo;
 import com.rabbit.core.service.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -60,8 +61,8 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String,Object> queryValMap=new HashMap<>(16);
-        queryValMap.put("valMap",sqlMap.get("VALUE"));
+        Map<String, Object> queryValMap = new HashMap<>(16);
+        queryValMap.put("valMap", sqlMap.get("VALUE"));
         Map<String, Object> objMap = baseMapper.getObject(sqlMap, queryValMap);
         if (CollectionUtils.isEmpty(objMap)) return null;
 
@@ -86,8 +87,8 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
         copyQueryWrapper(queryWrapper, clazz);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String,Object> queryValMap=new HashMap<>(16);
-        queryValMap.put("valMap",sqlMap.get("VALUE"));
+        Map<String, Object> queryValMap = new HashMap<>(16);
+        queryValMap.put("valMap", sqlMap.get("VALUE"));
         List<Map<String, Object>> objMapList = baseMapper.getObjectList(sqlMap, queryValMap);
         if (CollectionUtils.isEmpty(objMapList)) return Collections.emptyList();
 
@@ -129,7 +130,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         TableFieldInfo tableFieldInfo = tableInfo.getColumnMap().get(pkField.getName());
         queryWrapper.where(tableFieldInfo.getColumnName(), id);
         Map<String, Object> sqlMap = queryWrapper.mergeSqlMap();
-        Map<String, Object> objMap = baseMapper.getObject(sqlMap, (Map<String, Object>) sqlMap.get("VALUE"));
+        Map<String, Object> queryValMap = new HashMap<>(16);
+        queryValMap.put("valMap", sqlMap.get("VALUE"));
+        Map<String, Object> objMap = baseMapper.getObject(sqlMap, queryValMap);
         if (CollectionUtils.isEmpty(objMap)) return null;
         convertEnumVal(tableInfo.getColumnMap(), Arrays.asList(objMap));
         if (CollectionUtils.isEmpty(objMap)) return null;
@@ -141,7 +144,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * 自定义sql查询
      *
      * @param sql 自定义sql
-     * @return List<Map<String, Object>>
+     * @return List<Map < String, Object>>
      */
     @Override
     public List<Map<String, Object>> queryCustomSql(String sql) {
@@ -173,7 +176,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
         DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(obj.getClass());
-        if(Objects.isNull(tableInfo.getPrimaryKey())){
+        if (Objects.isNull(tableInfo.getPrimaryKey())) {
             throw new MyBatisRabbitPlugException("未指定主键字段...");
         }
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
@@ -215,7 +218,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
 
         DeleteWrapper deleteWrapper = new DeleteWrapper(obj);
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(obj.getClass());
-        if(Objects.isNull(tableInfo.getPrimaryKey())){
+        if (Objects.isNull(tableInfo.getPrimaryKey())) {
             throw new MyBatisRabbitPlugException("未指定主键字段...");
         }
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
@@ -273,9 +276,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         // 自定义字段填充策略
         Class<?> clazz = this.getFillingStrategyClass();
         try {
-            if (Objects.equals(object.getClass().getSuperclass(), clazz)) {
-                this.setFillingStrategyContent(beanMap, clazz, Update.class);
-            }
+            this.setFillingStrategyContent(beanMap, object, Update.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,7 +307,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         long beginTime = System.currentTimeMillis();
         UpdateWrapper updateWrapper = new UpdateWrapper(objectList.get(0));
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(objectList.get(0).getClass());
-        if(Objects.isNull(tableInfo.getPrimaryKey())){
+        if (Objects.isNull(tableInfo.getPrimaryKey())) {
             throw new MyBatisRabbitPlugException("未指定主键字段...");
         }
         List<Map<String, Object>> objMapList = objectList.stream().map(x -> BeanUtil.beanToMap(x)).collect(Collectors.toList());
@@ -320,12 +321,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
             paramterMap.put(item, paramterMap.get(item).replace("objectMap", "obj"));
         }
         // 自定义字段批量填充
-        Class<?> clazz = this.getFillingStrategyClass();
         try {
-            if (Objects.equals(objectList.get(0).getClass().getSuperclass(), clazz)) {
-                for (Map<String, Object> item : objMapList) {
-                    this.setFillingStrategyContent(item, clazz, Update.class);
-                }
+            for (int i = 0; i < objectList.size(); i++) {
+                this.setFillingStrategyContent(objMapList.get(i), objectList.get(i), Update.class);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,15 +407,12 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
             // 默认表主键
             pk = "default-tab-pk";
         }
-        // 自定义字段填充
-        Class<?> clazz = this.getFillingStrategyClass();
-        // obj father class is clazz
-        if (Objects.equals(clazz, obj.getClass().getSuperclass())) {
-            try {
-                this.setFillingStrategyContent(beanMap, clazz, Create.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+        // 公用字段填充
+        try {
+            this.setFillingStrategyContent(beanMap, obj, Create.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         LOGGER.info(" ");
         LOGGER.info("{}: begin add data...", TAG);
@@ -486,17 +481,13 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         }
 
         // 批量字段填充
-        Class<?> clazz = this.getFillingStrategyClass();
-        if (Objects.equals(objectList.get(0).getClass().getSuperclass(), clazz)) {
-            for (Map<String, Object> item : objMap) {
-                try {
-                    this.setFillingStrategyContent(item, clazz, Create.class);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < objectList.size(); i++) {
+            try {
+                this.setFillingStrategyContent(objMap.get(i), objectList.get(i), Create.class);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
         // 开始批量新增
         LOGGER.info(" ");
         LOGGER.info("{}: begin addBatch data...", TAG);
@@ -533,24 +524,23 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
      * 设置自定义字段内容
      *
      * @param beanMap    实例Map
-     * @param clazz      公用字段class
+     * @param obj        entity
      * @param methodType 公用字段赋值方法类型Annotation: create/update/delete
      * @throws Exception
      */
-    private void setFillingStrategyContent(Map<String, Object> beanMap, Class<?> clazz, Class<? extends Annotation> methodType) throws Exception {
-        if (!Objects.isNull(clazz)) {
-            List<Method> methodList = Arrays.asList(clazz.getMethods());
-            Method addMethod = methodList.stream().filter(x ->
-                    x.isAnnotationPresent(methodType)).findAny().orElseThrow(() ->
-                    new MyBatisRabbitPlugException("未找到新增时的自定义字段填充Method......"));
-            Object obj = clazz.newInstance();
-            addMethod.invoke(obj);
-            List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
-            for (Field item : fieldList) {
-                Method getMethod = clazz.getMethod("get" + StringUtils.capitalize(item.getName()));
-                Object val = getMethod.invoke(obj);
-                if (val != null) {
-                    beanMap.put(item.getName(), val);
+    private void setFillingStrategyContent(Map<String, Object> beanMap, Object obj, Class<? extends Annotation> methodType) throws Exception {
+        TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(obj.getClass());
+        if (Objects.nonNull(tableInfo)) {
+            // 获取解析后的填充方法
+            Map<Class<? extends Annotation>, Method> fillMethodMap = tableInfo.getFillMethods();
+            Method fillMethod = fillMethodMap.get(methodType);
+            if (Objects.nonNull(fillMethod)) {
+                fillMethod.invoke(obj);
+                Map<String, Object> parseObj = BeanUtil.beanToMap(obj);
+                for (String key : parseObj.keySet()) {
+                    if (beanMap.containsKey(key) && Objects.isNull(beanMap.get(key)) && Objects.nonNull(parseObj.get(key))) {
+                        beanMap.put(key, parseObj.get(key));
+                    }
                 }
             }
         }
