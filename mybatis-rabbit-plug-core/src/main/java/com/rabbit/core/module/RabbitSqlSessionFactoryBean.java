@@ -319,14 +319,24 @@ public class RabbitSqlSessionFactoryBean implements FactoryBean<SqlSessionFactor
         final SqlSessionFactory sqlSessionFactory = new RabbitMybatisSqlSessionFactoryBuilder().build(targetConfiguration);
 
         if (isBanner()) {
-            System.out.println("\n            _     _     _ _                          _           _   _                  _             ");
+            /*System.out.println("\n            _     _     _ _                          _           _   _                  _             ");
             System.out.println("           | |   | |   (_) |                        | |         | | (_)                | |            ");
             System.out.println("  _ __ __ _| |__ | |__  _| |_ ______ _ __ ___  _   _| |__   __ _| |_ _ ___ ______ _ __ | |_   _  __ _ ");
             System.out.println(" | '__/ _` | '_ \\| '_ \\| | __|______| '_ ` _ \\| | | | '_ \\ / _` | __| / __|______| '_ \\| | | | |/ _` |");
             System.out.println(" | | | (_| | |_) | |_) | | |_       | | | | | | |_| | |_) | (_| | |_| \\__ \\      | |_) | | |_| | (_| |");
             System.out.println(" |_|  \\__,_|_.__/|_.__/|_|\\__|      |_| |_| |_|\\__, |_.__/ \\__,_|\\__|_|___/      | .__/|_|\\__,_|\\__, |");
             System.out.println("                                                __/ |                            | |             __/ |");
-            System.out.println("                                               |___/                             |_|            |___/ ");
+            System.out.println("                                               |___/                             |_|            |___/ ");*/
+
+            System.out.println( "                 _           _   _                      _     _     _ _                _             \n" +
+                                "                | |         | | (_)                    | |   | |   (_) |              | |            \n" +
+                                " _ __ ___  _   _| |__   __ _| |_ _ ___ ______ _ __ __ _| |__ | |__  _| |_ ______ _ __ | |_   _  __ _ \n" +
+                                "| '_ ` _ \\| | | | '_ \\ / _` | __| / __|______| '__/ _` | '_ \\| '_ \\| | __|______| '_ \\| | | | |/ _` |\n" +
+                                "| | | | | | |_| | |_) | (_| | |_| \\__ \\      | | | (_| | |_) | |_) | | |_       | |_) | | |_| | (_| |\n" +
+                                "|_| |_| |_|\\__, |_.__/ \\__,_|\\__|_|___/      |_|  \\__,_|_.__/|_.__/|_|\\__|      | .__/|_|\\__,_|\\__, |\n" +
+                                "            __/ |                                                               | |             __/ |\n" +
+                                "           |___/                                                                |_|            |___/ \n");
+
 //            System.out.println(Ansi.ansi().fg(Ansi.Color.GREEN).a(":: rabbit-mybatis-plug ::") + ("   (v" + MybatisPlusVersion.getVersion() + ")\n"));
             System.out.println(" (v " + RabbitMybatisPlugVersion.getVersion() + ")\n");
         }
