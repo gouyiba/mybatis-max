@@ -66,7 +66,7 @@ public class BaseMapperMethodTest {
     @Test
     public void testUpdateByIdMethod() {
         User user = new User();
-        user.setStuUid("558fdc1e53ab44bb840deb1a9b3014af");
+        user.setStuUid("5e182bf8de7cf5871d904e0c");
         user.setStuName("小张");
         user.setStuAge(25);
         user.setSex(Sex.MAX);
@@ -78,11 +78,11 @@ public class BaseMapperMethodTest {
     @Test
     public void testUpdateBatchByIdMethod() {
         List<User> entityList = Stream.of(
-                new User("5e182bf8de7cf5871d904e05", "小明1", 20, Sex.MAX),
-                new User("5e182bf8de7cf5871d904e06", "小明2", 21, Sex.WOMEN),
-                new User("5e182bf8de7cf5871d904e07", "小明3", 22, Sex.MAX),
-                new User("5e182bf8de7cf5871d904e08", "小明4", 23, Sex.WOMEN),
-                new User("5e182bf8de7cf5871d904e09", "小明5", 24, Sex.MAX)
+                new User("5e182bf8de7cf5871d904e0c", "小明1", 20, Sex.MAX),
+                new User("5e182bf8de7cf5871d904e0d", "小明2", 21, Sex.WOMEN),
+                new User("5e182bf8de7cf5871d904e0e", "小明3", 22, Sex.MAX),
+                new User("5e182bf8de7cf5871d904e0f", "小明4", 23, Sex.WOMEN),
+                new User("5e182bf8de7cf5871d904e10", "小明5", 24, Sex.MAX)
         ).collect(Collectors.toList());
 
         int result = userMapper.updateBatchById(entityList);
@@ -117,7 +117,7 @@ public class BaseMapperMethodTest {
 
         UpdateWrapper wrapper = new UpdateWrapper();
         wrapper.setEntity(user);
-        wrapper.where("stu_uid", "558fdc1e53ab44bb840deb1a9b3014af");
+        wrapper.where("stu_uid", "5e182bf8de7cf5871d904e0c");
         wrapper.where("del_flag", 1);
 
         int result = userMapper.update(wrapper);

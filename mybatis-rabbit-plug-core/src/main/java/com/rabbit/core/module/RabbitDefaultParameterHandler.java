@@ -88,7 +88,7 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                 }
             }
 
-            if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE && ObjectUtils.isNotEmpty(createMethod)) {
+            if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE && ObjectUtils.isNotEmpty(updateMethod)) {
                 updateMethod.setAccessible(true); // 公开私有
                 for (Object item : objectList) {
                     updateMethod.invoke(item);
