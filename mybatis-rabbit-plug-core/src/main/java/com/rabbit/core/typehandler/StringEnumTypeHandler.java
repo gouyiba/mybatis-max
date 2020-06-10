@@ -20,6 +20,8 @@ public class StringEnumTypeHandler<E extends Enum<?> & IEnum<E>> extends BaseTyp
 
     private Class<E> clazz;
 
+    public StringEnumTypeHandler() {}
+
     public StringEnumTypeHandler(Class<E> enumType) {
         if (enumType == null) {
             throw new IllegalArgumentException("Type argument cannot be null");

@@ -203,6 +203,7 @@ public class BaseMapperMethodTest {
     public void insert() {
         String id = UUID.randomUUID().toString();
         Account account = new Account();
+        account.setSex(Sex.MAX);
         account.setId(id);
         account.setUserName("root");
         account.setCreatedBy(UUID.randomUUID().toString());

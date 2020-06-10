@@ -1,6 +1,8 @@
 package com.rabbit.core.module;
 
 import com.rabbit.core.config.RabbitConfig;
+import com.rabbit.core.typehandler.IEnumTypeHandler;
+import com.rabbit.core.typehandler.StringEnumTypeHandler;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.executor.*;
 import org.apache.ibatis.logging.Log;
@@ -30,6 +32,8 @@ public class RabbitConfiguration extends Configuration {
         this.mybatisMapperRegistry = new RabbitMapperRegistry(this);
         this.mapUnderscoreToCamelCase = true;
         this.languageRegistry.setDefaultDriverClass(RabbitXMLLanguageDriver.class);
+        this.typeHandlerRegistry.register(IEnumTypeHandler.class);
+        this.typeHandlerRegistry.register(StringEnumTypeHandler.class);
     }
 
     @Override

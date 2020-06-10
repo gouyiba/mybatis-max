@@ -23,6 +23,8 @@
         <spring-version>5.2.2.RELEASE</spring-version>
         <spring-boot-version>2.2.2.RELEASE</spring-boot-version>
         <maven-compiler-plugin-version>3.6.0</maven-compiler-plugin-version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -32,14 +34,6 @@
             <version>1.18.10</version>
             <scope>compile</scope>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.0.7</version>
-            <scope>compile</scope>
-            <!--<optional>true</optional>-->
         </dependency>
 
         <dependency>
