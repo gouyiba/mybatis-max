@@ -6,7 +6,7 @@ spring:
   # hikariPool
   datasource:
     username: root
-    password: ENC(EoCusIQvUutZ76SiZtzlzGr7bziQ2z1s)
+    password: ENC(a5rsd8uK8dVi94FUIw0AQdZSId+S8j1v)
     url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
 rabbit-mybatis-plug:
@@ -15,4 +15,4 @@ rabbit-mybatis-plug:
   type-aliases-package: com.rabbit.entity
 jasypt:
   encryptor:
-    password: mrp
+    password: NDEyZWQyZTlhZWJhODY2NjRhYTYyYTg3ZTI5NmExYjU=
