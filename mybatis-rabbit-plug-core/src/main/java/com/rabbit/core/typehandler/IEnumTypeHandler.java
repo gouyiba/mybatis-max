@@ -21,6 +21,8 @@ public class IEnumTypeHandler<E extends Enum<?> & IEnum<E>> extends BaseTypeHand
 
     private Class<E> clazz;
 
+    public IEnumTypeHandler() {}
+
     public IEnumTypeHandler(Class<E> enumType) {
         if (enumType == null) {
             throw new IllegalArgumentException("Type argument cannot be null");
