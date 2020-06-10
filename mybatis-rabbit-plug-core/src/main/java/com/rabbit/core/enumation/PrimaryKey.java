@@ -38,7 +38,7 @@ public enum PrimaryKey implements IEnum<String> {
      * @param value
      * @return
      */
-    public static PrimaryKey valueConvertEnum(String value) {
+    public static PrimaryKey convert(String value) {
         for (PrimaryKey primaryKey : PrimaryKey.values()) {
             if (primaryKey.generateType.equals(value)) {
                 return primaryKey;

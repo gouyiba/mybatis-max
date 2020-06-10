@@ -19,7 +19,7 @@ public enum Sex implements IEnum<Integer> {
         this.value=value;
     }
 
-    public static Sex valueConvertEnum(Integer value) {
+    public static Sex convert(Integer value) {
         for (Sex sex : Sex.values()) {
             if (sex.value.equals(value)) {
                 return sex;

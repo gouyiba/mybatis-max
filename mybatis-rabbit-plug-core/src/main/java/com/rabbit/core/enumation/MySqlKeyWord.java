@@ -56,7 +56,7 @@ public enum MySqlKeyWord implements IEnum<String> {
      * @param value
      * @return
      */
-    public static MySqlKeyWord valueConvertEnum(String value) {
+    public static MySqlKeyWord convert(String value) {
         for (MySqlKeyWord mySqlKeyWord : MySqlKeyWord.values()) {
             if (mySqlKeyWord.keyword.equals(value)) {
                 return mySqlKeyWord;

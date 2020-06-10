@@ -71,7 +71,7 @@ public enum SqlKey implements IEnum<String> {
      * @param value
      * @return
      */
-    public static SqlKey valueConvertEnum(String value) {
+    public static SqlKey convert(String value) {
         for (SqlKey sqlKeyItem : SqlKey.values()) {
             if (sqlKeyItem.sqlKey.equals(value)) {
                 return sqlKeyItem;

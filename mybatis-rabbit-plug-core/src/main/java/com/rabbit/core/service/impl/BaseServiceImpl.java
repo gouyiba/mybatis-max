@@ -600,9 +600,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         for (Map.Entry<String, TableFieldInfo> item : enumPropertyMap.entrySet()) {
             Class<?> enumClass = item.getValue().getPropertyType();
             try {
-                // 调用自定义枚举中的valueConvertEnum函数，如果没定义该函数，将抛出异常
+                // 调用自定义枚举中的convert函数，如果没定义该函数，将抛出异常
                 Class<?> parameterClass = this.extractModelClass(enumClass);
-                Method method = enumClass.getMethod("valueConvertEnum", parameterClass);
+                Method method = enumClass.getMethod("convert", parameterClass);
                 for (Map<String, Object> objMap : objMapList) {
                     Object parameter = objMap.get(item.getValue().getColumnName());
                     if (Objects.isNull(parameter)) {
@@ -611,7 +611,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
                     }
                     // 此处invoke的enum-method必须被static修饰,否则将抛出空指针异常
                     Enum iEnum = (Enum) method.invoke(null, parameter);
-                    String enumName = iEnum.name();
+                    String enumName = iEnum == null ? "" : iEnum.name();
                     if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName)) {
                         objMap.put(item.getValue().getColumnName(), enumName);
                     }

@@ -39,7 +39,7 @@ public enum MySqlColumnType implements IEnum<String> {
      * @param value
      * @return
      */
-    public static MySqlColumnType valueConvertEnum(String value) {
+    public static MySqlColumnType convert(String value) {
         for (MySqlColumnType mySqlColumnType : MySqlColumnType.values()) {
             if (mySqlColumnType.columnType.equals(value)) {
                 return mySqlColumnType;
