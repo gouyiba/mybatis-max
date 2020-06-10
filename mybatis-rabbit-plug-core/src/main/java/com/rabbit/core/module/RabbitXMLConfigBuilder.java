@@ -43,11 +43,11 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
     private String environment;
 
     public RabbitXMLConfigBuilder(Reader reader) {
-        this((Reader)reader, (String)null, (Properties)null);
+        this((Reader) reader, (String) null, (Properties) null);
     }
 
     public RabbitXMLConfigBuilder(Reader reader, String environment) {
-        this((Reader)reader, environment, (Properties)null);
+        this((Reader) reader, environment, (Properties) null);
     }
 
     public RabbitXMLConfigBuilder(Reader reader, String environment, Properties props) {
@@ -55,11 +55,11 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
     }
 
     public RabbitXMLConfigBuilder(InputStream inputStream) {
-        this((InputStream)inputStream, (String)null, (Properties)null);
+        this((InputStream) inputStream, (String) null, (Properties) null);
     }
 
     public RabbitXMLConfigBuilder(InputStream inputStream, String environment) {
-        this((InputStream)inputStream, environment, (Properties)null);
+        this((InputStream) inputStream, environment, (Properties) null);
     }
 
     public RabbitXMLConfigBuilder(InputStream inputStream, String environment, Properties props) {
@@ -78,7 +78,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
 
     @Override
     public RabbitConfiguration getConfiguration() {
-        return (RabbitConfiguration)this.configuration;
+        return (RabbitConfiguration) this.configuration;
     }
 
     public Configuration parse() {
@@ -127,7 +127,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
                 }
 
                 key = var4.next();
-            } while(metaConfig.hasSetter(String.valueOf(key)));
+            } while (metaConfig.hasSetter(String.valueOf(key)));
 
             throw new BuilderException("The setting " + key + " is not known.  Make sure you spelled it correctly (case sensitive).");
         }
@@ -140,7 +140,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
             String[] var4 = clazzes;
             int var5 = clazzes.length;
 
-            for(int var6 = 0; var6 < var5; ++var6) {
+            for (int var6 = 0; var6 < var5; ++var6) {
                 String clazz = var4[var6];
                 if (!clazz.isEmpty()) {
                     Class<? extends VFS> vfsImpl = (Class<? extends VFS>) Resources.classForName(clazz);
@@ -160,8 +160,8 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (parent != null) {
             Iterator var2 = parent.getChildren().iterator();
 
-            while(var2.hasNext()) {
-                XNode child = (XNode)var2.next();
+            while (var2.hasNext()) {
+                XNode child = (XNode) var2.next();
                 String alias;
                 if ("package".equals(child.getName())) {
                     alias = child.getStringAttribute("name");
@@ -190,11 +190,11 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (parent != null) {
             Iterator var2 = parent.getChildren().iterator();
 
-            while(var2.hasNext()) {
-                XNode child = (XNode)var2.next();
+            while (var2.hasNext()) {
+                XNode child = (XNode) var2.next();
                 String interceptor = child.getStringAttribute("interceptor");
                 Properties properties = child.getChildrenAsProperties();
-                Interceptor interceptorInstance = (Interceptor)this.resolveClass(interceptor).newInstance();
+                Interceptor interceptorInstance = (Interceptor) this.resolveClass(interceptor).newInstance();
                 interceptorInstance.setProperties(properties);
                 this.configuration.addInterceptor(interceptorInstance);
             }
@@ -206,7 +206,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (context != null) {
             String type = context.getStringAttribute("type");
             Properties properties = context.getChildrenAsProperties();
-            ObjectFactory factory = (ObjectFactory)this.resolveClass(type).newInstance();
+            ObjectFactory factory = (ObjectFactory) this.resolveClass(type).newInstance();
             factory.setProperties(properties);
             this.configuration.setObjectFactory(factory);
         }
@@ -216,7 +216,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
     private void objectWrapperFactoryElement(XNode context) throws Exception {
         if (context != null) {
             String type = context.getStringAttribute("type");
-            ObjectWrapperFactory factory = (ObjectWrapperFactory)this.resolveClass(type).newInstance();
+            ObjectWrapperFactory factory = (ObjectWrapperFactory) this.resolveClass(type).newInstance();
             this.configuration.setObjectWrapperFactory(factory);
         }
 
@@ -225,7 +225,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
     private void reflectorFactoryElement(XNode context) throws Exception {
         if (context != null) {
             String type = context.getStringAttribute("type");
-            ReflectorFactory factory = (ReflectorFactory)this.resolveClass(type).newInstance();
+            ReflectorFactory factory = (ReflectorFactory) this.resolveClass(type).newInstance();
             this.configuration.setReflectorFactory(factory);
         }
 
@@ -261,15 +261,15 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         this.configuration.setAutoMappingBehavior(AutoMappingBehavior.valueOf(props.getProperty("autoMappingBehavior", "PARTIAL")));
         this.configuration.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.valueOf(props.getProperty("autoMappingUnknownColumnBehavior", "NONE")));
         this.configuration.setCacheEnabled(this.booleanValueOf(props.getProperty("cacheEnabled"), true));
-        this.configuration.setProxyFactory((ProxyFactory)this.createInstance(props.getProperty("proxyFactory")));
+        this.configuration.setProxyFactory((ProxyFactory) this.createInstance(props.getProperty("proxyFactory")));
         this.configuration.setLazyLoadingEnabled(this.booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
         this.configuration.setAggressiveLazyLoading(this.booleanValueOf(props.getProperty("aggressiveLazyLoading"), false));
         this.configuration.setMultipleResultSetsEnabled(this.booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
         this.configuration.setUseColumnLabel(this.booleanValueOf(props.getProperty("useColumnLabel"), true));
         this.configuration.setUseGeneratedKeys(this.booleanValueOf(props.getProperty("useGeneratedKeys"), false));
         this.configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
-        this.configuration.setDefaultStatementTimeout(this.integerValueOf(props.getProperty("defaultStatementTimeout"), (Integer)null));
-        this.configuration.setDefaultFetchSize(this.integerValueOf(props.getProperty("defaultFetchSize"), (Integer)null));
+        this.configuration.setDefaultStatementTimeout(this.integerValueOf(props.getProperty("defaultStatementTimeout"), (Integer) null));
+        this.configuration.setDefaultFetchSize(this.integerValueOf(props.getProperty("defaultFetchSize"), (Integer) null));
         this.configuration.setMapUnderscoreToCamelCase(this.booleanValueOf(props.getProperty("mapUnderscoreToCamelCase"), true));
         this.configuration.setSafeRowBoundsEnabled(this.booleanValueOf(props.getProperty("safeRowBoundsEnabled"), false));
         this.configuration.setLocalCacheScope(LocalCacheScope.valueOf(props.getProperty("localCacheScope", "SESSION")));
@@ -293,8 +293,8 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
 
             Iterator var2 = context.getChildren().iterator();
 
-            while(var2.hasNext()) {
-                XNode child = (XNode)var2.next();
+            while (var2.hasNext()) {
+                XNode child = (XNode) var2.next();
                 String id = child.getStringAttribute("id");
                 if (this.isSpecifiedEnvironment(id)) {
                     TransactionFactory txFactory = this.transactionManagerElement(child.evalNode("transactionManager"));
@@ -317,7 +317,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
             }
 
             Properties properties = context.getChildrenAsProperties();
-            databaseIdProvider = (DatabaseIdProvider)this.resolveClass(type).newInstance();
+            databaseIdProvider = (DatabaseIdProvider) this.resolveClass(type).newInstance();
             databaseIdProvider.setProperties(properties);
         }
 
@@ -333,7 +333,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (context != null) {
             String type = context.getStringAttribute("type");
             Properties props = context.getChildrenAsProperties();
-            TransactionFactory factory = (TransactionFactory)this.resolveClass(type).newInstance();
+            TransactionFactory factory = (TransactionFactory) this.resolveClass(type).newInstance();
             factory.setProperties(props);
             return factory;
         } else {
@@ -345,7 +345,7 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (context != null) {
             String type = context.getStringAttribute("type");
             Properties props = context.getChildrenAsProperties();
-            DataSourceFactory factory = (DataSourceFactory)this.resolveClass(type).newInstance();
+            DataSourceFactory factory = (DataSourceFactory) this.resolveClass(type).newInstance();
             factory.setProperties(props);
             return factory;
         } else {
@@ -357,8 +357,8 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
         if (parent != null) {
             Iterator var2 = parent.getChildren().iterator();
 
-            while(var2.hasNext()) {
-                XNode child = (XNode)var2.next();
+            while (var2.hasNext()) {
+                XNode child = (XNode) var2.next();
                 String typeHandlerPackage;
                 if ("package".equals(child.getName())) {
                     typeHandlerPackage = child.getStringAttribute("name");
@@ -392,8 +392,8 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
             this.setResource(parent, resources, mapperClasses);
             Iterator var4 = resources.iterator();
 
-            while(var4.hasNext()) {
-                String resource = (String)var4.next();
+            while (var4.hasNext()) {
+                String resource = (String) var4.next();
                 ErrorContext.instance().resource(resource);
                 InputStream inputStream = Resources.getResourceAsStream(resource);
                 XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, this.configuration, resource, this.configuration.getSqlFragments());
@@ -402,8 +402,8 @@ public class RabbitXMLConfigBuilder extends BaseBuilder {
 
             var4 = mapperClasses.iterator();
 
-            while(var4.hasNext()) {
-                Class<?> mapper = (Class)var4.next();
+            while (var4.hasNext()) {
+                Class<?> mapper = (Class) var4.next();
                 this.configuration.addMapper(mapper);
             }
         }

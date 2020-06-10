@@ -1,7 +1,7 @@
 package com.rabbit.core.enumation;
 
 /**
- * MySql数据库关键字枚举
+ * MySql数据库关键字
  *
  * @author duxiaoyu
  * @since 2019-12-12

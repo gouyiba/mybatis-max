@@ -15,7 +15,7 @@ import java.util.Objects;
 
 /**
  * @ClassName DeleteById
- * @ClassExplain: 说明
+ * @ClassExplain: 根据id删除
  * @Author Duxiaoyu
  * @Date 2020/5/30 17:30
  * @Since V 1.0
@@ -31,9 +31,10 @@ public class DeleteById extends RabbitAbstractMethod {
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
         Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
         Field primaryKey = tableInfo.getPrimaryKey();
-        if(Objects.isNull(primaryKey)){
+        if (Objects.isNull(primaryKey)) {
             return;
         }
+
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
         String where = String.format("%s %s=#{%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), "id", columnPK.getJdbcType().getValue());
 

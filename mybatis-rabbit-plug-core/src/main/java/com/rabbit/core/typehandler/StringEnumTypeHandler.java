@@ -29,22 +29,22 @@ public class StringEnumTypeHandler<E extends Enum<?> & IEnum<E>> extends BaseTyp
 
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, IEnum iEnum, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setString(i,(String) iEnum.getValue());
+        preparedStatement.setString(i, (String) iEnum.getValue());
     }
 
     @Override
     public IEnum getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        return convert(clazz,resultSet.getString(s));
+        return convert(clazz, resultSet.getString(s));
     }
 
     @Override
     public IEnum getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        return convert(clazz,resultSet.getString(i));
+        return convert(clazz, resultSet.getString(i));
     }
 
     @Override
     public IEnum getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        return convert(clazz,callableStatement.getString(i));
+        return convert(clazz, callableStatement.getString(i));
     }
 
     private <T extends Enum<?> & IEnum> T convert(Class<T> enumClass, String value) {

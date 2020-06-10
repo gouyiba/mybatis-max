@@ -13,9 +13,7 @@ import java.util.Date;
 /**
  * example:
  * 公用字段类需要自行创建，存放所有bean的公用字段,子类继承
- * explain:
- * 1.需要将自定义的公用字段类注入到spring中
- * 2.使用@FillingStrategy进行标注声明该类是一个自定义公用字段类
+ *
  * @author duxiaoyu
  * @date 2020-02-05
  */
@@ -35,17 +33,17 @@ public class BaseBean implements Serializable {
      * 新增时，字段填充策略
      */
     @Create
-    public void add(){
-        this.createDate=new Date();
-        this.delFlag=1;
+    public void add() {
+        this.createDate = new Date();
+        this.delFlag = 1;
     }
 
     /**
      * 修改时，字段填充策略
      */
     @Update
-    public void update(){
-        this.updateDate=new Date();
+    public void update() {
+        this.updateDate = new Date();
     }
 
 }

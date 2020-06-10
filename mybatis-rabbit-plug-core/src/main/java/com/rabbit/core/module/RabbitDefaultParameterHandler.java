@@ -57,7 +57,7 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                 if (key.getValue() instanceof List) {
                     objectList = (List<Object>) key.getValue();
                     break;
-                }else {
+                } else {
                     objectList.add(key.getValue());
                     break;
                 }

@@ -1,34 +1,23 @@
 package com.rabbit.core.injector.method.base;
 
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.IdUtil;
-import com.rabbit.common.utils.StringPool;
-import com.rabbit.core.annotation.Id;
-import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.DefaultAbstractWrapper;
-import com.rabbit.core.enumation.PrimaryKey;
 import com.rabbit.core.injector.RabbitAbstractMethod;
 import com.rabbit.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.builder.MapperBuilderAssistant;
-import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
-import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.session.Configuration;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
+/**
+ * @ClassName DeleteById
+ * @ClassExplain: 新增
+ * @Author Duxiaoyu
+ * @Date 2020/5/30 17:30
+ * @Since V 1.0
+ */
 public class Insert extends RabbitAbstractMethod {
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {

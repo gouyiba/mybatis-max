@@ -15,6 +15,7 @@ public @interface Table {
 
     /**
      * 数据库表名称
+     *
      * @return
      */
     String value() default "";

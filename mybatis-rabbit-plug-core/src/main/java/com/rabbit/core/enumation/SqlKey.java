@@ -6,7 +6,7 @@ package com.rabbit.core.enumation;
  * @author duxiaoyu
  * @since 2019-12-25
  */
-public enum SqlKey implements IEnum<String>{
+public enum SqlKey implements IEnum<String> {
 
     // 实际的表名
     TABLE_NAME("TABLE_NAME"),
@@ -61,8 +61,8 @@ public enum SqlKey implements IEnum<String>{
 
     private String sqlKey;
 
-    private SqlKey(String sqlKey){
-        this.sqlKey=sqlKey;
+    private SqlKey(String sqlKey) {
+        this.sqlKey = sqlKey;
     }
 
     /**

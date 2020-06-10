@@ -1,7 +1,6 @@
 package com.rabbit.core.injector.method.base;
 
 import com.rabbit.common.utils.SqlScriptUtil;
-import com.rabbit.core.bean.TableFieldInfo;
 import com.rabbit.core.bean.TableInfo;
 import com.rabbit.core.constructor.DeleteWrapper;
 import com.rabbit.core.enumation.MySqlKeyWord;
@@ -11,12 +10,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
 /**
  * @ClassName Delete
- * @ClassExplain: 说明
+ * @ClassExplain: 删除
  * @Author Duxiaoyu
  * @Date 2020/5/30 17:31
  * @Since V 1.0
@@ -30,10 +26,6 @@ public class Delete extends RabbitAbstractMethod {
         }
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
-        /*Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
-        Field primaryKey = tableInfo.getPrimaryKey();
-        TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());*/
-
         StringBuffer sql = new StringBuffer("<script>");
         sql.append(MySqlKeyWord.DELETE.getValue() + " " + MySqlKeyWord.FROM.getValue() + "\t");
         sql.append(tableInfo.getTableName());

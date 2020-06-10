@@ -12,6 +12,7 @@ import java.sql.SQLException;
 /**
  * IEnumTypeHandler
  * 用于bean中的枚举属性转换-int类型
+ *
  * @param <E>
  * @author duxiaoyu
  * @since 2020--2-11

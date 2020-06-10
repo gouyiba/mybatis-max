@@ -14,25 +14,28 @@ public class SqlScriptUtil implements Serializable {
 
     /**
      * 转换if标签
+     *
      * @param test
      * @param sqlScript
      * @return
      */
-    public static String convertIf(final String test,final String sqlScript){
-        return String.format("\n<if test=\"%s\">\n%s\n</if>",test,sqlScript);
+    public static String convertIf(final String test, final String sqlScript) {
+        return String.format("\n<if test=\"%s\">\n%s\n</if>", test, sqlScript);
     }
 
     /**
      * 转换where标签
+     *
      * @param sqlScript
      * @return
      */
-    public static String convertWhere(final String sqlScript){
-        return String.format("\n<where>\n%s\n</where>",sqlScript);
+    public static String convertWhere(final String sqlScript) {
+        return String.format("\n<where>\n%s\n</where>", sqlScript);
     }
 
     /**
      * 转换trim标签
+     *
      * @param prefix
      * @param sufffix
      * @param prefixOverrides
@@ -43,22 +46,22 @@ public class SqlScriptUtil implements Serializable {
                                      final String sufffix,
                                      final String prefixOverrides,
                                      final String suffixOverrides,
-                                     final String sqlScript){
-        StringBuffer stringBuffer=new StringBuffer("\n<trim");
-        if(StringUtils.isNotBlank(prefix)){
-            stringBuffer.append(String.format(" prefix=\"%s\"",prefix));
+                                     final String sqlScript) {
+        StringBuffer stringBuffer = new StringBuffer("\n<trim");
+        if (StringUtils.isNotBlank(prefix)) {
+            stringBuffer.append(String.format(" prefix=\"%s\"", prefix));
         }
-        if(StringUtils.isNotBlank(sufffix)){
-            stringBuffer.append(String.format(" sufffix=\"%s\"",sufffix));
+        if (StringUtils.isNotBlank(sufffix)) {
+            stringBuffer.append(String.format(" sufffix=\"%s\"", sufffix));
         }
-        if(StringUtils.isNotBlank(prefixOverrides)){
-            stringBuffer.append(String.format(" prefixOverrides=\"%s\"",prefixOverrides));
+        if (StringUtils.isNotBlank(prefixOverrides)) {
+            stringBuffer.append(String.format(" prefixOverrides=\"%s\"", prefixOverrides));
         }
-        if(StringUtils.isNotBlank(suffixOverrides)){
-            stringBuffer.append(String.format(" suffixOverrides=\"%s\"",suffixOverrides));
+        if (StringUtils.isNotBlank(suffixOverrides)) {
+            stringBuffer.append(String.format(" suffixOverrides=\"%s\"", suffixOverrides));
         }
         stringBuffer.append(">");
-        if(StringUtils.isNotBlank(sqlScript)){
+        if (StringUtils.isNotBlank(sqlScript)) {
             stringBuffer.append(sqlScript);
         }
         return stringBuffer.append("\n</trim>").toString();
@@ -66,6 +69,7 @@ public class SqlScriptUtil implements Serializable {
 
     /**
      * 转换foreach标签
+     *
      * @param collection
      * @param item
      * @param index
@@ -81,28 +85,28 @@ public class SqlScriptUtil implements Serializable {
                                         final String open,
                                         final String separator,
                                         final String close,
-                                        final String sqlScript){
-        StringBuffer stringBuffer=new StringBuffer("\n<foreach");
-        if(StringUtils.isNotBlank(collection)){
-            stringBuffer.append(String.format(" collection=\"%s\"",collection));
+                                        final String sqlScript) {
+        StringBuffer stringBuffer = new StringBuffer("\n<foreach");
+        if (StringUtils.isNotBlank(collection)) {
+            stringBuffer.append(String.format(" collection=\"%s\"", collection));
         }
-        if(StringUtils.isNotBlank(item)){
-            stringBuffer.append(String.format(" item=\"%s\"",item));
+        if (StringUtils.isNotBlank(item)) {
+            stringBuffer.append(String.format(" item=\"%s\"", item));
         }
-        if(StringUtils.isNotBlank(index)){
-            stringBuffer.append(String.format(" index=\"%s\"",index));
+        if (StringUtils.isNotBlank(index)) {
+            stringBuffer.append(String.format(" index=\"%s\"", index));
         }
-        if(StringUtils.isNotBlank(open)){
-            stringBuffer.append(String.format(" open=\"%s\"",open));
+        if (StringUtils.isNotBlank(open)) {
+            stringBuffer.append(String.format(" open=\"%s\"", open));
         }
-        if(StringUtils.isNotBlank(separator)){
-            stringBuffer.append(String.format(" separator=\"%s\"",separator));
+        if (StringUtils.isNotBlank(separator)) {
+            stringBuffer.append(String.format(" separator=\"%s\"", separator));
         }
-        if(StringUtils.isNotBlank(close)){
-            stringBuffer.append(String.format(" close=\"%s\"",close));
+        if (StringUtils.isNotBlank(close)) {
+            stringBuffer.append(String.format(" close=\"%s\"", close));
         }
         stringBuffer.append(">");
-        if(StringUtils.isNotBlank(sqlScript)){
+        if (StringUtils.isNotBlank(sqlScript)) {
             stringBuffer.append(sqlScript);
         }
         return stringBuffer.append("\n</foreach>").toString();
@@ -110,6 +114,7 @@ public class SqlScriptUtil implements Serializable {
 
     /**
      * 安全入参#{}
+     *
      * @param param
      * @return
      */
@@ -119,6 +124,7 @@ public class SqlScriptUtil implements Serializable {
 
     /**
      * 非安全入参${}
+     *
      * @param param
      * @return
      */

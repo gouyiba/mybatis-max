@@ -18,7 +18,7 @@ import java.util.Objects;
 
 /**
  * @ClassName UpdateBatchById
- * @ClassExplain: 说明
+ * @ClassExplain: 根据id批量修改
  * @Author Duxiaoyu
  * @Date 2020/5/30 17:36
  * @Since V 1.0
@@ -33,7 +33,7 @@ public class UpdateBatchById extends RabbitAbstractMethod {
 
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
         Field primaryKey = tableInfo.getPrimaryKey();
-        if(Objects.isNull(primaryKey)){
+        if (Objects.isNull(primaryKey)) {
             return;
         }
         Map<String, Object> sqlMap = new DefaultAbstractWrapper(tableInfo).updateSqlGenerate();

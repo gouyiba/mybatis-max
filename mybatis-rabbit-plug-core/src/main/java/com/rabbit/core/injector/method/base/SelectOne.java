@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
+ * 查询单条记录
  * this class by created wuyongfei on 2020/5/31 14:59
  **/
 public class SelectOne extends RabbitAbstractMethod {

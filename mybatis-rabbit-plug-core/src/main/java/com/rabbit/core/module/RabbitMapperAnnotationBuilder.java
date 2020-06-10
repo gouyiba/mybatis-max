@@ -67,7 +67,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
             Method[] var4 = methods;
             int var5 = methods.length;
 
-            for(int var6 = 0; var6 < var5; ++var6) {
+            for (int var6 = 0; var6 < var5; ++var6) {
                 Method method = var4[var6];
                 try {
                     if (!method.isBridge()) {
@@ -86,11 +86,11 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
     private void parsePendingMethods() {
         Collection<MethodResolver> incompleteMethods = this.configuration.getIncompleteMethods();
-        synchronized(incompleteMethods) {
+        synchronized (incompleteMethods) {
             Iterator iter = incompleteMethods.iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 try {
-                    ((MethodResolver)iter.next()).resolve();
+                    ((MethodResolver) iter.next()).resolve();
                     iter.remove();
                 } catch (IncompleteElementException var6) {
                     ;
@@ -119,7 +119,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
     }
 
     private void parseCache() {
-        CacheNamespace cacheDomain = (CacheNamespace)this.type.getAnnotation(CacheNamespace.class);
+        CacheNamespace cacheDomain = (CacheNamespace) this.type.getAnnotation(CacheNamespace.class);
         if (cacheDomain != null) {
             Integer size = cacheDomain.size() == 0 ? null : cacheDomain.size();
             Long flushInterval = cacheDomain.flushInterval() == 0L ? null : cacheDomain.flushInterval();
@@ -135,7 +135,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
             Properties props = new Properties();
             Property[] var3 = properties;
             int var4 = properties.length;
-            for(int var5 = 0; var5 < var4; ++var5) {
+            for (int var5 = 0; var5 < var4; ++var5) {
                 Property property = var3[var5];
                 props.setProperty(property.name(), PropertyParser.parse(property.value(), this.configuration.getVariables()));
             }
@@ -144,7 +144,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
     }
 
     private void parseCacheRef() {
-        CacheNamespaceRef cacheDomainRef = (CacheNamespaceRef)this.type.getAnnotation(CacheNamespaceRef.class);
+        CacheNamespaceRef cacheDomainRef = (CacheNamespaceRef) this.type.getAnnotation(CacheNamespaceRef.class);
         if (cacheDomainRef != null) {
             Class<?> refType = cacheDomainRef.value();
             String refName = cacheDomainRef.name();
@@ -165,23 +165,23 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
     private String parseResultMap(Method method) {
         Class<?> returnType = this.getReturnType(method);
-        ConstructorArgs args = (ConstructorArgs)method.getAnnotation(ConstructorArgs.class);
-        Results results = (Results)method.getAnnotation(Results.class);
-        TypeDiscriminator typeDiscriminator = (TypeDiscriminator)method.getAnnotation(TypeDiscriminator.class);
+        ConstructorArgs args = (ConstructorArgs) method.getAnnotation(ConstructorArgs.class);
+        Results results = (Results) method.getAnnotation(Results.class);
+        TypeDiscriminator typeDiscriminator = (TypeDiscriminator) method.getAnnotation(TypeDiscriminator.class);
         String resultMapId = this.generateResultMapName(method);
         this.applyResultMap(resultMapId, returnType, this.argsIf(args), this.resultsIf(results), typeDiscriminator);
         return resultMapId;
     }
 
     private String generateResultMapName(Method method) {
-        Results results = (Results)method.getAnnotation(Results.class);
+        Results results = (Results) method.getAnnotation(Results.class);
         if (results != null && !results.id().isEmpty()) {
             return this.type.getName() + "." + results.id();
         } else {
             StringBuilder suffix = new StringBuilder();
             Class[] var4 = method.getParameterTypes();
             int var5 = var4.length;
-            for(int var6 = 0; var6 < var5; ++var6) {
+            for (int var6 = 0; var6 < var5; ++var6) {
                 Class<?> c = var4[var6];
                 suffix.append("-");
                 suffix.append(c.getSimpleName());
@@ -198,7 +198,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         this.applyConstructorArgs(args, returnType, resultMappings);
         this.applyResults(results, returnType, resultMappings);
         Discriminator disc = this.applyDiscriminator(resultMapId, returnType, discriminator);
-        this.assistant.addResultMap(resultMapId, returnType, (String)null, disc, resultMappings, (Boolean)null);
+        this.assistant.addResultMap(resultMapId, returnType, (String) null, disc, resultMappings, (Boolean) null);
         this.createDiscriminatorResultMaps(resultMapId, returnType, discriminator);
     }
 
@@ -206,13 +206,13 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         if (discriminator != null) {
             Case[] var4 = discriminator.cases();
             int var5 = var4.length;
-            for(int var6 = 0; var6 < var5; ++var6) {
+            for (int var6 = 0; var6 < var5; ++var6) {
                 Case c = var4[var6];
                 String caseResultMapId = resultMapId + "-" + c.value();
                 List<ResultMapping> resultMappings = new ArrayList();
                 this.applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
                 this.applyResults(c.results(), resultType, resultMappings);
-                this.assistant.addResultMap(caseResultMapId, c.type(), resultMapId, (Discriminator)null, resultMappings, (Boolean)null);
+                this.assistant.addResultMap(caseResultMapId, c.type(), resultMapId, (Discriminator) null, resultMappings, (Boolean) null);
             }
         }
     }
@@ -231,14 +231,14 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
             Case[] var10 = cases;
             int var11 = cases.length;
 
-            for(int var12 = 0; var12 < var11; ++var12) {
+            for (int var12 = 0; var12 < var11; ++var12) {
                 Case c = var10[var12];
                 String value = c.value();
                 String caseResultMapId = resultMapId + "-" + value;
                 discriminatorMap.put(value, caseResultMapId);
             }
 
-           return this.assistant.buildDiscriminator(resultType, column, javaType, jdbcType, typeHandler, discriminatorMap);
+            return this.assistant.buildDiscriminator(resultType, column, javaType, jdbcType, typeHandler, discriminatorMap);
         }
     }
 
@@ -247,7 +247,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         LanguageDriver languageDriver = this.getLanguageDriver(method);
         SqlSource sqlSource = this.getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);
         if (sqlSource != null) {
-            Options options = (Options)method.getAnnotation(Options.class);
+            Options options = (Options) method.getAnnotation(Options.class);
             String mappedStatementId = this.type.getName() + "." + method.getName();
             Integer fetchSize = null;
             Integer timeout = null;
@@ -263,7 +263,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
             if (!SqlCommandType.INSERT.equals(sqlCommandType) && !SqlCommandType.UPDATE.equals(sqlCommandType)) {
                 keyGenerator = NoKeyGenerator.INSTANCE;
             } else {
-                SelectKey selectKey = (SelectKey)method.getAnnotation(SelectKey.class);
+                SelectKey selectKey = (SelectKey) method.getAnnotation(SelectKey.class);
                 if (selectKey != null) {
                     keyGenerator = this.handleSelectKeyAnnotation(selectKey, mappedStatementId, this.getParameterType(method), languageDriver);
                     keyProperty = selectKey.keyProperty();
@@ -291,20 +291,20 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
             }
 
             String resultMapId = null;
-            ResultMap resultMapAnnotation = (ResultMap)method.getAnnotation(ResultMap.class);
+            ResultMap resultMapAnnotation = (ResultMap) method.getAnnotation(ResultMap.class);
             if (resultMapAnnotation != null) {
                 resultMapId = String.join(",", resultMapAnnotation.value());
             } else if (isSelect) {
                 resultMapId = this.parseResultMap(method);
             }
 
-            this.assistant.addMappedStatement(mappedStatementId, sqlSource, statementType, sqlCommandType, fetchSize, timeout, (String)null, parameterTypeClass, resultMapId, this.getReturnType(method), resultSetType, flushCache, useCache, false, (KeyGenerator)keyGenerator, keyProperty, keyColumn, (String)null, languageDriver, options != null ? this.nullOrEmpty(options.resultSets()) : null);
+            this.assistant.addMappedStatement(mappedStatementId, sqlSource, statementType, sqlCommandType, fetchSize, timeout, (String) null, parameterTypeClass, resultMapId, this.getReturnType(method), resultSetType, flushCache, useCache, false, (KeyGenerator) keyGenerator, keyProperty, keyColumn, (String) null, languageDriver, options != null ? this.nullOrEmpty(options.resultSets()) : null);
         }
 
     }
 
     private LanguageDriver getLanguageDriver(Method method) {
-        Lang lang = (Lang)method.getAnnotation(Lang.class);
+        Lang lang = (Lang) method.getAnnotation(Lang.class);
         Class<? extends LanguageDriver> langClass = null;
         if (lang != null) {
             langClass = lang.value();
@@ -319,7 +319,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         Class[] var4 = parameterTypes;
         int var5 = parameterTypes.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             Class<?> currentParameterType = var4[var6];
             if (!RowBounds.class.isAssignableFrom(currentParameterType) && !ResultHandler.class.isAssignableFrom(currentParameterType)) {
                 if (parameterType == null) {
@@ -337,20 +337,20 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         Class<?> returnType = method.getReturnType();
         Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, this.type);
         if (resolvedReturnType instanceof Class) {
-            returnType = (Class)resolvedReturnType;
+            returnType = (Class) resolvedReturnType;
             if (returnType.isArray()) {
                 returnType = returnType.getComponentType();
             }
 
             if (Void.TYPE.equals(returnType)) {
-                ResultType rt = (ResultType)method.getAnnotation(ResultType.class);
+                ResultType rt = (ResultType) method.getAnnotation(ResultType.class);
                 if (rt != null) {
                     returnType = rt.value();
                 }
             }
         } else if (resolvedReturnType instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType)resolvedReturnType;
-            Class<?> rawType = (Class)parameterizedType.getRawType();
+            ParameterizedType parameterizedType = (ParameterizedType) resolvedReturnType;
+            Class<?> rawType = (Class) parameterizedType.getRawType();
             Type[] actualTypeArguments;
             Type returnTypeParameter;
             if (!Collection.class.isAssignableFrom(rawType) && !Cursor.class.isAssignableFrom(rawType)) {
@@ -359,16 +359,16 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
                     if (actualTypeArguments != null && actualTypeArguments.length == 2) {
                         returnTypeParameter = actualTypeArguments[1];
                         if (returnTypeParameter instanceof Class) {
-                            returnType = (Class)returnTypeParameter;
+                            returnType = (Class) returnTypeParameter;
                         } else if (returnTypeParameter instanceof ParameterizedType) {
-                            returnType = (Class)((ParameterizedType)returnTypeParameter).getRawType();
+                            returnType = (Class) ((ParameterizedType) returnTypeParameter).getRawType();
                         }
                     }
                 } else if (Optional.class.equals(rawType)) {
                     actualTypeArguments = parameterizedType.getActualTypeArguments();
                     returnTypeParameter = actualTypeArguments[0];
                     if (returnTypeParameter instanceof Class) {
-                        returnType = (Class)returnTypeParameter;
+                        returnType = (Class) returnTypeParameter;
                     }
                 }
 //                else if (IPage.class.isAssignableFrom(rawType)) {
@@ -385,11 +385,11 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
                 if (actualTypeArguments != null && actualTypeArguments.length == 1) {
                     returnTypeParameter = actualTypeArguments[0];
                     if (returnTypeParameter instanceof Class) {
-                        returnType = (Class)returnTypeParameter;
+                        returnType = (Class) returnTypeParameter;
                     } else if (returnTypeParameter instanceof ParameterizedType) {
-                        returnType = (Class)((ParameterizedType)returnTypeParameter).getRawType();
+                        returnType = (Class) ((ParameterizedType) returnTypeParameter).getRawType();
                     } else if (returnTypeParameter instanceof GenericArrayType) {
-                        Class<?> componentType = (Class)((GenericArrayType)returnTypeParameter).getGenericComponentType();
+                        Class<?> componentType = (Class) ((GenericArrayType) returnTypeParameter).getGenericComponentType();
                         returnType = Array.newInstance(componentType, 0).getClass();
                     }
                 }
@@ -409,7 +409,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
                     throw new BindingException("You cannot supply both a static SQL and SqlProvider to method named " + method.getName());
                 } else {
                     sqlProviderAnnotation = method.getAnnotation(sqlAnnotationType);
-                    String[] strings = (String[])((String[])sqlProviderAnnotation.getClass().getMethod("value").invoke(sqlProviderAnnotation));
+                    String[] strings = (String[]) ((String[]) sqlProviderAnnotation.getClass().getMethod("value").invoke(sqlProviderAnnotation));
                     return this.buildSqlSourceFromStrings(strings, parameterType, languageDriver);
                 }
             } else if (sqlProviderAnnotationType != null) {
@@ -428,7 +428,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         String[] var5 = strings;
         int var6 = strings.length;
 
-        for(int var7 = 0; var7 < var6; ++var7) {
+        for (int var7 = 0; var7 < var6; ++var7) {
             String fragment = var5[var7];
             sql.append(fragment);
             sql.append(" ");
@@ -477,9 +477,9 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
                 return null;
             }
 
-            type = (Class)var3.next();
+            type = (Class) var3.next();
             annotation = method.getAnnotation(type);
-        } while(annotation == null);
+        } while (annotation == null);
 
         return type;
     }
@@ -488,7 +488,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         Result[] var4 = results;
         int var5 = results.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             Result result = var4[var6];
             List<ResultFlag> flags = new ArrayList();
             if (result.id()) {
@@ -497,7 +497,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
 //            Class<? extends TypeHandler<?>> typeHandler = result.typeHandler() == UnknownTypeHandler.class ? null : result.typeHandler();
             Class<? extends TypeHandler<?>> typeHandler = UnknownTypeHandler.class;
-            ResultMapping resultMapping = this.assistant.buildResultMapping(resultType, this.nullOrEmpty(result.property()), this.nullOrEmpty(result.column()), result.javaType() == Void.TYPE ? null : result.javaType(), result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(), this.hasNestedSelect(result) ? this.nestedSelectId(result) : null, (String)null, (String)null, (String)null, typeHandler, flags, (String)null, (String)null, this.isLazy(result));
+            ResultMapping resultMapping = this.assistant.buildResultMapping(resultType, this.nullOrEmpty(result.property()), this.nullOrEmpty(result.column()), result.javaType() == Void.TYPE ? null : result.javaType(), result.jdbcType() == JdbcType.UNDEFINED ? null : result.jdbcType(), this.hasNestedSelect(result) ? this.nestedSelectId(result) : null, (String) null, (String) null, (String) null, typeHandler, flags, (String) null, (String) null, this.isLazy(result));
             resultMappings.add(resultMapping);
         }
 
@@ -539,7 +539,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         Arg[] var4 = args;
         int var5 = args.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             Arg arg = var4[var6];
             List<ResultFlag> flags = new ArrayList();
             flags.add(ResultFlag.CONSTRUCTOR);
@@ -549,7 +549,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
 
 //            Class<? extends TypeHandler<?>> typeHandler = arg.typeHandler() == UnknownTypeHandler.class ? null : arg.typeHandler();
             Class<? extends TypeHandler<?>> typeHandler = UnknownTypeHandler.class;
-            ResultMapping resultMapping = this.assistant.buildResultMapping(resultType, this.nullOrEmpty(arg.name()), this.nullOrEmpty(arg.column()), arg.javaType() == Void.TYPE ? null : arg.javaType(), arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), this.nullOrEmpty(arg.select()), this.nullOrEmpty(arg.resultMap()), (String)null, this.nullOrEmpty(arg.columnPrefix()), typeHandler, flags, (String)null, (String)null, false);
+            ResultMapping resultMapping = this.assistant.buildResultMapping(resultType, this.nullOrEmpty(arg.name()), this.nullOrEmpty(arg.column()), arg.javaType() == Void.TYPE ? null : arg.javaType(), arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), this.nullOrEmpty(arg.select()), this.nullOrEmpty(arg.resultMap()), (String) null, this.nullOrEmpty(arg.columnPrefix()), typeHandler, flags, (String) null, (String) null, false);
             resultMappings.add(resultMapping);
         }
 
@@ -584,7 +584,7 @@ public class RabbitMapperAnnotationBuilder extends MapperAnnotationBuilder {
         ResultSetType resultSetTypeEnum = null;
         SqlSource sqlSource = this.buildSqlSourceFromStrings(selectKeyAnnotation.statement(), parameterTypeClass, languageDriver);
         SqlCommandType sqlCommandType = SqlCommandType.SELECT;
-        this.assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, (Integer)fetchSize, (Integer)timeout, (String)parameterMap, parameterTypeClass, (String)resultMap, resultTypeClass, (ResultSetType)resultSetTypeEnum, flushCache, useCache, false, keyGenerator, keyProperty, keyColumn, (String)null, languageDriver, (String)null);
+        this.assistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType, (Integer) fetchSize, (Integer) timeout, (String) parameterMap, parameterTypeClass, (String) resultMap, resultTypeClass, (ResultSetType) resultSetTypeEnum, flushCache, useCache, false, keyGenerator, keyProperty, keyColumn, (String) null, languageDriver, (String) null);
         id = this.assistant.applyCurrentNamespace(id, false);
         MappedStatement keyStatement = this.configuration.getMappedStatement(id, false);
         SelectKeyGenerator answer = new SelectKeyGenerator(keyStatement, executeBefore);

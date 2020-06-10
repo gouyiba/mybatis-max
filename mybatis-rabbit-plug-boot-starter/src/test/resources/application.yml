@@ -6,10 +6,13 @@ spring:
   # hikariPool
   datasource:
     username: root
-    password: Duxiaoyu@123
+    password: ENC(EoCusIQvUutZ76SiZtzlzGr7bziQ2z1s)
     url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
 rabbit-mybatis-plug:
   banner: true
   mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: com.rabbit.entity
+jasypt:
+  encryptor:
+    password: mrp

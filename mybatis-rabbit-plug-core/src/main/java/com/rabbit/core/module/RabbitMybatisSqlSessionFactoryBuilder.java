@@ -61,7 +61,7 @@ public class RabbitMybatisSqlSessionFactoryBuilder extends SqlSessionFactoryBuil
 
     @Override
     public SqlSessionFactory build(Configuration config) {
-        RabbitConfiguration configuration = (RabbitConfiguration)config;
+        RabbitConfiguration configuration = (RabbitConfiguration) config;
         SqlSessionFactory factory = super.build(configuration);
         return factory;
     }

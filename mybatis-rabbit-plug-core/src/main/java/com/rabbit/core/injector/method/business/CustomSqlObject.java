@@ -16,10 +16,10 @@ public class CustomSqlObject extends RabbitAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
-        StringBuffer sql=new StringBuffer("<script>");
+        StringBuffer sql = new StringBuffer("<script>");
         sql.append("${sql}");
         sql.append("\n</script>");
-        SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(),String.class);
-        addSelectMappedStatementForOther(mapperClass,"customSqlObject",sqlSource, Map.class);
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), String.class);
+        addSelectMappedStatementForOther(mapperClass, "customSqlObject", sqlSource, Map.class);
     }
 }

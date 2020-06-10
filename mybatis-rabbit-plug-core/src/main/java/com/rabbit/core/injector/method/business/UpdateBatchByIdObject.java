@@ -17,15 +17,15 @@ public class UpdateBatchByIdObject extends RabbitAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
-        StringBuffer sql=new StringBuffer("<script>");
-        sql.append(SqlScriptUtil.convertForeach("objectList","obj",null,null,";",null,
-                "update ${sqlMap.TABLE_NAME}"+
-                SqlScriptUtil.convertTrim("set",null,null,",",
-                        SqlScriptUtil.convertForeach("sqlMap.UPDATE_VALUE.keys","item","i",null,null,null,
-                                SqlScriptUtil.convertIf("obj[item]!=null","${sqlMap.UPDATE_VALUE[item]}")))+
-                SqlScriptUtil.convertIf("sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''","${sqlMap.UPDATE_WHERE}")));
+        StringBuffer sql = new StringBuffer("<script>");
+        sql.append(SqlScriptUtil.convertForeach("objectList", "obj", null, null, ";", null,
+                "update ${sqlMap.TABLE_NAME}" +
+                        SqlScriptUtil.convertTrim("set", null, null, ",",
+                                SqlScriptUtil.convertForeach("sqlMap.UPDATE_VALUE.keys", "item", "i", null, null, null,
+                                        SqlScriptUtil.convertIf("obj[item]!=null", "${sqlMap.UPDATE_VALUE[item]}"))) +
+                        SqlScriptUtil.convertIf("sqlMap.UPDATE_WHERE!=null and sqlMap.UPDATE_WHERE!=''", "${sqlMap.UPDATE_WHERE}")));
         sql.append("\n</script>");
-        SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
-        addUpdateMappedStatement(mapperClass,Map.class,"updateBatchByIdObject",sqlSource);
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), Map.class);
+        addUpdateMappedStatement(mapperClass, Map.class, "updateBatchByIdObject", sqlSource);
     }
 }

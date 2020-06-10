@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 删除条件构造器
+ * DELETE-SQL构造器
  *
  * @param <E>
  * @author duxiaoyu
@@ -28,26 +28,24 @@ public class DeleteWrapper<E> extends QueryWrapper<E> implements Serializable {
     // delete-sql-cache-map
     private final Map<String, String> sqlMap = new ConcurrentHashMap<>();
 
-    private Map<String,Object> queryWrapper=new HashMap<>(16);
+    private Map<String, Object> queryWrapper = new HashMap<>(16);
 
-    public Map<String,Object> getQueryWrapper(){
+    public Map<String, Object> getQueryWrapper() {
         return queryWrapper;
     }
 
-    public void setQueryWrapper(Map<String,Object> valMap){
-        this.queryWrapper.put("valMap",valMap);
+    public void setQueryWrapper(Map<String, Object> valMap) {
+        this.queryWrapper.put("valMap", valMap);
     }
 
-    /**
-     * 解析后的TableInfo
-     */
     private TableInfo tableInfo;
 
     public DeleteWrapper(E clazz) {
         this.tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(clazz.getClass());
     }
 
-    public DeleteWrapper(){}
+    public DeleteWrapper() {
+    }
 
     /**
      * 删除 sql 生成:

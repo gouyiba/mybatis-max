@@ -17,6 +17,7 @@ import java.util.List;
  * @since 2019-12-12
  */
 public interface BaseMapper<T> extends BusinessMapper {
+
     /**
      * 插入一条记录
      *

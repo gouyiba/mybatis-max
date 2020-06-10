@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;
 
 /**
+ * 查询总记录数
  * this class by created wuyongfei on 2020/5/31 14:59
  **/
 public class SelectCount extends RabbitAbstractMethod {

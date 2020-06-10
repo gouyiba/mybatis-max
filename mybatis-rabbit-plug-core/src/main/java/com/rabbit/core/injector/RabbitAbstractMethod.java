@@ -130,21 +130,36 @@ public abstract class RabbitAbstractMethod {
 //    }
 
     protected MappedStatement addSelectMappedStatementForOther(Class<?> mapperClass, String id, SqlSource sqlSource, Class<?> resultType) {
-        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.SELECT, (Class)null, (String)null, resultType, new NoKeyGenerator(), (String)null, (String)null);
+        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.SELECT, (Class) null, (String) null, resultType, new NoKeyGenerator(), (String) null, (String) null);
     }
 
     protected MappedStatement addInsertMappedStatement(Class<?> mapperClass, Class<?> parameterType, String id, SqlSource sqlSource, KeyGenerator keyGenerator, String keyProperty, String keyColumn) {
-        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.INSERT, parameterType, (String)null, Integer.class, keyGenerator, keyProperty, keyColumn);
+        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.INSERT, parameterType, (String) null, Integer.class, keyGenerator, keyProperty, keyColumn);
     }
 
     protected MappedStatement addDeleteMappedStatement(Class<?> mapperClass, String id, SqlSource sqlSource) {
-        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.DELETE, (Class)null, (String)null, Integer.class, new NoKeyGenerator(), (String)null, (String)null);
+        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.DELETE, (Class) null, (String) null, Integer.class, new NoKeyGenerator(), (String) null, (String) null);
     }
 
     protected MappedStatement addUpdateMappedStatement(Class<?> mapperClass, Class<?> parameterType, String id, SqlSource sqlSource) {
-        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.UPDATE, parameterType, (String)null, Integer.class, new NoKeyGenerator(), (String)null, (String)null);
+        return this.addMappedStatement(mapperClass, id, sqlSource, SqlCommandType.UPDATE, parameterType, (String) null, Integer.class, new NoKeyGenerator(), (String) null, (String) null);
     }
 
+    /**
+     * 注入MappedStatement
+     *
+     * @param mapperClass
+     * @param id
+     * @param sqlSource
+     * @param sqlCommandType
+     * @param parameterType
+     * @param resultMap
+     * @param resultType
+     * @param keyGenerator
+     * @param keyProperty
+     * @param keyColumn
+     * @return
+     */
     protected MappedStatement addMappedStatement(Class<?> mapperClass, String id, SqlSource sqlSource, SqlCommandType sqlCommandType, Class<?> parameterType, String resultMap, Class<?> resultType, KeyGenerator keyGenerator, String keyProperty, String keyColumn) {
         String statementName = mapperClass.getName() + "." + id;
         if (this.hasMappedStatement(statementName)) {
@@ -156,7 +171,7 @@ public abstract class RabbitAbstractMethod {
                 isSelect = true;
             }
 
-            return this.builderAssistant.addMappedStatement(id, sqlSource, StatementType.PREPARED, sqlCommandType, (Integer)null, (Integer)null, (String)null, parameterType, resultMap, resultType, (ResultSetType)null, !isSelect, isSelect, false, keyGenerator, keyProperty, keyColumn, this.configuration.getDatabaseId(), this.languageDriver, (String)null);
+            return this.builderAssistant.addMappedStatement(id, sqlSource, StatementType.PREPARED, sqlCommandType, (Integer) null, (Integer) null, (String) null, parameterType, resultMap, resultType, (ResultSetType) null, !isSelect, isSelect, false, keyGenerator, keyProperty, keyColumn, this.configuration.getDatabaseId(), this.languageDriver, (String) null);
         }
     }
 

@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * 新增 constructor
+ * INSERT-SQL构造器
  *
  * @param <E>
  * @author duxiaoyu
@@ -58,7 +58,6 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
         if(CollectionUtils.isNotEmpty(baseBeanFieldMap)){
             fieldInfoMap.putAll(baseBeanFieldMap);
         }*/
-
         sqlMap.put(SqlKey.INSERT_HEAD.getValue(), MySqlKeyWord.INSERT.getValue());
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
         sqlMap.put(SqlKey.INSERT_PAM_LEFT_BRA.getValue(), "(");
@@ -81,16 +80,11 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
     }
 
     /**
-     * 新增时 sql-value-format 格式化:
-     * 根据属性和数据库字段类型进行value类型格式转换
-     * 需要考虑sql注入风险: 考虑使用 #{} 进行赋值操作，sql的value会生成: #{stuid,jdbcType=BIGINT} 格式的sql
-     * 字段value进行转换时，如: 字段是枚举类型，如果指定了typeHandler，则使用指定的typeHandler进行转换，未指定，则使用默认的typeHandler进行转换
-     * 将最终的完整sql交给mybatis进行预编译，避免sql的注入风险
+     * Java Field to SQL dynamic Field convert -> #{}, #{} ......
+     * 将Java字段转换为SQL动态字段
      *
      * @param fieldInfoMap 字段Map
      * @return value 转换后的字符串
-     * @author duxiaoyu
-     * @since 2019-12-25
      */
     private String sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
         StringJoiner sj = new StringJoiner(",");
@@ -100,7 +94,7 @@ public class InsertWrapper<E> extends BaseAbstractWrapper<E> implements Serializ
             if (field.isAnnotationPresent(Column.class)) {
                 Column column = field.getAnnotation(Column.class);
                 Class<?> typeHandlerClass = column.typeHandler();
-                if(!StringUtils.equals("Object",typeHandlerClass.getSimpleName())){
+                if (!StringUtils.equals("Object", typeHandlerClass.getSimpleName())) {
                     typeHandler = typeHandlerClass.getName();
                 }
             }

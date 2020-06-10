@@ -12,7 +12,11 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * 默认条件构造器
+ *
+ * @author duxiaoyu
+ */
 public class DefaultAbstractWrapper extends BaseAbstractWrapper {
 
     private TableInfo tableInfo;
@@ -25,8 +29,7 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
      * 新增 sql 生成: INSERT INTO table VALUES (#{field})
      * 用于新增sql的参数和value的生成
      *
-     * @author duxiaoyu
-     * @since 2019-12-25
+     * @return Map<String, String>
      */
     public Map<String, String> insertSqlGenerate() {
         Map<String, String> sqlMap = new HashMap<>();
@@ -57,7 +60,9 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
 
     /**
      * 修改sql生成 : update tableName set #{field}
-     * @return
+     * 用于修改sql的参数和value的生成
+     *
+     * @return Map<String, Object>
      */
     public Map<String, Object> updateSqlGenerate() {
         Map<String, TableFieldInfo> fieldInfoMap = this.tableInfo.getColumnMap();
@@ -65,15 +70,15 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
         sqlMap.put(SqlKey.TABLE_NAME.getValue(), this.tableInfo.getTableName());
 
         Field primaryKey = this.tableInfo.getPrimaryKey();
-        TableFieldInfo columnPK=null;
-        if(Objects.nonNull(primaryKey)){
-            columnPK  = fieldInfoMap.get(primaryKey.getName());
+        TableFieldInfo columnPK = null;
+        if (Objects.nonNull(primaryKey)) {
+            columnPK = fieldInfoMap.get(primaryKey.getName());
         }
         //fieldInfoMap.remove(this.tableInfo.getPrimaryKey().getName());
-        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap,primaryKey==null?"":primaryKey.getName());
+        Map<String, String> sqlValue = this.sqlValueConvert(fieldInfoMap, primaryKey == null ? "" : primaryKey.getName());
         sqlMap.put(SqlKey.UPDATE_VALUE.getValue(), sqlValue);
         // 根据指定主键修改
-        if(Objects.nonNull(columnPK)){
+        if (Objects.nonNull(columnPK)) {
             String where = String.format("%s %s=#{objectMap.%s,jdbcType=%s}", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName(), primaryKey.getName(), columnPK.getJdbcType().getValue());
             sqlMap.put(SqlKey.UPDATE_WHERE.getValue(), where);
         }
@@ -84,8 +89,8 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
      * Java Field to SQL dynamic Field convert -> #{}, #{} ......
      * 将Java字段转换为SQL动态字段
      *
-     * @param fieldInfoMap
-     * @return
+     * @param fieldInfoMap 字段Map
+     * @return value 转换后的字符串
      */
     private String sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap) {
         StringJoiner values = new StringJoiner(",");
@@ -117,17 +122,12 @@ public class DefaultAbstractWrapper extends BaseAbstractWrapper {
     }
 
     /**
-     * 修改时 sql-value-format 格式化:
-     * 根据属性和数据库字段类型进行value类型格式转换
-     * 需要考虑sql注入风险: 考虑使用 #{} 进行赋值操作，sql的value会生成: #{stuid,jdbcType=BIGINT} 格式的sql
-     * 字段value进行转换时，如: 字段是枚举类型，如果指定了typeHandler，则使用指定的typeHandler进行转换，未指定，则使用默认的typeHandler进行转换
-     * 将最终的完整sql交给mybatis进行预编译，避免sql的注入风险
-     * 同时，在修改时考虑到非空值，所以会自动生成动态sql的非空验证
+     * Java Field to SQL dynamic Field convert -> #{}, #{} ......
+     * 将Java字段转换为SQL动态字段
      *
      * @param fieldInfoMap 字段Map
-     * @return value 转换后的字符串
-     * @author duxiaoyu
-     * @since 2020-01-28
+     * @param pkName       主键字段
+     * @return Map<String, String>
      */
     private Map<String, String> sqlValueConvert(Map<String, TableFieldInfo> fieldInfoMap, String pkName) {
         Map<String, String> paramterMap = new HashMap<>();

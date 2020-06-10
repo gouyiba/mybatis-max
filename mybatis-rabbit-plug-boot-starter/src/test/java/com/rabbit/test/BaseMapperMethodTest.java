@@ -9,6 +9,8 @@ import com.rabbit.enumatioon.Sex;
 import com.rabbit.mapper.AccountMapper;
 import com.rabbit.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.EnvironmentPBEConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
@@ -21,6 +23,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @ClassName BaseMapperMethodTest
+ * @Author duxiaoyu
+ * @Date 2020/6/9 14:20
+ * @Version 1.0
+ */
 @SpringBootTest
 @Slf4j
 public class BaseMapperMethodTest {
@@ -208,5 +216,18 @@ public class BaseMapperMethodTest {
         account.setCreatedBy(UUID.randomUUID().toString());
         Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");
         SYS_UUID_CONTAINER.add(id);
+    }
+
+    @Test
+    public  void passworTest(){
+        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
+        EnvironmentPBEConfig config = new EnvironmentPBEConfig();
+
+        config.setAlgorithm("PBEWithMD5AndDES");          // 加密的算法，这个算法是默认的
+        config.setPassword("mrp");                        // 加密的密钥
+        standardPBEStringEncryptor.setConfig(config);
+        String plainText = "Duxiaoyu@123";
+        String encryptedText = standardPBEStringEncryptor.encrypt(plainText);
+        System.out.println(encryptedText);
     }
 }

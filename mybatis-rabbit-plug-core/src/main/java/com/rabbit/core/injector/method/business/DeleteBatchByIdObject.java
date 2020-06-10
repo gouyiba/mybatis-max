@@ -17,13 +17,13 @@ public class DeleteBatchByIdObject extends RabbitAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
-        StringBuffer sql=new StringBuffer("<script>");
-        sql.append(SqlScriptUtil.convertIf("sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''","${sqlMap.DELETE_HEAD}"));
-        sql.append(SqlScriptUtil.convertIf("sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''","${sqlMap.TABLE_NAME}"));
-        sql.append(SqlScriptUtil.convertIf("sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''","${sqlMap.DELETE_WHERE}"));
-        sql.append(SqlScriptUtil.convertForeach("objectList","item",null,"(",",",")","#{item}"));
+        StringBuffer sql = new StringBuffer("<script>");
+        sql.append(SqlScriptUtil.convertIf("sqlMap.DELETE_HEAD!=null and sqlMap.DELETE_HEAD!=''", "${sqlMap.DELETE_HEAD}"));
+        sql.append(SqlScriptUtil.convertIf("sqlMap.TABLE_NAME!=null and sqlMap.TABLE_NAME!=''", "${sqlMap.TABLE_NAME}"));
+        sql.append(SqlScriptUtil.convertIf("sqlMap.DELETE_WHERE!=null and sqlMap.DELETE_WHERE!=''", "${sqlMap.DELETE_WHERE}"));
+        sql.append(SqlScriptUtil.convertForeach("objectList", "item", null, "(", ",", ")", "#{item}"));
         sql.append("\n</script>");
-        SqlSource sqlSource=languageDriver.createSqlSource(configuration,sql.toString(), Map.class);
-        addDeleteMappedStatement(mapperClass,"deleteBatchByIdObject",sqlSource);
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql.toString(), Map.class);
+        addDeleteMappedStatement(mapperClass, "deleteBatchByIdObject", sqlSource);
     }
 }

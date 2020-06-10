@@ -21,7 +21,6 @@ import com.rabbit.core.parse.ParseClass2TableInfo;
 import com.rabbit.core.service.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -31,7 +30,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 公用Service-Method-Impl
+ * $$$$$$$%!;!!$$|;``;
+ * $$$$$$$%!;!!$$$$|;``;
+ * &$%||%%%|!!!||||%;'.  `!
+ * %%%||%%%%||||||||;'``  `!
+ * %%%%%%%%%||%|||||!'`.   .'!
+ * %%%%%%%%%%%%%%%|%%|;`.      `!
+ * $$$%%||%%%|!'.   .::. .`!@:  '!
+ * &$%||||!'                     '|
+ * %%%%%|'              .````''':;!
+ * $$$%%:                .`:;;!!!!
+ * $%%|:.         ...  ..````';|
+ * $%$%:.``... ...``````..```:|
+ * $$%|;'::'``'''':::::'````:|
+ * $$$&$|!!;:;;:::;!!!;:'`';|
+ * $$$$$$%|!|!;;!!|$&$!:::;|
+ * &&$$%%$&%|!;;%&$&$|;::|
+ * <p>
+ * <p>
+ * 顶级BaseService-Method-Impl，继承后即可获得CRUD功能
  *
  * @author duxiaoyu
  * @since 2019-12-12

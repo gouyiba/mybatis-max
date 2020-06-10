@@ -15,7 +15,7 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
     }
 
     /**
-     * 获取自定义方法实例
+     * 获取自定义方法
      *
      * @param mapperClass
      * @return

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
+ * 根据id查询
  * this class by created wuyongfei on 2020/5/31 14:58
  **/
 public class SelectById extends RabbitAbstractMethod {

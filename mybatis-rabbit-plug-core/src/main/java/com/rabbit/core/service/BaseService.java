@@ -23,9 +23,9 @@ import java.util.Map;
  * $$$&$|!!;:;;:::;!!!;:'`';|
  * $$$$$$%|!|!;;!!|$&$!:::;|
  * &&$$%%$&%|!;;%&$&$|;::|
- *
- *
- * 顶级Service接口，声明Service-Method并实现，继承后即可获得CRUD功能
+ * <p>
+ * <p>
+ * 顶级Service接口，声明Service-Method，继承后即可获得CRUD功能
  *
  * @author duxiaoyu
  * @date 2019-12-12
@@ -91,7 +91,7 @@ public interface BaseService {
     /**
      * 根据条件修改实例
      *
-     * @param object 实例参数
+     * @param object        实例参数
      * @param updateWrapper 修改实例条件,可以为null或为空 = 无条件修改，谨慎操作
      * @return 受影响行数
      */

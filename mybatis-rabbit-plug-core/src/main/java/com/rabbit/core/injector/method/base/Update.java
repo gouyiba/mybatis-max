@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @ClassName Update
- * @ClassExplain: 说明
+ * @ClassExplain: 修改
  * @Author Duxiaoyu
  * @Date 2020/5/30 17:37
  * @Since V 1.0
@@ -40,7 +40,7 @@ public class Update extends RabbitAbstractMethod {
         // TODO: 第一版全量更新
         StringBuffer sqlVal = new StringBuffer("");
         for (Map.Entry<String, String> item : sqlValMap.entrySet()) {
-            sqlVal.append(SqlScriptUtil.convertIf("entity."+item.getKey()+"!=null",item.getValue()));
+            sqlVal.append(SqlScriptUtil.convertIf("entity." + item.getKey() + "!=null", item.getValue()));
         }
 
 

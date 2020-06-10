@@ -17,7 +17,7 @@ import java.util.Objects;
 
 /**
  * @ClassName DeleteBatchIds
- * @ClassExplain: 说明
+ * @ClassExplain: 根据id批量删除
  * @Author Duxiaoyu
  * @Date 2020/5/30 17:32
  * @Since V 1.0
@@ -33,9 +33,10 @@ public class DeleteBatchById extends RabbitAbstractMethod {
         TableInfo tableInfo = ParseClass2TableInfo.parseClazzToTableInfo(modelClass);
         Map<String, TableFieldInfo> fieldInfoMap = tableInfo.getColumnMap();
         Field primaryKey = tableInfo.getPrimaryKey();
-        if(Objects.isNull(primaryKey)){
+        if (Objects.isNull(primaryKey)) {
             return;
         }
+
         TableFieldInfo columnPK = fieldInfoMap.get(primaryKey.getName());
         String where = String.format("%s %s in ", MySqlKeyWord.WHERE.getValue(), columnPK.getColumnName());
 

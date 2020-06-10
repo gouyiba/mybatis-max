@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 查询条件构造器
+ * QUERY-SQL构造器
  *
  * @param <E>
  * @author duxiaoyu
@@ -229,6 +229,78 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     }
 
     /**
+     * 大于
+     *
+     * @param column
+     * @param value
+     * @return
+     */
+    public QueryWrapper gt(String column, Object value) {
+        isBlank(column);
+        joinNum++;
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s>#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
+        return this;
+    }
+
+    /**
+     * 小于
+     *
+     * @param column
+     * @param value
+     * @return
+     */
+    public QueryWrapper lt(String column, Object value) {
+        isBlank(column);
+        joinNum++;
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s<#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
+        return this;
+    }
+
+    /**
+     * 大于等于
+     *
+     * @param column
+     * @param value
+     * @return
+     */
+    public QueryWrapper ge(String column, Object value) {
+        isBlank(column);
+        joinNum++;
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s>=#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
+        return this;
+    }
+
+    /**
+     * 小于等于
+     *
+     * @param column
+     * @param value
+     * @return
+     */
+    public QueryWrapper le(String column, Object value) {
+        isBlank(column);
+        joinNum++;
+        // 获取字段val对应的JdbcType
+        MySqlColumnType columnType = ParseClass2TableInfo.getColumnType((value == null ? null : value.getClass()));
+        whereSqlMap.put(MySqlKeyWord.WHERE.getValue() + joinNum,
+                String.format(" %s %s<=#{%s,jdbcType=%s}", MySqlKeyWord.AND.getValue(), column, VALIDEN + column + joinNum, columnType.getValue()));
+        valMap.put(column + joinNum, value);
+        return this;
+    }
+
+    /**
      * 设置结果集字段
      *
      * @param columns
@@ -266,6 +338,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     }
 
     /************************************************** 连接查询暂时不实现 ***********************************************************/
+
     public QueryWrapper leftJoin(String tableName, String on) {
         return this;
     }
@@ -289,7 +362,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     /**
      * sqlMap合并
      *
-     * @return
+     * @return Map<String, Object>
      */
     public Map<String, Object> mergeSqlMap() {
         sqlMap.put(MySqlKeyWord.WHERE.getValue(), whereSqlMap);
