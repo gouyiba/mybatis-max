@@ -614,6 +614,8 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
                     String enumName = iEnum == null ? "" : iEnum.name();
                     if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName)) {
                         objMap.put(item.getValue().getColumnName(), enumName);
+                    }else {
+                        objMap.put(item.getValue().getColumnName(), null);
                     }
                 }
             } catch (NoSuchMethodException e) {
