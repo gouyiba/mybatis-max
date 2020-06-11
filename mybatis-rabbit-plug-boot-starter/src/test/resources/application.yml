@@ -1,5 +1,4 @@
 # 开发阶段导入，应用阶段移除
-
 server:
   port: 8888
 spring:
