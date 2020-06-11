@@ -6,15 +6,15 @@
 
     <parent>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-        <groupId>com.rabbit</groupId>
-        <version>1.0.0.alpha</version>
+        <groupId>com.github.wuyongfei-1</groupId>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>mybatis-rabbit-plug-boot-start</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.rabbit</groupId>
+            <groupId>com.github.wuyongfei-1</groupId>
             <artifactId>mybatis-rabbit-plug-core</artifactId>
             <version>${module-version}</version>
             <scope>compile</scope>
@@ -63,18 +63,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin-version}</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>utf-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

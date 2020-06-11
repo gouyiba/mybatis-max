@@ -5,7 +5,7 @@ package com.rabbit.core.module;
  **/
 public class RabbitMybatisPlugVersion {
 
-    private final static String DEFAULT_VERSION = "1.0.0.alpha";
+    private final static String DEFAULT_VERSION = "1.0.0";
 
     private RabbitMybatisPlugVersion() {
     }
