@@ -18,15 +18,13 @@ import java.util.Date;
  * @date 2020-02-05
  */
 @Data
-@Component
-@FillingStrategy
 public class BaseBean implements Serializable {
 
     private Date createDate;
 
     private Date updateDate;
 
-    //@Delete(physicsDel = false,value = 5)
+    @Delete(physicsDel = false,value = 6)
     private Integer delFlag;
 
     /**
