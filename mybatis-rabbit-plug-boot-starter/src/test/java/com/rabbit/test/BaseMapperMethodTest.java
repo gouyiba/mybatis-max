@@ -237,17 +237,4 @@ public class BaseMapperMethodTest {
         Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");
         SYS_UUID_CONTAINER.add(account.getId());
     }
-
-    @Test
-    public  void passworTest(){
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        EnvironmentPBEConfig config = new EnvironmentPBEConfig();
-
-        config.setAlgorithm("PBEWithMD5AndDES");          // 加密的算法，这个算法是默认的
-        config.setPassword("mrp");                        // 加密的密钥
-        standardPBEStringEncryptor.setConfig(config);
-        String plainText = "Duxiaoyu@123";
-        String encryptedText = standardPBEStringEncryptor.encrypt(plainText);
-        System.out.println(encryptedText);
-    }
 }
