@@ -328,12 +328,12 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     /**
      * 结果集分页
      *
-     * @param offset
+     * @param page
      * @param limit
      * @return
      */
-    public QueryWrapper limit(int offset, int limit) {
-        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (offset - 1) * limit, limit));
+    public QueryWrapper limit(int page, int limit) {
+        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (page - 1) * limit, limit));
         return this;
     }
 
