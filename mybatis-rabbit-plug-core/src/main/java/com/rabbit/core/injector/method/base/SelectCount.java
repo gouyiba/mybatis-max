@@ -47,9 +47,20 @@ public class SelectCount extends RabbitAbstractMethod {
                 "</if>" +
                 "\n</where>", whereForeachNode, inForeachNode);
 
+        // order by value foreach node
+        String orderByForeachNode = String.format("<foreach collection=\"queryWrapper.sqlMap\" index=\"key\" item=\"item\">" +
+                "\n<if test=\"key == 'ORDERBY'\"> ${item}" +
+                "\n</if>" +
+                "\n</foreach>");
+
+        // order by foreach node
+        String orderByNode = String.format("<if test=\"queryWrapper != null\">\n" +
+                "<if test=\"queryWrapper.sqlMap != null and queryWrapper.sqlMap.size > 0\">\n%s\n</if>" +
+                "\n</if>", orderByForeachNode);
+
         // 拼接完整SQL
-        String selectByIdSql = String.format("<script>\nSELECT COUNT(1) FROM %s %s\n</script>",
-                tableInfo.getTableName(), whereNode);
+        String selectByIdSql = String.format("<script>\nSELECT COUNT(1) FROM %s %s %s\n</script>",
+                tableInfo.getTableName(), whereNode, orderByNode);
 
         // dynamic XMLLanguageDriver
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdSql, modelClass);

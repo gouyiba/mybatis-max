@@ -315,13 +315,13 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     /**
      * 结果集排序
      *
-     * @param column
+     * @param columns
      * @param orderType
      * @return
      */
-    public QueryWrapper orderBy(String column, String orderType) {
-        isBlank(column);
-        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ", ""), String.format(" %s %s %s", MySqlKeyWord.ORDER_BY.getValue(), column, orderType));
+    public QueryWrapper orderBy(String columns, String orderType) {
+        isBlank(columns);
+        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ", ""), String.format(" %s %s %s", MySqlKeyWord.ORDER_BY.getValue(), columns, orderType));
         return this;
     }
 
@@ -333,7 +333,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
      * @return
      */
     public QueryWrapper limit(int offset, int limit) {
-        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), offset, limit));
+        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (offset - 1) * limit, limit));
         return this;
     }
 

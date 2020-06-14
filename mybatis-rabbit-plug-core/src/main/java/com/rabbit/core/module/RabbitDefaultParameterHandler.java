@@ -63,11 +63,26 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                 }
             }
             if (objectList.size() > 0) {
-                parameterClass = objectList.get(0).getClass();
+                parameterClass = objectList.get(0) != null ? objectList.get(0).getClass() : null;
             }
         } else {
             objectList.add(parameterObject);
             parameterClass = parameterObject.getClass();
+        }
+
+        // 处理BaseMapper中的update和delete方法条件参数问题
+        if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE || mappedStatement.getSqlCommandType() == SqlCommandType.DELETE) {
+            if (parameterObject instanceof UpdateWrapper) {
+                UpdateWrapper updateWrapper = (UpdateWrapper) parameterObject;
+                updateWrapper.setQueryWrapper(updateWrapper.getValMap());
+            } else if (parameterObject instanceof DeleteWrapper) {
+                DeleteWrapper deleteWrapper = (DeleteWrapper) parameterObject;
+                deleteWrapper.setQueryWrapper(deleteWrapper.getValMap());
+            }
+        }
+
+        if (ObjectUtils.isEmpty(parameterClass)) {
+            return;
         }
 
         // 检查执行填充方法
@@ -102,11 +117,14 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
             Id id = primaryKey.getAnnotation(Id.class);
             PrimaryKey pkEnum = id.generateType();
             Object idValue = null;
-            if (id.isKeyGenerator() && !id.isIncrementColumn()) {
+            if (id.isKeyGenerator() && !id.isIncrementColumn() && ObjectUtils.isNotEmpty(pkEnum)) {
                 for (Object item : objectList) {
                     switch (pkEnum) {
                         case UUID32:
                             idValue = IdUtil.simpleUUID();
+                            break;
+                        case UUID36:
+                            idValue = IdUtil.randomUUID();
                             break;
                         case OBJECTID:
                             idValue = IdUtil.objectId();
@@ -116,8 +134,8 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                             Snowflake snowflake = IdUtil.getSnowflake(id.workerId(), id.datacenterId());
                             idValue = snowflake.nextId();
                             break;
-                        default:
-                            break;
+                        case UN_KNOWN:
+                            return;
                     }
                     try {
                         // 处理主键生成
@@ -129,17 +147,6 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
                         e.printStackTrace();
                     }
                 }
-            }
-        }
-
-        // 处理BaseMapper中的update和delete方法条件参数问题
-        if (mappedStatement.getSqlCommandType() == SqlCommandType.UPDATE || mappedStatement.getSqlCommandType() == SqlCommandType.DELETE) {
-            if (parameterObject instanceof UpdateWrapper) {
-                UpdateWrapper updateWrapper = (UpdateWrapper) parameterObject;
-                updateWrapper.setQueryWrapper(updateWrapper.getValMap());
-            } else if (parameterObject instanceof DeleteWrapper) {
-                DeleteWrapper deleteWrapper = (DeleteWrapper) parameterObject;
-                deleteWrapper.setQueryWrapper(deleteWrapper.getValMap());
             }
         }
     }

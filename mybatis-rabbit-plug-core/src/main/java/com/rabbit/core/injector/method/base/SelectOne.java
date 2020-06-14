@@ -32,6 +32,20 @@ public class SelectOne extends RabbitAbstractMethod {
                 .map(key -> columnMap.get(key).getColumnName())
                 .forEach(field -> selectedColumnJoin.add(field));
 
+        // selected column value foreach node
+        String selectedColumnForeachNode = String.format("<foreach collection=\"queryWrapper.sqlMap\" index=\"key\" item=\"item\">" +
+                "\n<if test=\"key == 'setColumn'\"> ${item}" +
+                "\n</if>" +
+                "\n</foreach>");
+
+        // selected column foreach node
+        String selectedColumnNode = String.format("<if test=\"queryWrapper != null\">\n" +
+                "<if test=\"queryWrapper.sqlMap != null and queryWrapper.sqlMap.size > 0\">\n%s\n</if>" +
+                "<if test=\"queryWrapper.sqlMap == null or queryWrapper.sqlMap.size == 0 or queryWrapper.sqlMap.setColumn == null\">\n%s\n</if>" +
+                "</if>\n" +
+                "<if test=\"queryWrapper == null\">\n%s\n" +
+                "</if>\n", selectedColumnForeachNode, selectedColumnJoin, selectedColumnJoin);
+
         String inValueNode = "\n<foreach collection=\"item\" index=\"index\" item=\"value\" open=\"(\" separator=\",\" close=\")\">#{value}</foreach>\n";
 
         // in value foreach node
@@ -59,9 +73,31 @@ public class SelectOne extends RabbitAbstractMethod {
                 "\n</if>" +
                 "\n</where>", whereForeachNode, inForeachNode);
 
+        // order by value foreach node
+        String orderByForeachNode = String.format("<foreach collection=\"queryWrapper.sqlMap\" index=\"key\" item=\"item\">" +
+                "\n<if test=\"key == 'ORDERBY'\"> ${item}" +
+                "\n</if>" +
+                "\n</foreach>");
+
+        // order by foreach node
+        String orderByNode = String.format("<if test=\"queryWrapper != null\">\n" +
+                "<if test=\"queryWrapper.sqlMap != null and queryWrapper.sqlMap.size > 0\">\n%s\n</if>" +
+                "\n</if>", orderByForeachNode);
+
+        // limit value foreach node
+        String limitForeachNode = String.format("<foreach collection=\"queryWrapper.sqlMap\" index=\"key\" item=\"item\">" +
+                "\n<if test=\"key == 'LIMIT'\"> ${item}" +
+                "\n</if>" +
+                "\n</foreach>");
+
+        // limit foreach node
+        String limitNode = String.format("<if test=\"queryWrapper != null\">\n" +
+                "<if test=\"queryWrapper.sqlMap != null and queryWrapper.sqlMap.size > 0\">\n%s\n</if>" +
+                "\n</if>", limitForeachNode);
+
         // 拼接完整SQL
-        String selectByIdSql = String.format("<script>\nSELECT %s FROM %s %s\n</script>",
-                selectedColumnJoin.toString(), tableInfo.getTableName(), whereNode);
+        String selectByIdSql = String.format("<script>\nSELECT %s FROM %s %s %s %s\n</script>",
+                selectedColumnNode, tableInfo.getTableName(), whereNode, orderByNode, limitNode);
 
         // dynamic XMLLanguageDriver
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdSql, modelClass);

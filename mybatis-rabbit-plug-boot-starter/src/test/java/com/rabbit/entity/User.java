@@ -14,7 +14,7 @@ public class User extends BaseBean {
 
     private String id;
 
-    @Id(isKeyGenerator = true,generateType = PrimaryKey.UUID32)
+    @Id(generateType = PrimaryKey.UUID32)
     private String stuUid;
 
     private String stuName;

@@ -15,6 +15,12 @@ public enum PrimaryKey implements IEnum<String> {
     UUID32("UUID32"),
 
     /**
+     * UUID36位
+     * type: String
+     */
+    UUID36("UUID36"),
+
+    /**
      * objectID(mongoDB主键生成策略)
      * type: String
      */
@@ -24,7 +30,12 @@ public enum PrimaryKey implements IEnum<String> {
      * 分布式雪花算法主键生成策略
      * type: long
      */
-    SNOWFLAKE("SNOWFLAKE");
+    SNOWFLAKE("SNOWFLAKE"),
+
+    /**
+     * 不使用自动生成主键策略（默认值）
+     */
+    UN_KNOWN("UN_KNOWN");
 
     private String generateType;
 
