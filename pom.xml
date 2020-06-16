@@ -25,7 +25,7 @@
 
     <groupId>com.rabbit</groupId>
     <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-    <version>${module-version}</version>
+    <version>1.0.1</version>
 
     <distributionManagement>
         <snapshotRepository>
