@@ -83,7 +83,7 @@ public class BaseMapperMethodTest {
         log.info(result > 0 ? "updateById success..." : "updateById failed...");
     }
 
-    @Test
+    //@Test
     public void testUpdateBatchByIdMethod() {
         List<User> entityList = Stream.of(
                 new User("5e182bf8de7cf5871d904e0c", "小明1", 20, Sex.MAX),
