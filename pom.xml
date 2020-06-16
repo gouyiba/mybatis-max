@@ -25,7 +25,7 @@
 
     <groupId>com.github.wuyongfei-1</groupId>
     <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.2</version>
 
     <distributionManagement>
         <snapshotRepository>
@@ -45,7 +45,7 @@
     </modules>
 
     <properties>
-        <module-version>1.0.3</module-version>
+        <module-version>1.0.2</module-version>
         <mybatis-version>3.5.3</mybatis-version>
         <mybatis-spring-version>2.0.3</mybatis-spring-version>
         <spring-version>5.2.2.RELEASE</spring-version>

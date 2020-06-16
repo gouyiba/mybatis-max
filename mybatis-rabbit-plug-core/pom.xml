@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.wuyongfei-1</groupId>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>mybatis-rabbit-plug-core</artifactId>
