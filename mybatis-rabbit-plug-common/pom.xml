@@ -6,11 +6,12 @@
 
     <parent>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-        <groupId>com.rabbit</groupId>
-        <version>1.0.0.alpha</version>
+        <groupId>com.github.wuyongfei-1</groupId>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>mybatis-rabbit-plug-common</artifactId>
+    <version>${module-version}</version>
 
     <dependencies>
         <dependency>
