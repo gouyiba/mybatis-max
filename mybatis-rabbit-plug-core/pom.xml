@@ -6,10 +6,11 @@
     <parent>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
         <groupId>com.rabbit</groupId>
-        <version>1.0.0.alpha</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>mybatis-rabbit-plug-core</artifactId>
+    <version>1.0.1</version>
 
     <dependencies>
         <dependency>
