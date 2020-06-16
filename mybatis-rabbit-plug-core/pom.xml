@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <groupId>com.github.wuyongfei-1</groupId>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
-        <groupId>com.rabbit</groupId>
         <version>1.0.3</version>
     </parent>
 
@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rabbit</groupId>
+            <groupId>com.github.wuyongfei-1</groupId>
             <artifactId>mybatis-rabbit-plug-common</artifactId>
             <version>${module-version}</version>
             <scope>compile</scope>

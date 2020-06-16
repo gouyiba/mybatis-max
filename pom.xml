@@ -23,7 +23,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>com.rabbit</groupId>
+    <groupId>com.github.wuyongfei-1</groupId>
     <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
     <version>1.0.3</version>
 
