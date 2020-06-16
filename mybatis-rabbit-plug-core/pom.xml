@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>mybatis-rabbit-plug-core</artifactId>
-    <version>1.0.1</version>
+    <version>${module-version}</version>
 
     <dependencies>
         <dependency>
