@@ -315,25 +315,25 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
     /**
      * 结果集排序
      *
-     * @param column
+     * @param columns
      * @param orderType
      * @return
      */
-    public QueryWrapper orderBy(String column, String orderType) {
-        isBlank(column);
-        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ", ""), String.format(" %s %s %s", MySqlKeyWord.ORDER_BY.getValue(), column, orderType));
+    public QueryWrapper orderBy(String columns, String orderType) {
+        isBlank(columns);
+        sqlMap.put(MySqlKeyWord.ORDER_BY.getValue().replace(" ", ""), String.format(" %s %s %s", MySqlKeyWord.ORDER_BY.getValue(), columns, orderType));
         return this;
     }
 
     /**
      * 结果集分页
      *
-     * @param offset
+     * @param page
      * @param limit
      * @return
      */
-    public QueryWrapper limit(int offset, int limit) {
-        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), offset, limit));
+    public QueryWrapper limit(int page, int limit) {
+        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (page - 1) * limit, limit));
         return this;
     }
 

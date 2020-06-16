@@ -2,10 +2,8 @@ package com.rabbit.entity;
 
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Delete;
-import com.rabbit.core.annotation.FillingStrategy;
 import com.rabbit.core.annotation.Update;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,15 +16,13 @@ import java.util.Date;
  * @date 2020-02-05
  */
 @Data
-@Component
-@FillingStrategy
 public class BaseBean implements Serializable {
 
     private Date createDate;
 
     private Date updateDate;
 
-    //@Delete(physicsDel = false,value = 5)
+    @Delete(physicsDel = false,value = 6)
     private Integer delFlag;
 
     /**

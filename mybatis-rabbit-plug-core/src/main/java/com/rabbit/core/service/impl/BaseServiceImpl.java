@@ -135,9 +135,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         Object obj = null;
         try {
             obj = clazz.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -197,9 +195,9 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
             throw new MyBatisRabbitPlugException("未指定主键字段...");
         }
         Map<String, String> sqlMap = deleteWrapper.sqlGenerate();
-        Class<?> publicClazz = this.getFillingStrategyClass();
+
         // 逻辑删除
-        Long logicDelResult = this.logicDel(publicClazz, clazz, Arrays.asList(objectId));
+        Long logicDelResult = this.logicDel(clazz, Arrays.asList(objectId));
         if (!Objects.isNull(logicDelResult)) return logicDelResult;
         LOGGER.info(" ");
         LOGGER.info("{}: begin delete data...", TAG);
@@ -244,9 +242,8 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         where = where.substring(0, where.indexOf("=")) + " " + MySqlKeyWord.IN.getValue();
         sqlMap.put(SqlKey.DELETE_WHERE.getValue(), where);
 
-        Class<?> publicClazz = this.getFillingStrategyClass();
         // 逻辑删除
-        Long logicDelResult = this.logicDel(publicClazz, clazz, objectIdList);
+        Long logicDelResult = this.logicDel(clazz, objectIdList);
         if (!Objects.isNull(logicDelResult)) return logicDelResult;
 
         // 开始批量删除
@@ -291,7 +288,6 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         Map<String, Object> sqlMap = updateSqlGenerate.sqlGenerate(mergeSqlMap);
 
         // 自定义字段填充策略
-        Class<?> clazz = this.getFillingStrategyClass();
         try {
             this.setFillingStrategyContent(beanMap, object, Update.class);
         } catch (Exception e) {
@@ -523,9 +519,11 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
 
     /**
      * 获取自定义字段填充Class
+     * <p> 2020-06-11 废弃</p>
      *
      * @return
      */
+    @Deprecated
     private Class<?> getFillingStrategyClass() {
         List<String> classNameList = Arrays.asList(applicationContext.getBeanDefinitionNames());
         for (String item : classNameList) {
@@ -573,9 +571,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
         Object obj = null;
         try {
             obj = clazz.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         QueryWrapper query = new QueryWrapper(obj);
@@ -614,15 +610,11 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
                     String enumName = iEnum == null ? "" : iEnum.name();
                     if (org.apache.commons.lang3.StringUtils.isNotBlank(enumName)) {
                         objMap.put(item.getValue().getColumnName(), enumName);
-                    }else {
+                    } else {
                         objMap.put(item.getValue().getColumnName(), null);
                     }
                 }
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -631,38 +623,31 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
     /**
      * 处理逻辑删除
      *
-     * @param baseBean     公共bean
      * @param beanClass    实例bean
      * @param objectIdList id-list
      * @return
      */
-    private Long logicDel(Class<?> baseBean, Class<?> beanClass, List<Object> objectIdList) {
+    private Long logicDel(Class<?> beanClass, List<Object> objectIdList) {
         Delete delete = null;
         String delField = "";
         Object obj = null;
-        List<Field> fieldList = new ArrayList<>();
-        if (!Objects.isNull(baseBean)) {
-            Field[] fields = baseBean.getDeclaredFields();
-            fieldList.addAll(Arrays.asList(fields));
-        }
-
-        if (!Objects.isNull(beanClass)) {
-            Field[] fields = beanClass.getDeclaredFields();
-            fieldList.addAll(Arrays.asList(fields));
-        }
-
-        for (Field item : fieldList) {
-            if (item.isAnnotationPresent(Delete.class)) {
-                delete = item.getAnnotation(Delete.class);
-                delField = item.getName();
-                break;
+        Map<String, TableFieldInfo> tableFieldInfoMap = null;
+        TableInfo tableInfo = ParseClass2TableInfo.getTableInfo(beanClass);
+        if (Objects.nonNull(tableInfo)) {
+            tableFieldInfoMap = tableInfo.getColumnMap();
+            for (Map.Entry<String, TableFieldInfo> item : tableFieldInfoMap.entrySet()) {
+                if (item.getValue().getField().isAnnotationPresent(Delete.class)) {
+                    delete = item.getValue().getField().getAnnotation(Delete.class);
+                    delField = item.getValue().getField().getName();
+                    break;
+                }
             }
         }
-        if (!Objects.isNull(delete)) {
+
+        if (Objects.nonNull(delete)) {
             boolean physicsDel = delete.physicsDel();
             if (!physicsDel) {
-                TableInfo tb = ParseClass2TableInfo.parseClazzToTableInfo(beanClass);
-                TableFieldInfo tbField = tb.getColumnMap().get(tb.getPrimaryKey().getName());
+                TableFieldInfo tbField = tableInfo.getColumnMap().get(tableInfo.getPrimaryKey().getName());
                 int value = delete.value();
                 List<Object> objBeanList = new ArrayList<>();
                 for (Object id : objectIdList) {
@@ -675,13 +660,7 @@ public class BaseServiceImpl<Mapper extends BaseMapper> extends BaseAbstractWrap
                                 StringUtils.capitalize(delField), Integer.class);
                         delMethod.invoke(obj, value);
                         objBeanList.add(obj);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    } catch (InstantiationException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

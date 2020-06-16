@@ -3,6 +3,7 @@ package com.rabbit.entity;
 import com.rabbit.core.annotation.Create;
 import com.rabbit.core.annotation.Id;
 import com.rabbit.core.annotation.Update;
+import com.rabbit.core.enumation.PrimaryKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class SuperEntity {
-    @Id
+    @Id(generateType = PrimaryKey.UUID36)
     private String id;
 
     private LocalDateTime createdOn;

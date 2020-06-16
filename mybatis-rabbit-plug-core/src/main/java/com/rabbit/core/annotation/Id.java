@@ -35,14 +35,14 @@ public @interface Id {
      *
      * @return
      */
-    boolean isKeyGenerator() default false;
+    boolean isKeyGenerator() default true;
 
     /**
      * 主键生成策略
      *
      * @return
      */
-    PrimaryKey generateType() default PrimaryKey.OBJECTID;
+    PrimaryKey generateType() default PrimaryKey.UN_KNOWN;
 
     /**
      * 工作机器ID (0-31) 只有使用分布式雪花算法时才设置该属性，默认为0

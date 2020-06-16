@@ -87,19 +87,19 @@ public class BaseServiceMethodTest {
 
     @Test
     public void deleteObject() {
-        /*// 逻辑删除
-        Long result=userService.deleteObject("87759a8d385749c3afdda1f6b9222fca",User.class);
-        log.info(result>0?"deleteObject success...":"deleteObject failed...");*/
+        // 逻辑删除
+        Long result=userService.deleteObject("5e182bf8de7cf5871d904e0d",User.class);
+        log.info(result>0?"deleteObject success...":"deleteObject failed...");
 
         // 物理删除
-        Long result = userService.deleteObject("87759a8d385749c3afdda1f6b9222fca", User.class);
-        log.info(result > 0 ? "deleteObject success..." : "deleteObject failed...");
+        /*Long result = userService.deleteObject("87759a8d385749c3afdda1f6b9222fca", User.class);
+        log.info(result > 0 ? "deleteObject success..." : "deleteObject failed...");*/
     }
 
     @Test
     public void deleteBatchByIdObject() {
-        /*// 批量逻辑删除
-        Long result=userService.deleteBatchByIdObject(Arrays.asList("45e25160086f413aa3bbc5b2919b3c84","87759a8d385749c3afdda1f6b9222fca"),User.class);
+        // 批量逻辑删除
+        /*Long result=userService.deleteBatchByIdObject(Arrays.asList("45e25160086f413aa3bbc5b2919b3c84","87759a8d385749c3afdda1f6b9222fca"),User.class);
         log.info(result>0?"deleteObject success...":"deleteObject failed...");*/
 
         // 批量物理删除

@@ -178,6 +178,9 @@ public class BaseMapperMethodTest {
         // in
         Integer inCount = accountMapper.selectCount(new QueryWrapper<>().in("id", 1, 2, 3));
         Assert.isTrue(inCount > 0, "select count failed.");
+        // order by
+        Integer orderByCount = accountMapper.selectCount(new QueryWrapper<>().orderBy("created_on", "DESC"));
+        Assert.isTrue(orderByCount > 0, "select count failed.");
     }
 
     @Test
@@ -186,9 +189,18 @@ public class BaseMapperMethodTest {
         // empty param
         List<Account> emptyParamAccountList = accountMapper.selectList(null);
         Assert.isTrue(emptyParamAccountList.size() > 0, "select list failed.");
-        // param
+        // where
         List<Account> paramAccountList = accountMapper.selectList(new QueryWrapper<>().where("1", 1));
         Assert.isTrue(paramAccountList.size() > 0, "select list failed.");
+        // selected column
+        List<Account> selectedColumnAccountList = accountMapper.selectList(new QueryWrapper<>().setColumn("id, user_name"));
+        Assert.isTrue(selectedColumnAccountList.size() > 0, "select list failed.");
+        // order by
+        List<Account> orderByAccountList = accountMapper.selectList(new QueryWrapper<>().orderBy("created_on", "DESC"));
+        Assert.isTrue(orderByAccountList.size() > 0, "select list failed.");
+        // limit
+        List<Account> limitAccountList = accountMapper.selectList(new QueryWrapper<>().limit(2, 10).orderBy("created_on", "DESC"));
+        Assert.isTrue(limitAccountList.size() > 0, "select list failed.");
     }
 
     @Test
@@ -196,6 +208,15 @@ public class BaseMapperMethodTest {
         insert();
         Account paramAccount = accountMapper.selectOne(new QueryWrapper<>().where("id", SYS_UUID_CONTAINER.get(0)));
         Assert.isTrue(!ObjectUtils.isEmpty(paramAccount), "select one failed.");
+        // selected column
+        Account selectedColumnAccount = accountMapper.selectOne(new QueryWrapper<>().setColumn("id, user_name").where("id", SYS_UUID_CONTAINER.get(0)));
+        Assert.isTrue(!ObjectUtils.isEmpty(selectedColumnAccount), "select one failed.");
+        // order by
+        Account orderByAccount = accountMapper.selectOne(new QueryWrapper<>().orderBy("created_on", "DESC").where("id", SYS_UUID_CONTAINER.get(0)));
+        Assert.isTrue(!ObjectUtils.isEmpty(orderByAccount), "select one failed.");
+        // limit
+        Account limitAccount = accountMapper.selectOne(new QueryWrapper<>().limit(1, 10).orderBy("created_on", "DESC").where("id", SYS_UUID_CONTAINER.get(0)));
+        Assert.isTrue(!ObjectUtils.isEmpty(limitAccount), "select one failed.");
     }
 
     @Test
@@ -209,26 +230,11 @@ public class BaseMapperMethodTest {
     }
 
     public void insert() {
-        String id = UUID.randomUUID().toString();
         Account account = new Account();
         account.setSex(Sex.MAX);
-        account.setId(id);
         account.setUserName("root");
         account.setCreatedBy(UUID.randomUUID().toString());
         Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");
-        SYS_UUID_CONTAINER.add(id);
-    }
-
-    @Test
-    public  void passworTest(){
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-        EnvironmentPBEConfig config = new EnvironmentPBEConfig();
-
-        config.setAlgorithm("PBEWithMD5AndDES");          // 加密的算法，这个算法是默认的
-        config.setPassword("mrp");                        // 加密的密钥
-        standardPBEStringEncryptor.setConfig(config);
-        String plainText = "Duxiaoyu@123";
-        String encryptedText = standardPBEStringEncryptor.encrypt(plainText);
-        System.out.println(encryptedText);
+        SYS_UUID_CONTAINER.add(account.getId());
     }
 }
