@@ -67,7 +67,7 @@ public class RabbitDefaultParameterHandler extends DefaultParameterHandler {
             }
         } else {
             objectList.add(parameterObject);
-            parameterClass = parameterObject.getClass();
+            parameterClass = parameterObject != null ? parameterObject.getClass() : null;
         }
 
         // 处理BaseMapper中的update和delete方法条件参数问题

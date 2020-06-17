@@ -3,6 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
+
     <parent>
         <groupId>com.github.wuyongfei-1</groupId>
         <artifactId>mybatis-rabbit-plug-spring-boot</artifactId>
