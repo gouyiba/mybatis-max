@@ -30,7 +30,7 @@ public class BaseServiceMethodTest {
     @Autowired
     private UserService userService;
 
-    /************************************* BaseService中所有CRUD均可操作不同entity *************************************/
+    /************************************* BaseService中所有CRUD均可操作不同entity，以下均为测试数据 *************************************/
 
     @Test
     public void addObject() {
@@ -88,8 +88,8 @@ public class BaseServiceMethodTest {
     @Test
     public void deleteObject() {
         // 逻辑删除
-        Long result=userService.deleteObject("5e182bf8de7cf5871d904e0d",User.class);
-        log.info(result>0?"deleteObject success...":"deleteObject failed...");
+        Long result = userService.deleteObject("5e182bf8de7cf5871d904e0d", User.class);
+        log.info(result > 0 ? "deleteObject success..." : "deleteObject failed...");
 
         // 物理删除
         /*Long result = userService.deleteObject("87759a8d385749c3afdda1f6b9222fca", User.class);
