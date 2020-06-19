@@ -12,7 +12,7 @@ import lombok.Data;
 @Table("t_user")
 public class User extends BaseBean {
 
-    private String id;
+    private Integer id;
 
     @Id(generateType = PrimaryKey.UUID32)
     private String stuUid;

@@ -44,7 +44,7 @@ public class SelectById extends RabbitAbstractMethod {
                 selectedColumnJoin.toString(), tableInfo.getTableName(), columnMap.get(primaryKey.getName()).getColumnName());
 
         // dynamic XMLLanguageDriver
-        SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdSql, modelClass);
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, selectByIdSql, Object.class);
 
         // 添加到MappedStatement缓存
         addSelectMappedStatementForOther(
