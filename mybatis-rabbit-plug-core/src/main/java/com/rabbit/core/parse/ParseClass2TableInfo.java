@@ -271,7 +271,7 @@ public final class ParseClass2TableInfo {
             } else if (Boolean.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.TINYINT;
             } else if (Short.class.isAssignableFrom(clazz)) {
-                return MySqlColumnType.SHORT;
+                return MySqlColumnType.INTEGER;
             } else if (Character.class.isAssignableFrom(clazz)) {
                 return MySqlColumnType.CHAR;
             } else if (LocalDate.class.isAssignableFrom(clazz)) {

@@ -10,22 +10,15 @@ public enum MySqlColumnType implements IEnum<String> {
 
     TINYINT("TINYINT"),
     SMALLINT("SMALLINT"),
-    MEDIUMINT("MEDIUMINT"),
     BIGINT("BIGINT"),
-    SHORT("SHORT"),
     INTEGER("INTEGER"),
     FLOAT("FLOAT"),
     DOUBLE("DOUBLE"),
     DECIMAL("DECIMAL"),
     DATE("DATE"),
-    DATETIME("DATETIME"),
     TIMESTAMP("TIMESTAMP"),
     CHAR("CHAR"),
-    VARCHAR("VARCHAR"),
-    TEXT("TEXT"),
-    MEDIUMTEXT("MEDIUMTEXT"),
-    TINYTEXT("TINYTEXT"),
-    LONGTEXT("LONGTEXT");
+    VARCHAR("VARCHAR");
 
     private String columnType;
 
