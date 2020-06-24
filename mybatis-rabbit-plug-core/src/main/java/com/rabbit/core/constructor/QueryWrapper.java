@@ -333,7 +333,7 @@ public class QueryWrapper<E> extends BaseAbstractWrapper<E> implements Serializa
      * @return
      */
     public QueryWrapper limit(int page, int limit) {
-        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (page - 1) * limit, limit));
+        sqlMap.put(MySqlKeyWord.LIMIT.getValue(), String.format(" %s %s,%s", MySqlKeyWord.LIMIT.getValue(), (page > 0 ? page - 1 : 0) * limit, limit));
         return this;
     }
 

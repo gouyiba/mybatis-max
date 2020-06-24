@@ -79,6 +79,7 @@ public class BaseMapperMethodTest {
         user.setStuAge(24);
         user.setSex(Sex.MAX);
 
+        // 全量修改
         int result = userMapper.updateById(user);
         log.info(result > 0 ? "updateById success..." : "updateById failed...");
     }
@@ -99,6 +100,7 @@ public class BaseMapperMethodTest {
             }
         }
 
+        // 全量修改
         int result = userMapper.updateBatchById(entityList);
         log.info(result > 0 ? "updateBatchById success..." : "updateBatchById failed...");
     }
