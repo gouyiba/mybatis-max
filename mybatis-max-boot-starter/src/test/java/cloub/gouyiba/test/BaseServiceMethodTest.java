@@ -1,11 +1,11 @@
 package cloub.gouyiba.test;
 
-import cloub.gouyiba.enumatioon.Sex;
-import cloub.gouyiba.service.UserService;
-import cn.hutool.json.JSONUtil;
 import cloub.gouyiba.core.constructor.QueryWrapper;
 import cloub.gouyiba.core.constructor.UpdateWrapper;
 import cloub.gouyiba.entity.User;
+import cloub.gouyiba.enumatioon.Sex;
+import cloub.gouyiba.service.UserService;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;

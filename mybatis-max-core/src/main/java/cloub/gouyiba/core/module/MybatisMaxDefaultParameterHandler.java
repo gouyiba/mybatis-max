@@ -1,5 +1,6 @@
 package cloub.gouyiba.core.module;
 
+import cloub.gouyiba.common.utils.StringUtils;
 import cloub.gouyiba.core.annotation.Create;
 import cloub.gouyiba.core.annotation.Id;
 import cloub.gouyiba.core.annotation.Update;
@@ -11,7 +12,6 @@ import cloub.gouyiba.core.enumation.PrimaryKey;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
-import cloub.gouyiba.common.utils.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.mapping.*;

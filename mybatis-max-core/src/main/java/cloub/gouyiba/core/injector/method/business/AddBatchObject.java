@@ -1,8 +1,8 @@
 package cloub.gouyiba.core.injector.method.business;
 
 
-import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.common.utils.SqlScriptUtil;
+import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.mapping.SqlSource;

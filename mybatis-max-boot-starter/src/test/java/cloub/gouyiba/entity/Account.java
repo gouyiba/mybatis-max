@@ -1,8 +1,8 @@
 package cloub.gouyiba.entity;
 
-import cloub.gouyiba.enumatioon.Sex;
 import cloub.gouyiba.core.annotation.Column;
 import cloub.gouyiba.core.typehandler.IEnumTypeHandler;
+import cloub.gouyiba.enumatioon.Sex;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

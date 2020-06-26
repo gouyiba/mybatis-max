@@ -1,9 +1,9 @@
 package cloub.gouyiba.core.util;
 
+import cloub.gouyiba.core.config.MybatisMaxConfig;
 import cloub.gouyiba.core.injector.DefaultMybatisMaxSqlInjector;
 import cloub.gouyiba.core.injector.IMybatisMaxSqlInjector;
 import cloub.gouyiba.core.module.MybatisMaxConfiguration;
-import cloub.gouyiba.core.config.MybatisMaxConfig;
 import org.apache.ibatis.session.Configuration;
 
 /**

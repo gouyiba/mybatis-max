@@ -1,10 +1,10 @@
 package cloub.gouyiba.core.constructor;
 
 import cloub.gouyiba.core.annotation.Column;
-import cloub.gouyiba.core.enumation.MySqlKeyWord;
-import cloub.gouyiba.core.enumation.SqlKey;
 import cloub.gouyiba.core.bean.TableFieldInfo;
 import cloub.gouyiba.core.bean.TableInfo;
+import cloub.gouyiba.core.enumation.MySqlKeyWord;
+import cloub.gouyiba.core.enumation.SqlKey;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -1,12 +1,12 @@
 package cloub.gouyiba.core.constructor;
 
+import cloub.gouyiba.common.exception.MyBatisMaxException;
+import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.enumation.MySqlColumnType;
 import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.core.enumation.SqlKey;
-import cn.hutool.json.JSONUtil;
-import cloub.gouyiba.common.exception.MyBatisMaxException;
-import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
+import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

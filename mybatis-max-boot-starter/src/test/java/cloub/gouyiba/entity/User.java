@@ -1,11 +1,11 @@
 package cloub.gouyiba.entity;
 
-import cloub.gouyiba.enumatioon.Sex;
 import cloub.gouyiba.core.annotation.Column;
 import cloub.gouyiba.core.annotation.Id;
 import cloub.gouyiba.core.annotation.Table;
 import cloub.gouyiba.core.enumation.PrimaryKey;
 import cloub.gouyiba.core.typehandler.IEnumTypeHandler;
+import cloub.gouyiba.enumatioon.Sex;
 import lombok.Data;
 
 @Data

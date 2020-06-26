@@ -1,11 +1,11 @@
 package cloub.gouyiba.test;
 
-import cloub.gouyiba.enumatioon.Sex;
 import cloub.gouyiba.core.constructor.DeleteWrapper;
 import cloub.gouyiba.core.constructor.QueryWrapper;
 import cloub.gouyiba.core.constructor.UpdateWrapper;
 import cloub.gouyiba.entity.Account;
 import cloub.gouyiba.entity.User;
+import cloub.gouyiba.enumatioon.Sex;
 import cloub.gouyiba.mapper.AccountMapper;
 import cloub.gouyiba.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;

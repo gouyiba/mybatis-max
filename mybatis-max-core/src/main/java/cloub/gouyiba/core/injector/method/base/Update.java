@@ -1,12 +1,12 @@
 package cloub.gouyiba.core.injector.method.base;
 
+import cloub.gouyiba.common.utils.SqlScriptUtil;
 import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.constructor.DefaultAbstractWrapper;
 import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.core.enumation.SqlKey;
 import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
-import cloub.gouyiba.common.utils.SqlScriptUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.SqlSource;

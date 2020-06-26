@@ -1,11 +1,11 @@
 package cloub.gouyiba.core.parse;
 
-import cloub.gouyiba.core.annotation.*;
-import cloub.gouyiba.core.enumation.MySqlColumnType;
 import cloub.gouyiba.common.utils.ClassUtils;
 import cloub.gouyiba.common.utils.StringUtils;
+import cloub.gouyiba.core.annotation.*;
 import cloub.gouyiba.core.bean.TableFieldInfo;
 import cloub.gouyiba.core.bean.TableInfo;
+import cloub.gouyiba.core.enumation.MySqlColumnType;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

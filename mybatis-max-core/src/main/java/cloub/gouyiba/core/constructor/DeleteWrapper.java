@@ -1,9 +1,9 @@
 package cloub.gouyiba.core.constructor;
 
-import cloub.gouyiba.core.enumation.MySqlKeyWord;
-import cloub.gouyiba.core.enumation.SqlKey;
 import cloub.gouyiba.core.bean.TableFieldInfo;
 import cloub.gouyiba.core.bean.TableInfo;
+import cloub.gouyiba.core.enumation.MySqlKeyWord;
+import cloub.gouyiba.core.enumation.SqlKey;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

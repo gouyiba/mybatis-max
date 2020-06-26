@@ -1,7 +1,7 @@
 package cloub.gouyiba.core.service;
 
-import cloub.gouyiba.core.constructor.UpdateWrapper;
 import cloub.gouyiba.core.constructor.QueryWrapper;
+import cloub.gouyiba.core.constructor.UpdateWrapper;
 
 import java.util.List;
 import java.util.Map;
