@@ -2,7 +2,7 @@ package cloub.gouyiba.core.injector.method.base;
 
 import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.constructor.DefaultAbstractWrapper;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @Date 2020/5/30 17:30
  * @Since V 1.0
  */
-public class Insert extends RabbitAbstractMethod {
+public class Insert extends MybatisMaxAbstractMethod {
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         if (ObjectUtils.isEmpty(modelClass)) {

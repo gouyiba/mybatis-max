@@ -1,7 +1,7 @@
 package cloub.gouyiba.core.injector.method.business;
 
 import cloub.gouyiba.common.utils.SqlScriptUtil;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import org.apache.ibatis.mapping.SqlSource;
 
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @Date 2020/5/5 11:03
  * @Since V 1.0
  */
-public class GetObject extends RabbitAbstractMethod {
+public class GetObject extends MybatisMaxAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {

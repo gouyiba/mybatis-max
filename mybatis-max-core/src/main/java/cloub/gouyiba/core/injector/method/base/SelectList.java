@@ -2,7 +2,7 @@ package cloub.gouyiba.core.injector.method.base;
 
 import cloub.gouyiba.core.bean.TableFieldInfo;
 import cloub.gouyiba.core.bean.TableInfo;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +15,7 @@ import java.util.StringJoiner;
  * 查询多条记录
  * this class by created wuyongfei on 2020/5/31 14:59
  **/
-public class SelectList extends RabbitAbstractMethod {
+public class SelectList extends MybatisMaxAbstractMethod {
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         if (ObjectUtils.isEmpty(modelClass)) {

@@ -1,6 +1,6 @@
 package cloub.gouyiba.core.util;
 
-import cloub.gouyiba.core.injector.DefaultRabbitSqlInjector;
+import cloub.gouyiba.core.injector.DefaultMybatisMaxSqlInjector;
 import cloub.gouyiba.core.injector.IMybatisMaxSqlInjector;
 import cloub.gouyiba.core.module.MybatisMaxConfiguration;
 import cloub.gouyiba.core.config.MybatisMaxConfig;
@@ -25,7 +25,7 @@ public class MybatisMaxConfigUtils {
         MybatisMaxConfig globalConfiguration = getGlobalConfig(configuration);
         IMybatisMaxSqlInjector sqlInjector = globalConfiguration.getSqlInjector();
         if (sqlInjector == null) {
-            sqlInjector = new DefaultRabbitSqlInjector();
+            sqlInjector = new DefaultMybatisMaxSqlInjector();
             globalConfiguration.setSqlInjector(sqlInjector);
         }
 

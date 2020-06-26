@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 /**
  * this class by created wuyongfei on 2020/5/10 20:53
  **/
-public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
-    public DefaultRabbitSqlInjector() {
+public class DefaultMybatisMaxSqlInjector extends AbstractMybatisMaxSqlInjector {
+    public DefaultMybatisMaxSqlInjector() {
     }
 
     /**
@@ -21,7 +21,7 @@ public class DefaultRabbitSqlInjector extends AbstractRabbitSqlInjector {
      * @return
      */
     @Override
-    public List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass) {
+    public List<MybatisMaxAbstractMethod> getMethodList(Class<?> mapperClass) {
         return Stream.of(
                 // business
                 new AddBatchObject(),

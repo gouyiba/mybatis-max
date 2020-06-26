@@ -20,14 +20,14 @@ import java.util.List;
 /**
  * this class by created wuyongfei on 2020/5/10 20:54
  **/
-public abstract class AbstractRabbitSqlInjector implements IMybatisMaxSqlInjector {
-    private static final Log logger = LogFactory.getLog(AbstractRabbitSqlInjector.class);
+public abstract class AbstractMybatisMaxSqlInjector implements IMybatisMaxSqlInjector {
+    private static final Log logger = LogFactory.getLog(AbstractMybatisMaxSqlInjector.class);
 
     private Configuration configuration;
 
     private String currentNamespace;
 
-    public AbstractRabbitSqlInjector() {
+    public AbstractMybatisMaxSqlInjector() {
     }
 
     private List<ResultMap> getStatementResultMaps(String resultMap, Class<?> resultType, String statementId) {
@@ -86,7 +86,7 @@ public abstract class AbstractRabbitSqlInjector implements IMybatisMaxSqlInjecto
     @Override
     public void inspectInject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass) {
         Class<?> modelClass = extractModelClass(mapperClass);
-        List<RabbitAbstractMethod> methodList = this.getMethodList(mapperClass);
+        List<MybatisMaxAbstractMethod> methodList = this.getMethodList(mapperClass);
         if (CollectionUtils.isNotEmpty(methodList)) {
             methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass));
         } else {
@@ -94,7 +94,7 @@ public abstract class AbstractRabbitSqlInjector implements IMybatisMaxSqlInjecto
         }
     }
 
-    public abstract List<RabbitAbstractMethod> getMethodList(Class<?> mapperClass);
+    public abstract List<MybatisMaxAbstractMethod> getMethodList(Class<?> mapperClass);
 
     /**
      * 提取泛型

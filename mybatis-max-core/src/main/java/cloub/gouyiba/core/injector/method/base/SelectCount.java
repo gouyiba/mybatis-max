@@ -1,7 +1,7 @@
 package cloub.gouyiba.core.injector.method.base;
 
 import cloub.gouyiba.core.bean.TableInfo;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +11,7 @@ import org.apache.ibatis.mapping.SqlSource;
  * 查询总记录数
  * this class by created wuyongfei on 2020/5/31 14:59
  **/
-public class SelectCount extends RabbitAbstractMethod {
+public class SelectCount extends MybatisMaxAbstractMethod {
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
         if (ObjectUtils.isEmpty(modelClass)) {

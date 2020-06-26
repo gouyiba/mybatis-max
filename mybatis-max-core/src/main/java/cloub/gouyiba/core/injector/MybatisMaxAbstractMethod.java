@@ -12,13 +12,13 @@ import org.apache.ibatis.session.Configuration;
 /**
  * this class by created wuyongfei on 2020/5/10 21:00
  **/
-public abstract class RabbitAbstractMethod {
-    protected static final Log logger = LogFactory.getLog(RabbitAbstractMethod.class);
+public abstract class MybatisMaxAbstractMethod {
+    protected static final Log logger = LogFactory.getLog(MybatisMaxAbstractMethod.class);
     protected Configuration configuration;
     protected LanguageDriver languageDriver;
     protected MapperBuilderAssistant builderAssistant;
 
-    public RabbitAbstractMethod() {
+    public MybatisMaxAbstractMethod() {
     }
 
     public void inject(MapperBuilderAssistant builderAssistant, Class<?> mapperClass, Class<?> modelClass) {

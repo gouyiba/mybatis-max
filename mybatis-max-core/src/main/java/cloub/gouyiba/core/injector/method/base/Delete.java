@@ -3,7 +3,7 @@ package cloub.gouyiba.core.injector.method.base;
 import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.constructor.DeleteWrapper;
 import cloub.gouyiba.core.enumation.MySqlKeyWord;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import cloub.gouyiba.common.utils.SqlScriptUtil;
 import org.apache.commons.lang3.ObjectUtils;
@@ -17,7 +17,7 @@ import org.apache.ibatis.mapping.SqlSource;
  * @Date 2020/5/30 17:31
  * @Since V 1.0
  */
-public class Delete extends RabbitAbstractMethod {
+public class Delete extends MybatisMaxAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {

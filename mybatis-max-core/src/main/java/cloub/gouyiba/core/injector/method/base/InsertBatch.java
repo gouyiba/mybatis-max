@@ -4,7 +4,7 @@ import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.common.utils.SqlScriptUtil;
 import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.constructor.DefaultAbstractWrapper;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @Date 2020/5/30 17:29
  * @Since V 1.0
  */
-public class InsertBatch extends RabbitAbstractMethod {
+public class InsertBatch extends MybatisMaxAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {

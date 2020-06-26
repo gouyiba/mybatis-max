@@ -4,7 +4,7 @@ import cloub.gouyiba.core.bean.TableInfo;
 import cloub.gouyiba.core.constructor.DefaultAbstractWrapper;
 import cloub.gouyiba.core.enumation.MySqlKeyWord;
 import cloub.gouyiba.core.enumation.SqlKey;
-import cloub.gouyiba.core.injector.RabbitAbstractMethod;
+import cloub.gouyiba.core.injector.MybatisMaxAbstractMethod;
 import cloub.gouyiba.core.parse.ParseClass2TableInfo;
 import cloub.gouyiba.common.utils.SqlScriptUtil;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,7 +21,7 @@ import java.util.Objects;
  * @Date 2020/5/30 17:33
  * @Since V 1.0
  */
-public class UpdateById extends RabbitAbstractMethod {
+public class UpdateById extends MybatisMaxAbstractMethod {
 
     @Override
     public void injectMappedStatement(Class<?> mapperClass, Class<?> modelClass) {
