@@ -1,0 +1,335 @@
+{
+  "groups": [
+    {
+      "name": "mybatis-max",
+      "type": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.configuration",
+      "type": "cloub.gouyiba.core.module.MybatisMaxConfiguration",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+      "sourceMethod": "getConfiguration()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mybatis-max.check-config-location",
+      "type": "java.lang.Boolean",
+      "description": "Indicates whether perform presence check of the MyBatis xml config file.",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "mybatis-max.config-location",
+      "type": "java.lang.String",
+      "description": "Location of MyBatis xml config file.",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.configuration-properties",
+      "type": "java.util.Properties",
+      "description": "Externalized properties for MyBatis configuration.",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.configuration.aggressive-lazy-loading",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.auto-mapping-behavior",
+      "type": "org.apache.ibatis.session.AutoMappingBehavior",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.auto-mapping-unknown-column-behavior",
+      "type": "org.apache.ibatis.session.AutoMappingUnknownColumnBehavior",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.cache-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.cache-names",
+      "type": "java.util.Collection<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.caches",
+      "type": "java.util.Collection<org.apache.ibatis.cache.Cache>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.call-setters-on-nulls",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.configuration-factory",
+      "type": "java.lang.Class<?>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.database-id",
+      "type": "java.lang.String",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.default-enum-type-handler",
+      "type": "java.lang.Class<? extends org.apache.ibatis.type.TypeHandler>",
+      "description": "A default TypeHandler class for Enum.",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration",
+      "defaultValue": "org.apache.ibatis.type.EnumTypeHandler"
+    },
+    {
+      "name": "mybatis-max.configuration.default-executor-type",
+      "type": "org.apache.ibatis.session.ExecutorType",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.default-fetch-size",
+      "type": "java.lang.Integer",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.default-result-set-type",
+      "type": "org.apache.ibatis.mapping.ResultSetType",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.default-scripting-language",
+      "type": "java.lang.Class<? extends org.apache.ibatis.scripting.LanguageDriver>",
+      "description": "A default LanguageDriver class.",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration",
+      "defaultValue": "org.apache.ibatis.scripting.xmltags.XMLLanguageDriver"
+    },
+    {
+      "name": "mybatis-max.configuration.default-statement-timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.environment",
+      "type": "org.apache.ibatis.mapping.Environment",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.incomplete-cache-refs",
+      "type": "java.util.Collection<org.apache.ibatis.builder.CacheRefResolver>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.incomplete-methods",
+      "type": "java.util.Collection<org.apache.ibatis.builder.annotation.MethodResolver>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.incomplete-result-maps",
+      "type": "java.util.Collection<org.apache.ibatis.builder.ResultMapResolver>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.incomplete-statements",
+      "type": "java.util.Collection<org.apache.ibatis.builder.xml.XMLStatementBuilder>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.interceptors",
+      "type": "java.util.List<org.apache.ibatis.plugin.Interceptor>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.jdbc-type-for-null",
+      "type": "org.apache.ibatis.type.JdbcType",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.key-generator-names",
+      "type": "java.util.Collection<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.key-generators",
+      "type": "java.util.Collection<org.apache.ibatis.executor.keygen.KeyGenerator>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.lazy-load-trigger-methods",
+      "type": "java.util.Set<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.lazy-loading-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.local-cache-scope",
+      "type": "org.apache.ibatis.session.LocalCacheScope",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.log-impl",
+      "type": "java.lang.Class<? extends org.apache.ibatis.logging.Log>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.log-prefix",
+      "type": "java.lang.String",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.map-underscore-to-camel-case",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.mapped-statement-names",
+      "type": "java.util.Collection<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.mapped-statements",
+      "type": "java.util.Collection<org.apache.ibatis.mapping.MappedStatement>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.multiple-result-sets-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.object-factory",
+      "type": "org.apache.ibatis.reflection.factory.ObjectFactory",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.object-wrapper-factory",
+      "type": "org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.parameter-map-names",
+      "type": "java.util.Collection<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.parameter-maps",
+      "type": "java.util.Collection<org.apache.ibatis.mapping.ParameterMap>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.proxy-factory",
+      "type": "org.apache.ibatis.executor.loader.ProxyFactory",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.reflector-factory",
+      "type": "org.apache.ibatis.reflection.ReflectorFactory",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.result-map-names",
+      "type": "java.util.Collection<java.lang.String>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.result-maps",
+      "type": "java.util.Collection<org.apache.ibatis.mapping.ResultMap>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.return-instance-for-empty-row",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.safe-result-handler-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.safe-row-bounds-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.sql-fragments",
+      "type": "java.util.Map<java.lang.String,org.apache.ibatis.parsing.XNode>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.use-actual-param-name",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.use-column-label",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.use-generated-keys",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.variables",
+      "type": "java.util.Properties",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.configuration.vfs-impl",
+      "type": "java.lang.Class<? extends org.apache.ibatis.io.VFS>",
+      "sourceType": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+    },
+    {
+      "name": "mybatis-max.default-scripting-language-driver",
+      "type": "java.lang.Class<? extends org.apache.ibatis.scripting.LanguageDriver>",
+      "description": "The default scripting language driver class. (Available when use together with mybatis-spring 2.0.2+) <p> 如果设置了这个,你会至少失去 mp 提供的有关填充到 entity 的 property 相关的功能",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.executor-type",
+      "type": "org.apache.ibatis.session.ExecutorType",
+      "description": "Execution mode for {@link org.mybatis.spring.SqlSessionTemplate}.",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.banner",
+      "type": "java.lang.Boolean",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.mapper-locations",
+      "type": "java.lang.String[]",
+      "description": "Locations of MyBatis mapper files. @since 3.1.2 add default value",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+      "defaultValue": [
+        "classpath*:\/mapper\/**\/*.xml"
+      ]
+    },
+    {
+      "name": "mybatis-max.type-aliases-package",
+      "type": "java.lang.String",
+      "description": "Packages to search type aliases. (Package delimiters are \",; \\t\\n\")",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.type-aliases-super-type",
+      "type": "java.lang.Class<?>",
+      "description": "The super class for filtering type alias. If this not specifies, the MyBatis deal as type alias all classes that searched from typeAliasesPackage.",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    },
+    {
+      "name": "mybatis-max.type-handlers-package",
+      "type": "java.lang.String",
+      "description": "Packages to search for type handlers. (Package delimiters are \",; \\t\\n\")",
+      "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+    }
+  ],
+  "hints": []
+}

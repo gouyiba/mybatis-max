@@ -1,4 +1,4 @@
-# mybatis-rabbit-plug
+# mybatis-max
 # 提交类型必填 <Fix(Bug错误)|Improvement(优化)|Feature(新特性)|Other(其他)|Test(添加测试及相关代码)|Refactor(重构代码)|Docs(文档改动)>
 # 例如
 # [Type]: Bug

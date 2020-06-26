@@ -157,3 +157,9 @@
  - 2020.06.18 更新
     - 增加自定义函数参数校验和返回结果处理
     - 调整测试类测试流程
+  
+ - 2020.06.26 更新
+    - 修改groupId: com.rabbit -> cloud.gouyiba
+    - 修改模块、类名称: Rabbit... -> MybatisMax...
+    - 修改yml配置名称: rabbit-mybatis-plug -> mybatis-max
+    - 替换项目涉及到的关键字: MRP -> mybatis-max
