@@ -7,7 +7,7 @@
     <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
 
     <parent>
-        <groupId>cloub.gouyiba</groupId>
+        <groupId>cloud.gouyiba</groupId>
         <artifactId>mybatis-max</artifactId>
         <version>1.0.3</version>
     </parent>

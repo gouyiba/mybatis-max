@@ -1,15 +1,15 @@
 {
     "groups": [
         {
-            "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+            "sourceType": "cloud.gouyiba.autoconfigure.MybatisMaxProperties",
             "name": "mybatis-max",
-            "type": "cloub.gouyiba.autoconfigure.MybatisMaxProperties"
+            "type": "cloud.gouyiba.autoconfigure.MybatisMaxProperties"
         },
         {
-            "sourceType": "cloub.gouyiba.autoconfigure.MybatisMaxProperties",
+            "sourceType": "cloud.gouyiba.autoconfigure.MybatisMaxProperties",
             "name": "mybatis-max.configuration",
             "sourceMethod": "getConfiguration()",
-            "type": "cloub.gouyiba.core.module.MybatisMaxConfiguration"
+            "type": "cloud.gouyiba.core.module.MybatisMaxConfiguration"
         }
     ],
     "properties": []

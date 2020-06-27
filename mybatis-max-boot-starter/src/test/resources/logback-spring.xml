@@ -60,7 +60,7 @@
         </filter>
     </appender>
 
-    <logger name="cloub.gouyiba" level="${log.level}" additivity="true">
+    <logger name="cloud.gouyiba" level="${log.level}" additivity="true">
         <appender-ref ref="debugAppender" />
         <appender-ref ref="infoAppender" />
         <appender-ref ref="errorAppender" />

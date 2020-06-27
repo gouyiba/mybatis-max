@@ -15,4 +15,4 @@ jasypt:
 mybatis-max:
   banner: true
   mapper-location: classpath*:/mapper/**/*.xml
-  type-aliases-package: cloub.gouyiba.entity
+  type-aliases-package: cloud.gouyiba.entity

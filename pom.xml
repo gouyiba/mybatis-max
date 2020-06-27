@@ -23,7 +23,7 @@
         <version>7</version>
     </parent>
 
-    <groupId>cloub.gouyiba</groupId>
+    <groupId>cloud.gouyiba</groupId>
     <artifactId>mybatis-max</artifactId>
     <version>1.0.3</version>
 
