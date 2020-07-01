@@ -4,9 +4,11 @@ import cloud.gouyiba.core.constructor.DeleteWrapper;
 import cloud.gouyiba.core.constructor.QueryWrapper;
 import cloud.gouyiba.core.constructor.UpdateWrapper;
 import cloud.gouyiba.entity.Account;
+import cloud.gouyiba.entity.NoInjectMethodEntity;
 import cloud.gouyiba.entity.User;
 import cloud.gouyiba.enumatioon.Sex;
 import cloud.gouyiba.mapper.AccountMapper;
+import cloud.gouyiba.mapper.NoInjectMethodEntityMapper;
 import cloud.gouyiba.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,9 @@ public class BaseMapperMethodTest {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private NoInjectMethodEntityMapper noInjectMethodObjMapper;
 
     private static List<String> SYS_UUID_CONTAINER = new ArrayList<>();
 
@@ -264,6 +269,20 @@ public class BaseMapperMethodTest {
         log.info("last updatedOn值：{}", account.getUpdatedOn());
     }
 
+    @Test
+    public void testlist() {
+        List<Account> emptyParamAccountList = accountMapper.selectList(null);
+        System.out.println(emptyParamAccountList);
+    }
+
+    @Test
+    public void testNoInjectMethod() {
+        NoInjectMethodEntity noInjectMethodObj = new NoInjectMethodEntity();
+        noInjectMethodObj.setId(UUID.randomUUID().toString());
+        noInjectMethodObj.setUserName("test no inject method");
+        noInjectMethodObjMapper.insert(noInjectMethodObj);
+    }
+
     public void insert() {
         Account account = new Account();
         account.setSex(Sex.MAX);
@@ -271,11 +290,5 @@ public class BaseMapperMethodTest {
         account.setCreatedBy(UUID.randomUUID().toString());
         Assert.isTrue(accountMapper.insert(account) > 0, "insert failed.");
         SYS_UUID_CONTAINER.add(account.getId());
-    }
-
-    @Test
-    public void testlist() {
-        List<Account> emptyParamAccountList = accountMapper.selectList(null);
-        System.out.println(emptyParamAccountList);
     }
 }

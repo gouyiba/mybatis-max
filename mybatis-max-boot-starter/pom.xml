@@ -4,7 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!--<name>mybatis-max</name>-->
     <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
+    <url>https://github.com/gouyiba/mybatis-max</url>
+    <inceptionYear>2019</inceptionYear>
 
     <parent>
         <groupId>cloud.gouyiba</groupId>

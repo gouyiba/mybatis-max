@@ -8,14 +8,22 @@
 
     <name>mybatis-max</name>
     <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
+    <url>https://github.com/gouyiba/mybatis-max</url>
+    <inceptionYear>2019</inceptionYear>
 
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
+
+    <organization>
+        <name>Gouyiba Group</name>
+        <url>https://github.com/gouyiba</url>
+    </organization>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -82,22 +90,26 @@
     </dependencies>
 
     <scm>
-        <tag>develop</tag>
-        <url>git@github.com:gouyiba/mybatis-max.git</url>
+        <tag>develop-v1.0.3</tag>
+        <url>https://github.com/gouyiba/mybatis-max</url>
         <connection>scm:git:git@github.com:gouyiba/mybatis-max.git</connection>
         <developerConnection>scm:git:git@github.com:gouyiba/mybatis-max.git</developerConnection>
     </scm>
 
     <developers>
         <developer>
+            <id>wuyongfei</id>
             <name>wuyongfei</name>
             <email>1402218191@qq.com</email>
             <organization>mybatis-max</organization>
+            <url>https://github.com/gouyiba/mybatis-max</url>
         </developer>
         <developer>
+            <id>duxiaoyu</id>
             <name>duxiaoyu</name>
             <email>389228699@qq.com</email>
             <organization>mybatis-max</organization>
+            <url>https://github.com/gouyiba/mybatis-max</url>
         </developer>
     </developers>
 
@@ -158,7 +170,7 @@
                 <configuration>
                     <serverId>sonatype-nexus-staging</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
                 </configuration>
             </plugin>
 

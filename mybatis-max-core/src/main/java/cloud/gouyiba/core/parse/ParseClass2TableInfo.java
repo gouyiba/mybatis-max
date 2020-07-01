@@ -177,17 +177,6 @@ public final class ParseClass2TableInfo {
                 }
             }
 
-            // 解析实例中填充方法
-            Map<Class<? extends Annotation>, Method> fillMap = new HashMap<>();
-            List<Method> classMethods = getClassMethods(clazz);
-            classMethods.stream()
-                    .filter(method -> ObjectUtils.isNotEmpty(method.getAnnotation(Create.class))).findFirst()
-                    .ifPresent(method -> fillMap.computeIfAbsent(Create.class, key -> method));
-            classMethods.stream()
-                    .filter(method -> ObjectUtils.isNotEmpty(method.getAnnotation(Update.class))).findFirst()
-                    .ifPresent(method -> fillMap.computeIfAbsent(Update.class, key -> method));
-            tableInfo.setFillMethods(fillMap);
-
             // 判断 @column 是否设置了对应的数据库表字段名称，如果没有设置，自动解析字段
             // 默认按照驼峰转下划线格式进行转换，如: salePrice -> sale_price
             if (StringUtils.isBlank(columnName)) {
@@ -203,6 +192,16 @@ public final class ParseClass2TableInfo {
             tbFieldMap.put(propertyName, tbField);
         }
 
+        // 解析实例中填充方法
+        Map<Class<? extends Annotation>, Method> fillMap = new HashMap<>();
+        List<Method> classMethods = getClassMethods(clazz);
+        classMethods.stream()
+                .filter(method -> ObjectUtils.isNotEmpty(method.getAnnotation(Create.class))).findFirst()
+                .ifPresent(method -> fillMap.computeIfAbsent(Create.class, key -> method));
+        classMethods.stream()
+                .filter(method -> ObjectUtils.isNotEmpty(method.getAnnotation(Update.class))).findFirst()
+                .ifPresent(method -> fillMap.computeIfAbsent(Update.class, key -> method));
+        tableInfo.setFillMethods(fillMap);
 
         logger.info("{} - complete parse tableInfo ......", TAG);
 

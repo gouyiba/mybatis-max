@@ -163,3 +163,7 @@
     - 修改模块、类名称: Rabbit... -> MybatisMax...
     - 修改yml配置名称: rabbit-mybatis-plug -> mybatis-max
     - 替换项目涉及到的关键字: MRP -> mybatis-max
+    
+ - 2020.07.01
+    - 修改没有注解标识实体类时，参数处理异常
+    - 完善pom对该项目描述的信息
