@@ -2,12 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
 
     <name>mybatis-max</name>
-    <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
+    <description>Mybatis-Max is an automatic injection SQL toolkit based on Mybatis.</description>
     <url>https://github.com/gouyiba/mybatis-max</url>
     <inceptionYear>2019</inceptionYear>
 
@@ -20,20 +19,14 @@
         </license>
     </licenses>
 
+    <issueManagement>
+        <url>https://github.com/gouyiba/mybatis-max/issues</url>
+    </issueManagement>
+
     <organization>
         <name>Gouyiba Group</name>
         <url>https://github.com/gouyiba</url>
     </organization>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
-    <groupId>cloud.gouyiba</groupId>
-    <artifactId>mybatis-max</artifactId>
-    <version>1.0.3</version>
 
     <distributionManagement>
         <snapshotRepository>
@@ -46,6 +39,40 @@
         </repository>
     </distributionManagement>
 
+    <scm>
+        <tag>develop</tag>
+        <url>https://github.com/gouyiba/mybatis-max</url>
+        <connection>scm:git:git@github.com:gouyiba/mybatis-max.git</connection>
+        <developerConnection>scm:git:git@github.com:gouyiba/mybatis-max.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>wuyongfei</id>
+            <name>wuyongfei</name>
+            <email>1402218191@qq.com</email>
+            <organization>mybatis-max</organization>
+            <url>https://github.com/gouyiba/mybatis-max</url>
+        </developer>
+        <developer>
+            <id>duxiaoyu</id>
+            <name>duxiaoyu</name>
+            <email>389228699@qq.com</email>
+            <organization>mybatis-max</organization>
+            <url>https://github.com/gouyiba/mybatis-max</url>
+        </developer>
+    </developers>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>cloud.gouyiba</groupId>
+    <artifactId>mybatis-max</artifactId>
+    <version>1.0.3-RELEASE</version>
+
     <modules>
         <module>mybatis-max-common</module>
         <module>mybatis-max-core</module>
@@ -53,7 +80,7 @@
     </modules>
 
     <properties>
-        <module-version>1.0.3</module-version>
+        <module-version>1.0.3-RELEASE</module-version>
         <mybatis-version>3.5.3</mybatis-version>
         <mybatis-spring-version>2.0.3</mybatis-spring-version>
         <spring-version>5.2.2.RELEASE</spring-version>
@@ -88,30 +115,6 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-    <scm>
-        <tag>develop-v1.0.3</tag>
-        <url>https://github.com/gouyiba/mybatis-max</url>
-        <connection>scm:git:git@github.com:gouyiba/mybatis-max.git</connection>
-        <developerConnection>scm:git:git@github.com:gouyiba/mybatis-max.git</developerConnection>
-    </scm>
-
-    <developers>
-        <developer>
-            <id>wuyongfei</id>
-            <name>wuyongfei</name>
-            <email>1402218191@qq.com</email>
-            <organization>mybatis-max</organization>
-            <url>https://github.com/gouyiba/mybatis-max</url>
-        </developer>
-        <developer>
-            <id>duxiaoyu</id>
-            <name>duxiaoyu</name>
-            <email>389228699@qq.com</email>
-            <organization>mybatis-max</organization>
-            <url>https://github.com/gouyiba/mybatis-max</url>
-        </developer>
-    </developers>
 
     <build>
         <plugins>

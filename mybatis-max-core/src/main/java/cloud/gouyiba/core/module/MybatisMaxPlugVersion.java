@@ -5,7 +5,7 @@ package cloud.gouyiba.core.module;
  **/
 public class MybatisMaxPlugVersion {
 
-    private final static String DEFAULT_VERSION = "1.0.3";
+    private final static String DEFAULT_VERSION = "1.0.3-RELEASE";
 
     private MybatisMaxPlugVersion() {
     }

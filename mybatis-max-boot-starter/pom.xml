@@ -5,14 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--<name>mybatis-max</name>-->
-    <description>简化并解决Mybatis的繁琐开发工作，大大提升开发效率，使开发者专注于Service业务的实现，不需要在数据层的开发耗费过多精力。</description>
+    <description>Mybatis-Max is an automatic injection SQL toolkit based on Mybatis.</description>
     <url>https://github.com/gouyiba/mybatis-max</url>
     <inceptionYear>2019</inceptionYear>
+
+    <organization>
+        <name>Gouyiba Group</name>
+        <url>https://github.com/gouyiba</url>
+    </organization>
 
     <parent>
         <groupId>cloud.gouyiba</groupId>
         <artifactId>mybatis-max</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.3-RELEASE</version>
     </parent>
 
     <artifactId>mybatis-max-boot-starter</artifactId>
