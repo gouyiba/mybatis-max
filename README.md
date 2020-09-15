@@ -7,7 +7,7 @@
 ## What is MyBatis-Max?
 Mybatis Max is to simplify and solve the tedious development work of the data layer based on Mybatis, greatly improve the development efficiency, and enable developers to focus on the implementation of the Service business, and do not need to spend too much energy on the development of the data layer.
 
-## Maven
+## Get Step
 - Add MyBatis-Plus dependency
     - Maven:
         ```xml
@@ -46,6 +46,7 @@ Mybatis Max is to simplify and solve the tedious development work of the data la
         ```
     -   All the injection methods provided in BaseMapper are accessible through an AccountMapper agent instance
 
+## Dependency
 Please see this <a href='https://mvnrepository.com/artifact/cloud.gouyiba/mybatis-max-boot-starter'>[China Maven Download Page]</a> for more repository infos.
 
 ## Welcome
