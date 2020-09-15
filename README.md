@@ -4,6 +4,7 @@
 [![GitHub release](https://img.shields.io/maven-central/v/cloud.gouyiba/mybatis-max?color=green&label=release)](https://github.com/gouyiba/mybatis-max/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/gouyiba/mybatis-max) 
+[![Issues](https://img.shields.io/github/issues/gouyiba/mybatis-max)](https://github.com/gouyiba/mybatis-max/issues) 
 ## What is MyBatis-Max?
 Mybatis Max is to simplify and solve the tedious development work of the data layer based on Mybatis, greatly improve the development efficiency, and enable developers to focus on the implementation of the Service business, and do not need to spend too much energy on the development of the data layer.
 
