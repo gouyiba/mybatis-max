@@ -49,7 +49,7 @@ Mybatis Max is to simplify and solve the tedious development work of the data la
 Please see this <a href='https://mvnrepository.com/artifact/cloud.gouyiba/mybatis-max-boot-starter'>[China Maven Download Page]</a> for more repository infos.
 
 ## Welcome
-We invite interested people to join our gouyiba development team and let us know by sending an issue.
+We invite interested people to join our gouyiba development team communicate together and let us know by sending an issue.
 
 ### *License*
 
