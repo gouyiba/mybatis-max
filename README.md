@@ -9,7 +9,7 @@
 Mybatis Max is to simplify and solve the tedious development work of the data layer based on Mybatis, greatly improve the development efficiency, and enable developers to focus on the implementation of the Service business, and do not need to spend too much energy on the development of the data layer.
 
 ## Get Step
-- Add MyBatis-Plus dependency
+- Add MyBatis-Max dependency
     - Maven:
         ```xml
         <dependency>
@@ -23,7 +23,7 @@ Mybatis Max is to simplify and solve the tedious development work of the data la
         compile group: 'cloud.gouyiba', name: 'mybatis-max-boot-starter', version: '1.0.5-RELEASE'
         ```
 
--   Modify mapper file extends BaseMapper interface
+-   Modify mapper file(extends AccountMapper interface)
     ```java
     public interface AccountMapper extends BaseMapper<Account> {
 
@@ -37,11 +37,17 @@ Mybatis Max is to simplify and solve the tedious development work of the data la
         
         public void getMybatisMaxFunction() {
             accountMapper.selectById();
+            
             accountMapper.selectOne();
+            
             accountMapper.insert();
+            
             accountMapper.update();
+            
             accountMapper.updateById();
+            
             accountMapper.delete();
+            
             // accountMapper.method()......
         }
         ```
