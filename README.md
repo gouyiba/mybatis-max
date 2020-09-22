@@ -23,7 +23,7 @@ Mybatis Max is to simplify and solve the tedious development work of the data la
         compile group: 'cloud.gouyiba', name: 'mybatis-max-boot-starter', version: '1.0.5-RELEASE'
         ```
 
--   Modify mapper file(extends AccountMapper interface)
+-   Modify mapper file(extends BaseMapper interface)
     ```java
     public interface AccountMapper extends BaseMapper<Account> {
 
