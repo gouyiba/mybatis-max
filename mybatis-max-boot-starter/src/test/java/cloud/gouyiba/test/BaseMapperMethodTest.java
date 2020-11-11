@@ -18,10 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,12 +76,15 @@ public class BaseMapperMethodTest {
     public void testUpdateByIdMethod() {
         String id = ByIdBefore();
 
-        User user = userMapper.selectById(id);
-        user.setStuName("小张");
-        user.setStuAge(24);
-        user.setSex(Sex.MAX);
+        // User user = userMapper.selectById(id);
+        User user = new User();
+        user.setStuUid(id);
+        user.setStuName("小赵");
+        // user.setStuAge(23);
+        // user.setSex(Sex.WOMEN);
+        // user.setUpdateDate(new Date());
 
-        // 全量修改
+        // 增量更新
         int result = userMapper.updateById(user);
         log.info(result > 0 ? "updateById success..." : "updateById failed...");
     }
@@ -92,38 +92,28 @@ public class BaseMapperMethodTest {
     @Test
     public void testUpdateBatchByIdMethod() {
         List<String> ids = BatchByIdBefore();
-        List<User> entityList = userMapper.selectBatchIds(ids);
-        for (int i = 0; i < entityList.size(); i++) {
+        // List<User> entityList = userMapper.selectBatchIds(ids);
+        List<User> entityList = new ArrayList<>();
+        for (int i = 0; i < ids.size(); i++) {
+            User user = new User();
+            user.setStuUid(ids.get(i));
             if (i % 2 == 0) {
-                entityList.get(i).setSex(Sex.MAX);
-                entityList.get(i).setStuName("小明" + i);
-                entityList.get(i).setStuAge(i);
+                user.setSex(Sex.MAX);
+                // user.setStuName("小明" + i);
+                // user.setStuAge(i);
+                user.setUpdateDate(new Date());
             } else {
-                entityList.get(i).setSex(Sex.WOMEN);
-                entityList.get(i).setStuName("小明" + i);
-                entityList.get(i).setStuAge(i);
+                user.setSex(Sex.WOMEN);
+                // user.setStuName("小明" + i);
+                // user.setStuAge(i);
+                user.setUpdateDate(new Date());
             }
+            entityList.add(user);
         }
 
-        // 全量修改
+        // 增量更新
         int result = userMapper.updateBatchById(entityList);
         log.info(result > 0 ? "updateBatchById success..." : "updateBatchById failed...");
-    }
-
-    @Test
-    public void testDeleteById() {
-        String id = ByIdBefore();
-
-        int result = userMapper.deleteById(id);
-        log.info(result > 0 ? "deleteById success..." : "deleteById failed...");
-    }
-
-    @Test
-    public void testDeleteBatchById() {
-        List<Object> ids = BatchByIdBefore().stream().map(x -> x).collect(Collectors.toList());
-
-        int result = userMapper.deleteBatchById(ids);
-        log.info(result > 0 ? "deleteBatchById success..." : "deleteBatchById failed...");
     }
 
     @Test
@@ -140,8 +130,25 @@ public class BaseMapperMethodTest {
         wrapper.where("stu_uid", id);
         wrapper.where("del_flag", 1);
 
+        // 增量更新
         int result = userMapper.update(wrapper);
         log.info(result > 0 ? "update success..." : "update failed...");
+    }
+
+    @Test
+    public void testDeleteById() {
+        String id = ByIdBefore();
+
+        int result = userMapper.deleteById(id);
+        log.info(result > 0 ? "deleteById success..." : "deleteById failed...");
+    }
+
+    @Test
+    public void testDeleteBatchById() {
+        List<Object> ids = BatchByIdBefore().stream().map(x -> x).collect(Collectors.toList());
+
+        int result = userMapper.deleteBatchById(ids);
+        log.info(result > 0 ? "deleteBatchById success..." : "deleteBatchById failed...");
     }
 
     @Test

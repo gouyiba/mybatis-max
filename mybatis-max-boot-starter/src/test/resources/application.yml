@@ -5,7 +5,7 @@ spring:
   # hikariPool
   datasource:
     username: root
-    password: ENC(a5rsd8uK8dVi94FUIw0AQdZSId+S8j1v)
+    password: ENC(lIEXjvB6WjnpX1mqwdyHUtdw90ttT3+s)
     url: jdbc:mysql://139.224.81.29/mybatis_rabbit_plug?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowMultiQueries=true
 
 jasypt:

@@ -37,10 +37,10 @@ public class Update extends MybatisMaxAbstractMethod {
             sqlValMap.put(item, sqlValMap.get(item).replace("objectMap", "entity"));
         }
 
-        // TODO: 第一版全量更新
+        // 增量更新
         StringBuffer sqlVal = new StringBuffer("");
         for (Map.Entry<String, String> item : sqlValMap.entrySet()) {
-            sqlVal.append(SqlScriptUtil.convertIf("entity." + item.getKey() + "!=null", item.getValue()));
+            sqlVal.append(SqlScriptUtil.convertIf(String.format("entity.%s != null", item.getKey()), item.getValue()));
         }
 
 
